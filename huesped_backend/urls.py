@@ -20,6 +20,6 @@ from common import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^coding/$', views.CodingList.as_view()),
-    url(r'^coding/(?P<pk>[0-9]+)/$', views.CodingDetail.as_view()),
+    url(r'^coding/$', views.CodingList.as_view(), name='coding-list'),
+    url(r'^coding/(?P<pk>[0-9]+)/$', views.CodingDetail.as_view(),name='coding-detail'),
 ]
