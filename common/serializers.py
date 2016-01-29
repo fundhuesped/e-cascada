@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from common.models import Coding
+from common.models import Coding, IdentifierType
 
 
 class CodingSerializer(serializers.Serializer):
@@ -22,5 +22,27 @@ class CodingSerializer(serializers.Serializer):
         instance.code = validated_data.get('code', instance.code)
         instance.display = validated_data.get('display', instance.display)
         instance.userSelected = validated_data.get('userSelected', instance.userSelected)
+        instance.save()
+        return instance
+
+class IdentifierTypeSerializer(serializers.Serializer):
+    """
+    Serializador de un IdentifierType
+    """
+    pk = serializers.IntegerField(read_only=True)
+    coding = serializers.CharField(max_length=4)
+    text = serializers.CharField()
+
+    def create(self, validated_data):
+        """
+        Create the IdentifierType
+        :param validated_data:
+        :return:
+        """
+        return IdentifierType.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.coding = validated_data.get('coding', instance.coding)
+        instance.text = validated_data.get('text', instance.text)
         instance.save()
         return instance
