@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from common.models import Coding, IdentifierType
+from common.models import Coding, IdentifierType, IdentifierPeriod
 
 
 class CodingSerializer(serializers.Serializer):
@@ -44,5 +44,27 @@ class IdentifierTypeSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.coding = validated_data.get('coding', instance.coding)
         instance.text = validated_data.get('text', instance.text)
+        instance.save()
+        return instance
+
+
+class IdentifierPeriodSerializer(serializers.Serializer):
+    """
+    Serializador de IdentifierPeriod
+    """
+    start = serializers.DateTimeField()
+    end = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        """
+        Create an IdentifierPeriod
+        :param validated_data:
+        :return:
+        """
+        return IdentifierPeriod.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.start = validated_data.get('start', instance.start)
+        instance.end = validated_data.get('end', instance.end)
         instance.save()
         return instance
