@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from common.models import Coding, IdentifierType, IdentifierPeriod
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod
 
 
 class CodingSerializer(serializers.Serializer):
@@ -47,7 +47,6 @@ class IdentifierTypeSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-
 class IdentifierPeriodSerializer(serializers.Serializer):
     """
     Serializador de IdentifierPeriod
@@ -62,6 +61,48 @@ class IdentifierPeriodSerializer(serializers.Serializer):
         :return:
         """
         return IdentifierPeriod.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.start = validated_data.get('start', instance.start)
+        instance.end = validated_data.get('end', instance.end)
+        instance.save()
+        return instance
+
+class ContactPointPeriodSerializer(serializers.Serializer):
+    """
+    Serializador de IdentifierPeriod
+    """
+    start = serializers.DateTimeField()
+    end = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        """
+        Create an IdentifierPeriod
+        :param validated_data:
+        :return:
+        """
+        return ContactPointPeriod.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.start = validated_data.get('start', instance.start)
+        instance.end = validated_data.get('end', instance.end)
+        instance.save()
+        return instance
+
+class AddressPointPeriodSerializer(serializers.Serializer):
+    """
+    Serializador de IdentifierPeriod
+    """
+    start = serializers.DateTimeField()
+    end = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        """
+        Create an IdentifierPeriod
+        :param validated_data:
+        :return:
+        """
+        return AddressPointPeriod.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.start = validated_data.get('start', instance.start)

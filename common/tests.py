@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import Coding, IdentifierType, IdentifierPeriod
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -117,7 +117,7 @@ class IdentifierTypeTest(APITestCase):
 class IdentifierPeriodTest(APITestCase):
     def test_createIdentifierPeriod(self):
         """
-        Asegura que el IdentifierType se haya creado
+        Asegura que el IdentifierPeriod se haya creado
         :return:
         """
         #url = reverse('coding-list')
@@ -129,7 +129,7 @@ class IdentifierPeriodTest(APITestCase):
 
     def test_getIdentifierPeriods(self):
         """
-        Asegura obtener Codings
+        Asegura obtener IdentifierPeriod
         :return:
         """
         #url = reverse('coding-list')
@@ -140,7 +140,7 @@ class IdentifierPeriodTest(APITestCase):
 
     def test_getIdentifierPeriod(self):
         """
-        Asegura obtener un Coding
+        Asegura obtener un IdentifierPeriod
         :return:
         """
         #url = reverse('coding-detail')
@@ -151,7 +151,7 @@ class IdentifierPeriodTest(APITestCase):
 
     def test_getIdentifierPeriodFiltered(self):
         """
-        Asegura obtener un Coding con filtro
+        Asegura obtener un IdentifierPeriod con filtro
         :return:
         """
         #url = reverse('coding-list')
@@ -162,12 +162,128 @@ class IdentifierPeriodTest(APITestCase):
 
     def test_deleteIdentifierPeriod(self):
         """
-        Asegura que se puedan eliminar Codings
+        Asegura que se puedan eliminar IdentifierPeriod
         :return:
         """
         data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
         response = self.client.post('/common/identifier-period/', data, format='json')
         response = self.client.delete('/common/identifier-period/1/')
-        cant = IdentifierType.objects.count()
+        cant = IdentifierPeriod.objects.count()
+        self.assertEqual(cant,0)
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class ContactPointPeriodTest(APITestCase):
+    def test_createContactPointPeriod(self):
+        """
+        Asegura que el ContactPointPeriod se haya creado
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        cantContactPointPeriods = ContactPointPeriod.objects.count()
+        response = self.client.post('/common/contact-point-period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(ContactPointPeriod.objects.count(),cantContactPointPeriods)
+
+    def test_getContactPointPeriods(self):
+        """
+        Asegura obtener ContactPointPeriod
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/contact-point-period/', data, format='json')
+        response = self.client.get('/common/contact-point-period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getContactPointPeriod(self):
+        """
+        Asegura obtener un ContactPointPeriod
+        :return:
+        """
+        #url = reverse('coding-detail')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/contact-point-period/', data, format='json')
+        response = self.client.get('/common/contact-point-period/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getContactPointPeriodFiltered(self):
+        """
+        Asegura obtener un ContactPointPeriod con filtro
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/contact-point-period/', data, format='json')
+        response = self.client.get('/common/contact-point-period/?start=2016-01-30 12:55&end=2016-01-31 13:00',format='json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_deleteContactPointPeriod(self):
+        """
+        Asegura que se puedan eliminar ContactPointPeriod
+        :return:
+        """
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/contact-point-period/', data, format='json')
+        response = self.client.delete('/common/contact-point-period/1/')
+        cant = ContactPointPeriod.objects.count()
+        self.assertEqual(cant,0)
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class AddressPointPeriodTest(APITestCase):
+    def test_createAddressPointPeriod(self):
+        """
+        Asegura que el AddressPointPeriod se haya creado
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        cantAddressPointPeriods = AddressPointPeriod.objects.count()
+        response = self.client.post('/common/address-point-period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(AddressPointPeriod.objects.count(),cantAddressPointPeriods)
+
+    def test_getIdentifierPeriods(self):
+        """
+        Asegura obtener AddressPointPeriod
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/address-point-period/', data, format='json')
+        response = self.client.get('/common/address-point-period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getIdentifierPeriod(self):
+        """
+        Asegura obtener un AddressPointPeriod
+        :return:
+        """
+        #url = reverse('coding-detail')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/address-point-period/', data, format='json')
+        response = self.client.get('/common/address-point-period/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getIdentifierPeriodFiltered(self):
+        """
+        Asegura obtener un AddressPointPeriod con filtro
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/address-point-period/', data, format='json')
+        response = self.client.get('/common/address-point-period/?start=2016-01-30 12:55&end=2016-01-31 13:00',format='json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_deleteIdentifierPeriod(self):
+        """
+        Asegura que se puedan eliminar AddressPointPeriod
+        :return:
+        """
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/address-point-period/', data, format='json')
+        response = self.client.delete('/common/address-point-period/1/')
+        cant = AddressPointPeriod.objects.count()
         self.assertEqual(cant,0)
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
