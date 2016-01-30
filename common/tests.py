@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -285,5 +285,111 @@ class AddressPointPeriodTest(APITestCase):
         response = self.client.post('/common/address-point-period/', data, format='json')
         response = self.client.delete('/common/address-point-period/1/')
         cant = AddressPointPeriod.objects.count()
+        self.assertEqual(cant,0)
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class NamePeriodTest(APITestCase):
+    def test_createNamePeriod(self):
+        """
+        Asegura que el NamePeriod se haya creado
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        cantNamePeriods = NamePeriod.objects.count()
+        response = self.client.post('/common/name-period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(AddressPointPeriod.objects.count(),cantNamePeriods)
+
+    def test_getNamePeriods(self):
+        """
+        Asegura obtener NamePeriod
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/name-period/', data, format='json')
+        response = self.client.get('/common/name-period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getNamePeriod(self):
+        """
+        Asegura obtener un NamePeriod
+        :return:
+        """
+        #url = reverse('coding-detail')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/name-period/', data, format='json')
+        response = self.client.get('/common/name-period/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getNamePeriodFiltered(self):
+        """
+        Asegura obtener un NamePeriod con filtro
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/name-period/', data, format='json')
+        response = self.client.get('/common/name-period/?start=2016-01-30 12:55&end=2016-01-31 13:00',format='json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_deleteNamePeriod(self):
+        """
+        Asegura que se puedan eliminar NamePeriod
+        :return:
+        """
+        data = {'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}
+        response = self.client.post('/common/name-period/', data, format='json')
+        response = self.client.delete('/common/name-period/1/')
+        cant = NamePeriod.objects.count()
+        self.assertEqual(cant,0)
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class AddressLineTest(APITestCase):
+    def crearAddressLine(self):
+        linea = AddressLine(line="Libertad 5899")
+        linea.save()
+
+    def test_createAddressLine(self):
+        """
+        Asegura que el NamePeriod se haya creado
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'line':'Libertad 5899'}
+        cantAddressLines = AddressLine.objects.count()
+        response = self.client.post('/common/address-line/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(AddressLine.objects.count(),cantAddressLines)
+
+    def test_getAddressLines(self):
+        """
+        Asegura obtener AddressLine
+        :return:
+        """
+        #url = reverse('coding-list')
+        self.crearAddressLine()
+        response = self.client.get('/common/address-line/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getAddressLine(self):
+        """
+        Asegura obtener un AddressLine
+        :return:
+        """
+        #url = reverse('coding-detail')
+        self.crearAddressLine()
+        response = self.client.get('/common/address-line/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteAddressLine(self):
+        """
+        Asegura que se puedan eliminar AddressLine
+        :return:
+        """
+        self.crearAddressLine()
+        response = self.client.delete('/common/address-line/1/')
+        cant = AddressLine.objects.count()
         self.assertEqual(cant,0)
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)

@@ -150,13 +150,11 @@ class AddressPointPeriod(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
 
-
 #Class AddressLine
 #Street name, number, direction & P.O. Box etc.
 #Clase creada para compatibilidad con el estandar FHIR, para que una Addres contenga muchas AddressLines
 class AddressLine(models.Model):
     line = models.TextField()
-
 
 #Clase HumanName
 #Según FHIR "A name of a human with text, parts and usage information."

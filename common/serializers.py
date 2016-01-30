@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine
 
 
 class CodingSerializer(serializers.Serializer):
@@ -107,5 +107,51 @@ class AddressPointPeriodSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.start = validated_data.get('start', instance.start)
         instance.end = validated_data.get('end', instance.end)
+        instance.save()
+        return instance
+
+class NamePeriodSerializer(serializers.Serializer):
+    """
+    Serializador de NamePeriod
+    """
+    start = serializers.DateTimeField()
+    end = serializers.DateTimeField()
+
+    def create(self, validated_data):
+        """
+        Create an NamePeriod
+        :param validated_data:
+        :return:
+        """
+        return NamePeriod.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.start = validated_data.get('start', instance.start)
+        instance.end = validated_data.get('end', instance.end)
+        instance.save()
+        return instance
+
+class AddressLineSerializer(serializers.Serializer):
+    """
+    Serializa un AddressLine
+    """
+    line = serializers.CharField()
+
+    def create(self, validated_data):
+        """
+        Create an AddresLine
+        :param validated_data:
+        :return:
+        """
+        return AddressLine.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Modifica y devuelve una instancia de AddressLine
+        :param instance:
+        :param validated_data: Datos validos para crear AddressLine
+        :return: Instancia de AddressLine
+        """
+        instance.line = validated_data.get('line', instance.line)
         instance.save()
         return instance
