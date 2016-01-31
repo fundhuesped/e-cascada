@@ -1,7 +1,7 @@
-from django.core.urlresolvers import reverse
+from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -391,5 +391,65 @@ class AddressLineTest(APITestCase):
         self.crearAddressLine()
         response = self.client.delete('/common/address-line/1/')
         cant = AddressLine.objects.count()
+        self.assertEqual(cant,0)
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class ContactPointLineTest(APITestCase):
+    def crearContactPoint(self):
+        contactPointPeriod = ContactPointPeriod(
+            start= datetime.now(),
+            end=datetime.now()
+        )
+        contactPointPeriod.save()
+
+        contactPoint = ContactPoint(
+            system = "Email",
+            value = "sa@prueba.com",
+            use = "home",
+            rank = 1,
+            period = contactPointPeriod
+        )
+        contactPoint.save()
+
+    def test_createContactPoint(self):
+        """
+        Asegura que el ContactPoint se haya creado
+        :return:
+        """
+        #url = reverse('coding-list')
+        data = {'system':'Email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':{'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}}
+        cantContactPoint = ContactPoint.objects.count()
+        response = self.client.post('/common/contact-point/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(ContactPoint.objects.count(),cantContactPoint)
+
+    def test_getContactPoints(self):
+        """
+        Asegura obtener ContactPoints
+        :return:
+        """
+        #url = reverse('coding-list')
+        self.crearContactPoint()
+        response = self.client.get('/common/contact-point/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getContactPoint(self):
+        """
+        Asegura obtener un ContactPoint
+        :return:
+        """
+        #url = reverse('coding-detail')
+        self.crearContactPoint()
+        response = self.client.get('/common/contact-point/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteContactPoint(self):
+        """
+        Asegura que se puedan eliminar ContactPoint
+        :return:
+        """
+        self.crearContactPoint()
+        response = self.client.delete('/common/contact-point/1/')
+        cant = ContactPoint.objects.count()
         self.assertEqual(cant,0)
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
