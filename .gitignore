@@ -1,5 +1,4 @@
 db.sqlite3
 manage.py
 */migrations
-*/settings.py
-*/wsgi.py
+*/critical_settings.py

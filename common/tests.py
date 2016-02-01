@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -407,7 +408,7 @@ class ContactPointLineTest(APITestCase):
             value = "sa@prueba.com",
             use = "home",
             rank = 1,
-            period = contactPointPeriod
+            period = None
         )
         contactPoint.save()
 
@@ -417,7 +418,7 @@ class ContactPointLineTest(APITestCase):
         :return:
         """
         #url = reverse('coding-list')
-        data = {'system':'Email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':{'start': '2016-01-30 12:55', 'end': '2016-01-31 13:00'}}
+        data = {'system':'Email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':None}
         cantContactPoint = ContactPoint.objects.count()
         response = self.client.post('/common/contact-point/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

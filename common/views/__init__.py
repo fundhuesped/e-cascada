@@ -1,3 +1,6 @@
 __author__ = 'Santi'
-from .views import *
-from .contactpointvi import *
+from .humanname_view import *
+from .contactpoint_view import *
+from .address_view import *
+from .coding_view import *
+from .identifier_view import *
