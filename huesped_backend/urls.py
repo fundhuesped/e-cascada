@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^common/', include('common.urls')),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 ]
