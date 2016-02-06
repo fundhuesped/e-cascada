@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from common import views
 
+app_name = "common"
 urlpatterns = [
     url(r'^coding/$', views.CodingList.as_view(), name='coding-list'),
     url(r'^coding/(?P<pk>[0-9]+)/$', views.CodingDetail.as_view(),name='coding-detail'),
@@ -15,7 +16,7 @@ urlpatterns = [
     url(r'^address-line/$', views.AddressLineList.as_view(), name='AddressLine-list'),
     url(r'^address-line/(?P<pk>[0-9]+)/$', views.AddressLineDetail.as_view(),name='AddressLine-detail'),
     url(r'^contact-point/$', views.ContactPointList.as_view(), name='ContactPoint-list'),
-    url(r'^contact-point/(?P<pk>[0-9]+)/$', views.ContactPointDetails.as_view(),name='ContactPoint-detail'),
-    url(r'^contact-point-period/$', views.ContactPointPeriodList.as_view(),name='ContactPointPeriod-list'),
+    url(r'^contact-point/(?P<pk>[0-9]+)/$', views.ContactPointDetails.as_view(),name="ContactPoint-detail"),
+    url(r'^contact-point-period/$', views.ContactPointPeriodList.as_view(),name="ContactPointPeriod-list"),
     url(r'^contact-point-period/(?P<pk>[0-9]+)/$', views.ContactPointPeriodDetail.as_view(),name='ContactPointPeriod-detail'),
 ]

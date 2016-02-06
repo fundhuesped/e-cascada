@@ -5,6 +5,7 @@ class NamePeriodSerializer(serializers.Serializer):
     """
     Serializador de NamePeriod
     """
+    id = serializers.ReadOnlyField()
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
 
@@ -32,5 +33,8 @@ class NamePeriodSerializer(serializers.Serializer):
         instance.line = validated_data.get('line', instance.line)
         instance.save()
         return instance
+    class Meta:
+        model = NamePeriod
+        fields = ('id', 'start', 'end')
 
 #TODO: Agregar serializer para HumanName

@@ -3,20 +3,13 @@ from common.models import ContactPointPeriod, ContactPoint
 
 __author__ = 'Santi'
 
-class ContactPointPeriodSerializer(serializers.Serializer):
+class ContactPointPeriodSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializador de IdentifierPeriod
     """
+    id = serializers.ReadOnlyField()
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
-
-    def create(self, validated_data):
-        """
-        Create an IdentifierPeriod
-        :param validated_data:
-        :return:
-        """
-        return ContactPointPeriod.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.start = validated_data.get('start', instance.start)
@@ -24,32 +17,30 @@ class ContactPointPeriodSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+    class Meta:
+        model = ContactPointPeriod
+        fields = ('id','start', 'end')
+
 class ContactPointSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializa un ContactPoint
     """
-    period = ContactPointPeriodSerializer()
+    id = serializers.ReadOnlyField()
 
-    """"
-    def create(self, validated_data):
-        system = validated_data['system']
-        value = validated_data['value']
-        use = validated_data['use']
-        rank = validated_data['rank']
-        periodo = ContactPointPeriod(start = validated_data['period']['start'], end = validated_data['period']['end'])
-        periodo.save()
-        return ContactPoint.objects.create(system=system, value=value, use=use, rank=rank, period=periodo)
+    period = serializers.HyperlinkedRelatedField(
+        view_name="common:ContactPointPeriod-detail",
+        queryset=ContactPointPeriod.objects
+    )
 
     def update(self, instance, validated_data):
         instance.system = validated_data['system']
         instance.value = validated_data['value']
         instance.use = validated_data['use']
         instance.rank = validated_data['rank']
-        instance.period = ContactPointPeriod.objects.get_or_create(start = validated_data['period']['start'], end = validated_data['period']['end'])
+        instance.period = validated_data['period']
         instance.save()
         return instance
-    """
 
     class Meta:
         model = ContactPoint
-        fields = ('system', 'value', 'use', 'rank', 'period')
+        fields = ('id', 'system', 'value', 'use', 'rank', 'period')

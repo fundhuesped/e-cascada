@@ -7,6 +7,7 @@ class AddressPointPeriodSerializer(serializers.Serializer):
     """
     Serializador de IdentifierPeriod
     """
+    id = serializers.ReadOnlyField()
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
 
@@ -24,10 +25,15 @@ class AddressPointPeriodSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+    class Meta:
+        model = AddressPointPeriod
+        fields = ('id', 'start', 'end')
+
 class AddressLineSerializer(serializers.Serializer):
     """
     Serializa un AddressLine
     """
+    id = serializers.ReadOnlyField()
     line = serializers.CharField()
 
     def create(self, validated_data):
@@ -37,5 +43,8 @@ class AddressLineSerializer(serializers.Serializer):
         :return:
         """
         return AddressLine.objects.create(**validated_data)
+    class Meta:
+        model = AddressLine
+        fields = ('id', 'line')
 
 #TODO: Agregar serializer para Address

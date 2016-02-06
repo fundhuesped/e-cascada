@@ -2,7 +2,7 @@ from rest_framework import serializers
 from common.models import Coding
 
 class CodingSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
+    id = serializers.ReadOnlyField()
     system = serializers.URLField()
     version = serializers.CharField()
     code = serializers.CharField()
@@ -23,4 +23,8 @@ class CodingSerializer(serializers.Serializer):
         instance.userSelected = validated_data.get('userSelected', instance.userSelected)
         instance.save()
         return instance
+
+    class Meta:
+        model = Coding
+        fields = ('id', 'system', 'version','code','display','userSelected')
 

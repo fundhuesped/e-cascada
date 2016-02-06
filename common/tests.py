@@ -418,7 +418,13 @@ class ContactPointLineTest(APITestCase):
         :return:
         """
         #url = reverse('coding-list')
-        data = {'system':'Email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':None}
+
+        contactPointPeriod = ContactPointPeriod(
+            start= datetime.now(),
+            end=datetime.now()
+        )
+        contactPointPeriod.save()
+        data = {'system':'Email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':'http://localhost:8000/common/contact-point-period/1/'}
         cantContactPoint = ContactPoint.objects.count()
         response = self.client.post('/common/contact-point/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

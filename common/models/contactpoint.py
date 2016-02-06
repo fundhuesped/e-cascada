@@ -46,6 +46,6 @@ class ContactPoint(models.Model):
     value = models.TextField()                                                          #The actual contact point details
     use = models.CharField(max_length=4, choices=USE_CHOICES, default=HOME)             #home | work | temp | old | mobile - purpose of this contact point
     rank = models.PositiveIntegerField(default=1)                                       #Specify preferred order of use (1 = highest)
-    period = models.ForeignKey(ContactPointPeriod, related_name='period',null=True)
+    period = models.OneToOneField(ContactPointPeriod, related_name='period',null=True, on_delete=models.CASCADE)
 
 

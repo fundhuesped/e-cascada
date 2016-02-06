@@ -5,7 +5,7 @@ class IdentifierTypeSerializer(serializers.Serializer):
     """
     Serializador de un IdentifierType
     """
-    pk = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(read_only=True)
     coding = serializers.CharField(max_length=4)
     text = serializers.CharField()
 
@@ -23,10 +23,15 @@ class IdentifierTypeSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+    class Meta:
+        model = IdentifierType
+        fields = ('id', 'coding', 'text')
+
 class IdentifierPeriodSerializer(serializers.Serializer):
     """
     Serializador de IdentifierPeriod
     """
+    id = serializers.ReadOnlyField()
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
 
@@ -43,5 +48,9 @@ class IdentifierPeriodSerializer(serializers.Serializer):
         instance.end = validated_data.get('end', instance.end)
         instance.save()
         return instance
+
+    class Meta:
+        model = IdentifierPeriod
+        fields = ('id', 'start', 'end')
 
 #TODO: Agregar serializaer para Identifier
