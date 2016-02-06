@@ -31,9 +31,3 @@ class HumanName(models.Model):
     prefix = models.TextField()                                                             #Parts that come before the name - debe devolverse como una colecci�n
     suffix = models.TextField()                                                             #Parts that come after the name - debe devolverse como una colecci�n
     period = models.ForeignKey("NamePeriod")                                                  #Time period when name was/is in use
-
-#Periodo de tiempo en el que un nombre es valido
-#La estructura sigue las definiciones de FHIR en https://www.hl7.org/fhir/datatypes.html#Period
-class NamePeriod(models.Model):
-    start = models.DateTimeField()
-    end = models.DateTimeField()

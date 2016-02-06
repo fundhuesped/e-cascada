@@ -1,15 +1,10 @@
 from django.db import models
+from .contactpointperiod import *
 
 __author__ = 'Santi'
-#Periodo de tiempo en el que el identificador es valido
-#La estructura sigue las definiciones de FHIR en https://www.hl7.org/fhir/datatypes.html#Period
-class ContactPointPeriod(models.Model):
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-
 #Clase ContactPoint
-#Según FHIR> Details for all kinds of technology-mediated contact points for a person or organization, including telephone, email, etc.
-#Mas información: https://www.hl7.org/fhir/datatypes.html#ContactPoint
+#Segï¿½n FHIR> Details for all kinds of technology-mediated contact points for a person or organization, including telephone, email, etc.
+#Mas informaciï¿½n: https://www.hl7.org/fhir/datatypes.html#ContactPoint
 class ContactPoint(models.Model):
     #Constantes para system
     PHONE = 'phone'

@@ -1,9 +1,10 @@
 from django.db import models
-__author__ = 'Santi'
+from .addresspointperiod import *
+from .addressline import *
 
 #Clase Address
-#Según FHIR: "A postal address. There are a variety of postal address formats defined around the world. Postal addresses are often also used to record a location that can be visited to find a patient or person."
-#Más información: https://www.hl7.org/fhir/datatypes.html#Address
+#Segï¿½n FHIR: "A postal address. There are a variety of postal address formats defined around the world. Postal addresses are often also used to record a location that can be visited to find a patient or person."
+#Mï¿½s informaciï¿½n: https://www.hl7.org/fhir/datatypes.html#Address
 class Address(models.Model):
     #Constantes para use
     HOME = 'home'
@@ -41,16 +42,4 @@ class Address(models.Model):
     postalCode = models.TextField()                                                             #Postal code for area
     country = models.TextField()                                                                #Country (can be ISO 3166 3 letter code)
     period = models.ForeignKey("AddressPointPeriod")                                              #Time period when address was/is in use
-
-#Periodo de tiempo en el que una dirección es valida
-#La estructura sigue las definiciones de FHIR en https://www.hl7.org/fhir/datatypes.html#Period
-class AddressPointPeriod(models.Model):
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-
-#Class AddressLine
-#Street name, number, direction & P.O. Box etc.
-#Clase creada para compatibilidad con el estandar FHIR, para que una Addres contenga muchas AddressLines
-class AddressLine(models.Model):
-    line = models.TextField()
 
