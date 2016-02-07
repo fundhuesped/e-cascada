@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -635,4 +635,136 @@ class AddressTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['country'],'Brazil')
 
+class OrganizationContactTest(APITestCase):
 
+    def createAddress(self):
+        addressPointPeriod = AddressPointPeriod.objects.create(
+            start= datetime.now(),
+            end=datetime.now()
+        )
+        addressLine = AddressLine.objects.create(
+            line='Libertad 5899'
+        )
+        address = Address.objects.create(
+            use = 'home',
+            type= 'postal',
+            text='prueba',
+            city='villa Libertad',
+            district='san Martin',
+            state='Buenos Aires',
+            postalCode='1650',
+            country='Argentina'
+        )
+        address.period=addressPointPeriod
+        address.lines.add(addressLine)
+        address.save()
+        return address
+
+    def createContactPoint(self):
+        contactPointPeriod = ContactPointPeriod(
+            start= datetime.now(),
+            end=datetime.now()
+        )
+        contactPointPeriod.save()
+
+        contactPoint = ContactPoint(
+            system = "Email",
+            value = "sa@prueba.com",
+            use = "home",
+            rank = 1,
+            period = None
+        )
+        contactPoint.save()
+
+    def createHumanName(self):
+        period = NamePeriod.objects.create(
+            start = datetime.now(),
+            end = datetime.now()
+        )
+        name = HumanName.objects.create(
+            use = 'official',
+            text = 'Roberto Gomez',
+            family = 'Gomez',
+            given = 'Roberto',
+            prefix = 'Mr',
+            suffix = None,
+            period = period
+        )
+
+    def createOrganizationContact(self):
+        address = self.createAddress()
+        contactPoint = self.createContactPoint()
+        name = self.createHumanName()
+
+        return OrganizationContact.objects.create(
+            purpose = 'bill',
+            name = name,
+            telecom = contactPoint,
+            address = address
+        )
+
+    def test_createOrganizationContact(self):
+        """
+        Asegura crear un OrganizationContact
+        :return:
+        """
+        self.createHumanName()
+        self.createContactPoint()
+        self.createAddress()
+
+        data= {'purpose': 'bill','name': 'http://localhost:8000/common/human-name/1/','telecom': 'http://localhost:8000/common/contact-point/1/','address': 'http://localhost:8000/common/address/1/'}
+        cantContacts= OrganizationContact.objects.count()
+        response = self.client.post('/common/organization-contact/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(Address.objects.count(),cantContacts)
+
+    def test_getOrganizationContacts(self):
+        """
+        Obtiene todas las OrganizationContact
+        :return:
+        """
+        self.createOrganizationContact()
+        response = self.client.get('/common/organization-contact/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getOrganizationContact(self):
+        """
+        Obtiene una OrganizationContact
+        :return:
+        """
+        self.createOrganizationContact()
+        response = self.client.get('/common/organization-contact/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredOrganizationContact(self):
+        """
+        Obtiene un OrganizationContact filtrado
+        :return:
+        """
+        self.createOrganizationContact()
+        response = self.client.get('/common/organization-contact/?purpose=bill',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+    def test_deleteOrganizationContact(self):
+        """
+        Elinima un OrganizationContact
+        :return:
+        """
+        self.createOrganizationContact()
+        response = self.client.delete('/common/organization-contact/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(OrganizationContact.objects.count(),0)
+
+    def test_updateOrganizationContact(self):
+        """
+        Modifica un OrganizationContact
+        :return:
+        """
+        self.createOrganizationContact()
+        self.createHumanName()
+        data= {'purpose': 'adm','name': 'http://localhost:8000/common/human-name/2/','telecom': 'http://localhost:8000/common/contact-point/1/','address': 'http://localhost:8000/common/address/1/'}
+        response = self.client.put('/common/organization-contact/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['purpose'],'adm')
+        self.assertEqual(response.json()['name'],'http://testserver/common/human-name/2/')

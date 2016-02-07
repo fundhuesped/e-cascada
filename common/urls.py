@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^name-period/(?P<pk>[0-9]+)/$', views.NamePeriodDetail.as_view(),name='NamePeriod-detail'),
     url(r'^human-name/$', views.HumanNameList.as_view(),name="HumanName-list"),
     url(r'^human-name/(?P<pk>[0-9]+)/$', views.HumanNameDetails.as_view(),name='HumanName-detail'),
+    url(r'^organization-contact/$', views.OrganizationContactList.as_view(),name="OrganizationContact-list"),
+    url(r'^organization-contact/(?P<pk>[0-9]+)/$', views.OrganizationContactDetails.as_view(),name='OrganizationContact-detail'),
 ]

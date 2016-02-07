@@ -24,5 +24,5 @@ class Identifier(models.Model):
     type = models.ForeignKey("IdentifierType", null=True, on_delete=models.SET_NULL)                     #Description of identifier
     system = models.URLField()                                                              #The namespace for the identifier
     value = models.TextField(unique=True)                                                   #The value that is unique
-    period = models.ForeignKey("IdentifierPeriod", null=True, on_delete=models.SET_NULL)
+    period = models.OneToOneField("IdentifierPeriod", null=True, on_delete=models.SET_NULL)
     assigner = models.ForeignKey("Organization", related_name="assign_for")

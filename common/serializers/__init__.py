@@ -8,3 +8,4 @@ from .coding_ser import *
 from .nameperiod_ser import *
 from .humanname_ser import *
 from .identifier_ser import *
+from .organizationcontact_ser import *

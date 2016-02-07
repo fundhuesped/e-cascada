@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from common.models import IdentifierPeriod, IdentifierType
 
-class IdentifierTypeSerializer(serializers.Serializer):
+class IdentifierTypeSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializador de un IdentifierType
     """
@@ -27,7 +27,7 @@ class IdentifierTypeSerializer(serializers.Serializer):
         model = IdentifierType
         fields = ('id', 'coding', 'text')
 
-class IdentifierPeriodSerializer(serializers.Serializer):
+class IdentifierPeriodSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializador de IdentifierPeriod
     """
@@ -53,4 +53,10 @@ class IdentifierPeriodSerializer(serializers.Serializer):
         model = IdentifierPeriod
         fields = ('id', 'start', 'end')
 
-#TODO: Agregar serializaer para Identifier
+
+class IdentifierSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializador para Identifier
+    """
+
+    id = serializers.ReadOnlyField()

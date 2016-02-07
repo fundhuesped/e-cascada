@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import NamePeriod
+from .nameperiod import NamePeriod
 
 #Clase HumanName
 #Seg�n FHIR "A name of a human with text, parts and usage information."
