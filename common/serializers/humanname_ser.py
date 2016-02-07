@@ -1,40 +1,28 @@
 from rest_framework import serializers
-from common.models import NamePeriod
+from common.models import NamePeriod, HumanName
 
-class NamePeriodSerializer(serializers.Serializer):
+class HumanNameSerializer(serializers.HyperlinkedModelSerializer):
     """
-    Serializador de NamePeriod
+    Serializa un HumanName
     """
     id = serializers.ReadOnlyField()
-    start = serializers.DateTimeField()
-    end = serializers.DateTimeField()
 
-    def create(self, validated_data):
-        """
-        Create an NamePeriod
-        :param validated_data:
-        :return:
-        """
-        return NamePeriod.objects.create(**validated_data)
+    period = serializers.HyperlinkedRelatedField(
+        view_name="common:NamePeriod-detail",
+        queryset=NamePeriod.objects
+    )
 
     def update(self, instance, validated_data):
-        instance.start = validated_data.get('start', instance.start)
-        instance.end = validated_data.get('end', instance.end)
+        instance.use = validated_data['use']
+        instance.text = validated_data['text']
+        instance.family = validated_data['family']
+        instance.given = validated_data['given']
+        instance.prefix = validated_data['prefix']
+        instance.suffix = validated_data['suffix']
+        instance.period = validated_data['period']
         instance.save()
         return instance
 
-    def update(self, instance, validated_data):
-        """
-        Modifica y devuelve una instancia de AddressLine
-        :param instance:
-        :param validated_data: Datos validos para crear AddressLine
-        :return: Instancia de AddressLine
-        """
-        instance.line = validated_data.get('line', instance.line)
-        instance.save()
-        return instance
     class Meta:
-        model = NamePeriod
-        fields = ('id', 'start', 'end')
-
-#TODO: Agregar serializer para HumanName
+        model = HumanName
+        fields = ('id', 'use', 'text', 'family', 'given', 'prefix', 'suffix', 'period')

@@ -35,11 +35,11 @@ class Address(models.Model):
     use = models.CharField(max_length=4, choices=USE_CHOICES, default=HOME)                     #Home | work | temp | old - purpose of this address
     type = models.CharField(max_length=8, choices=TYPE_CHOICES, default=BOTH)                   #postal | physical | both
     text = models.TextField()                                                                   #Text representation of the address
-    line = models.ManyToManyField("AddressLine")                                                  #Street name, number, direction & P.O. Box etc.
+    lines = models.ManyToManyField(AddressLine, related_name="lines")                           #Street name, number, direction & P.O. Box etc.
     city = models.TextField()                                                                   #Name of city, town etc.
     district = models.TextField()                                                               #District name (aka county)
     state = models.TextField()                                                                  #Sub-unit of country (abbreviations ok)
     postalCode = models.TextField()                                                             #Postal code for area
     country = models.TextField()                                                                #Country (can be ISO 3166 3 letter code)
-    period = models.ForeignKey("AddressPointPeriod")                                              #Time period when address was/is in use
+    period = models.OneToOneField(AddressPointPeriod, related_name="period", null=True, on_delete=models.CASCADE)                                              #Time period when address was/is in use
 

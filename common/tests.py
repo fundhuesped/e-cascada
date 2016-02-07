@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint
+from common.models import Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -300,7 +300,7 @@ class NamePeriodTest(APITestCase):
         cantNamePeriods = NamePeriod.objects.count()
         response = self.client.post('/common/name-period/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertGreater(AddressPointPeriod.objects.count(),cantNamePeriods)
+        self.assertGreater(NamePeriod.objects.count(),cantNamePeriods)
 
     def test_getNamePeriods(self):
         """
@@ -346,6 +346,84 @@ class NamePeriodTest(APITestCase):
         cant = NamePeriod.objects.count()
         self.assertEqual(cant,0)
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class HumanNameTest(APITestCase):
+    def createHumanName(self):
+        period = NamePeriod.objects.create(
+            start = datetime.now(),
+            end = datetime.now()
+        )
+        name = HumanName.objects.create(
+            use = 'official',
+            text = 'Roberto Gomez',
+            family = 'Gomez',
+            given = 'Roberto',
+            prefix = 'Mr',
+            suffix = None,
+            period = period
+        )
+
+    def test_createHumanName(self):
+        """
+        Prueba la creación de un HumanName
+        :return:
+        """
+
+        period = NamePeriod.objects.create(
+            start = datetime.now(),
+            end = datetime.now()
+        )
+        data = {'use':'usual', 'text':'Roberto Gomez', 'family':'Gomez', 'given':'Roberto','prefix':'Mr', 'suffix':'jr', 'period':'http://localhost:8000/common/name-period/1/'}
+        response = self.client.post('/common/human-name/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getHumanNames(self):
+        """
+        Prueba obtener todos los HummanName
+        :return:
+        """
+        self.createHumanName()
+        response = self.client.get('/common/human-name/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getHumanName(self):
+        """
+        Prueba ontener un HumanName
+        :return:
+        """
+        self.createHumanName()
+        response = self.client.get('/common/human-name/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredHumanName(self):
+        """
+        Prueba obtener un HumanName con filtros
+        :return:
+        """
+        self.createHumanName()
+        response = self.client.get('/common/human-name/?family=Gomez', format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_updateHumanName(self):
+        """
+        Prueba modificar un HumanName
+        :return:
+        """
+        self.createHumanName()
+        data={'use':'official', 'text':'Roberto Juan', 'family':'Gomez', 'given':'Juan','prefix':'Mr', 'suffix':'jr', 'period':'http://localhost:8000/common/name-period/1/'}
+        response = self.client.put('/common/human-name/1/', data, format='json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.json()['given'],'Juan')
+
+    def test_deleteHumanName(self):
+        """
+        Prueba eliminar un HumanName
+        :return:
+        """
+        self.createHumanName()
+        response = self.client.delete('/common/human-name/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(0,HumanName.objects.count())
 
 class AddressLineTest(APITestCase):
     def crearAddressLine(self):
@@ -419,12 +497,12 @@ class ContactPointLineTest(APITestCase):
         """
         #url = reverse('coding-list')
 
-        contactPointPeriod = ContactPointPeriod(
+        contactPointPeriod = ContactPointPeriod.objects.create(
             start= datetime.now(),
             end=datetime.now()
         )
-        contactPointPeriod.save()
-        data = {'system':'Email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':'http://localhost:8000/common/contact-point-period/1/'}
+
+        data = {'system':'email', 'value':'sa@prueba.com', 'use':'home', 'rank':'1', 'period':'http://localhost:8000/common/contact-point-period/1/'}
         cantContactPoint = ContactPoint.objects.count()
         response = self.client.post('/common/contact-point/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -460,3 +538,101 @@ class ContactPointLineTest(APITestCase):
         cant = ContactPoint.objects.count()
         self.assertEqual(cant,0)
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
+
+class AddressTest(APITestCase):
+
+    def createAddress(self):
+        addressPointPeriod = AddressPointPeriod.objects.create(
+            start= datetime.now(),
+            end=datetime.now()
+        )
+
+        addressLine = AddressLine.objects.create(
+            line='Libertad 5899'
+        )
+        address = Address.objects.create(
+            use = 'home',
+            type= 'postal',
+            text='prueba',
+            city='villa Libertad',
+            district='san Martin',
+            state='Buenos Aires',
+            postalCode='1650',
+            country='Argentina'
+        )
+        address.period=addressPointPeriod
+        address.lines.add(addressLine)
+        address.save()
+        return address
+
+    def test_createAddress(self):
+        """
+        Asegura crear un Address
+        :return:
+        """
+
+        addressPointPeriod = AddressPointPeriod.objects.create(
+            start= datetime.now(),
+            end=datetime.now()
+        )
+
+        addressLine = AddressLine.objects.create(
+            line='Libertad 5899'
+        )
+
+        data= {'use': 'home','type': 'postal','text': 'Prueba','lines': ['http://localhost:8000/common/address-line/1/'],'city': 'Villa Libertad','district': 'San Martin','state': 'Buenos Aires','postalCode': '1650', 'country': 'Argentina','period': 'http://localhost:8000/common/address-point-period/1/'}
+        cantAddress= Address.objects.count()
+        response = self.client.post('/common/address/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(Address.objects.count(),cantAddress)
+
+    def test_getAddresses(self):
+        """
+        Obtiene todas las Address
+        :return:
+        """
+        self.createAddress()
+        response = self.client.get('/common/address/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getAddress(self):
+        """
+        Obtiene una address
+        :return:
+        """
+        self.createAddress()
+        response = self.client.get('/common/address/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredAddress(self):
+        """
+        Obtiene un address filtrado
+        :return:
+        """
+        self.createAddress()
+        response = self.client.get('/common/address/?use=home&type=postal&text=prueba',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+    def test_deleteAddress(self):
+        """
+        Elinima un address
+        :return:
+        """
+        self.createAddress()
+        response = self.client.delete('/common/address/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Address.objects.count(),0)
+
+    def test_updateAddress(self):
+        """
+        Modifica un Address
+        :return:
+        """
+        self.createAddress()
+        data= {'use': 'home','type': 'postal','text': 'Prueba','lines': ['http://localhost:8000/common/address-line/1/'],'city': 'Villa Libertad','district': 'San Martin','state': 'Buenos Aires','postalCode': '1650', 'country': 'Brazil','period': 'http://localhost:8000/common/address-point-period/1/'}
+        response = self.client.put('/common/address/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['country'],'Brazil')
+
+
