@@ -12,3 +12,4 @@ from .identifierperiod_view import *
 from .identifiertype_view import *
 from .organizationcontact_view import *
 from .organization_view import *
+from .daysofweek_view import *

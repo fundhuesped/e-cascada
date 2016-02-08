@@ -11,3 +11,4 @@ from .identifierperiod_ser import *
 from .identifiertype_ser import *
 from .organizationcontact_ser import *
 from .organization_ser import *
+from .daysofweek_ser import *

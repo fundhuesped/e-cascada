@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^organization-contact/(?P<pk>[0-9]+)/$', views.OrganizationContactDetails.as_view(),name='OrganizationContact-detail'),
     url(r'^organization/$', views.OrganizationList.as_view(),name="Organization-list"),
     url(r'^organization/(?P<pk>[0-9]+)/$', views.OrganizationDetails.as_view(),name='Organization-detail'),
+    url(r'^day-of-week/$', views.DayOfWeekList.as_view(),name="DayOfWeek-list"),
+    url(r'^day-of-week/(?P<pk>[0-9]+)/$', views.DayOfWeekDetails.as_view(),name='DayOfWeek-detail'),
 ]
