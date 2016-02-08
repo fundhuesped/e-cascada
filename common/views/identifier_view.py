@@ -1,81 +1,44 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from common.serializers import IdentifierPeriodSerializer, IdentifierTypeSerializer
-from common.models import IdentifierPeriod, IdentifierType
+from common.serializers import IdentifierSerializer
+from common.models import Identifier
 
-class IdentifierTypeList(generics.ListCreateAPIView):
+class IdentifierList(generics.ListCreateAPIView):
     """
-    Crea un nuevo IdentifierType, o lista los existentes
-    :param request: En caso de creacion, la representacion json del IdentifierType.
-    :return: En caso de GET, la representacion json de un IdentifierType.
+    Crea un nuevo Identifier, o lista los existentes
+    :param request: En caso de creacion, la representacion json del Identifier.
+    :return: En caso de GET, la representacion json de un Identifier.
     """
-    serializer_class = IdentifierTypeSerializer
-    queryset = IdentifierType.objects.all()
+    serializer_class = IdentifierSerializer
+    queryset = Identifier.objects.all()
     permission_classes = (AllowAny,)
-    paginate_by = 100
+    paginate_by = 20
 
     def get_queryset(self):
         """
-        Filtrado opcional del query, en base a un coding dado
+        Filtrado opcional del query, en base a un system o type dado
         """
-        queryset = IdentifierType.objects.all()
-        coding = self.request.query_params.get('coding')
+        queryset = Identifier.objects.all()
+        system = self.request.query_params.get('system')
+        type = self.request.query_params.get('type')
 
-        if coding is not None:
-            queryset = queryset.filter(coding=coding)
+        if system is not None:
+            queryset = queryset.filter(system=system)
+        if type is not None:
+            queryset = queryset.filter(type=type)
         return queryset
 
-class IdentifierTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+class IdentifierDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Devuelve, modifica o elimina una instancia de IdentifierType
-    :param request: En el caso de GET o DELETE, el pk del IdentifierType como parte de la URL. En el caso de PUT, ademas, un objeto json representando el IdentifierType
-    :param pk: El primary key del IdentifierType
-    :return: En el caso de GET y PUT, una representacion de IdentifierType
+    Devuelve, modifica o elimina una instancia de Identifier
+    :param request: En el caso de GET o DELETE, el pk del Identifier como parte de la URL. En el caso de PUT, ademas, un objeto json representando el Identifier
+    :param pk: El primary key del Identifier
+    :return: En el caso de GET y PUT, una representacion de Identifier
     """
-    serializer_class = IdentifierTypeSerializer
-    queryset = IdentifierType.objects.all()
+    serializer_class = IdentifierSerializer
+    queryset = Identifier.objects.all()
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
         return generics.RetrieveUpdateDestroyAPIView.get(self, request, *args, **kwargs)
-
-class IdentifierPeriodList(generics.ListCreateAPIView):
-    """
-    Crea un nuevo IdentifierPeriod, o lista los existentes
-    :param request: En caso de creacion, la representacion json del IdentifierPeriod.
-    :return: En caso de GET, la representacion json de un IdentifierPeriod.
-    """
-    serializer_class = IdentifierPeriodSerializer
-    queryset = IdentifierPeriod.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 100
-
-    def get_queryset(self):
-        """
-        Filtrado opcional del query, en base a un coding dado
-        """
-        queryset = IdentifierPeriod.objects.all()
-        start = self.request.query_params.get('start')
-        end = self.request.query_params.get('end')
-
-        if start is not None:
-            queryset = queryset.filter(start=start)
-        if end is not None:
-            queryset = queryset.filter(end=end)
-        return queryset
-
-class IdentifierPeriodDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Devuelve, modifica o elimina una instancia de IdentifierPeriod
-    :param request: En el caso de GET o DELETE, el pk del IdentifierType como parte de la URL. En el caso de PUT, ademas, un objeto json representando el IdentifierPeriod
-    :param pk: El primary key del IdentifierPeriod
-    :return: En el caso de GET y PUT, una representacion de IdentifierPeriod
-    """
-    serializer_class = IdentifierPeriodSerializer
-    queryset = IdentifierPeriod.objects.all()
-    permission_classes = (AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        return generics.RetrieveUpdateDestroyAPIView.get(self, request, *args, **kwargs)
-
 

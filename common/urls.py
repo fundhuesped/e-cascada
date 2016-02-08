@@ -5,6 +5,8 @@ app_name = "common"
 urlpatterns = [
     url(r'^coding/$', views.CodingList.as_view(), name='coding-list'),
     url(r'^coding/(?P<pk>[0-9]+)/$', views.CodingDetail.as_view(),name='coding-detail'),
+    url(r'^identifier/$', views.IdentifierList.as_view(), name='Identifier-list'),
+    url(r'^identifier/(?P<pk>[0-9]+)/$', views.IdentifierDetail.as_view(),name='Identifier-detail'),
     url(r'^identifier-type/$', views.IdentifierTypeList.as_view(), name='IdentifierType-list'),
     url(r'^identifier-type/(?P<pk>[0-9]+)/$', views.IdentifierTypeDetail.as_view(),name='IdentifierType-detail'),
     url(r'^identifier-period/$', views.IdentifierPeriodList.as_view(), name='IdentifierPeriod-list'),
@@ -25,4 +27,6 @@ urlpatterns = [
     url(r'^human-name/(?P<pk>[0-9]+)/$', views.HumanNameDetails.as_view(),name='HumanName-detail'),
     url(r'^organization-contact/$', views.OrganizationContactList.as_view(),name="OrganizationContact-list"),
     url(r'^organization-contact/(?P<pk>[0-9]+)/$', views.OrganizationContactDetails.as_view(),name='OrganizationContact-detail'),
+    url(r'^organization/$', views.OrganizationList.as_view(),name="Organization-list"),
+    url(r'^organization/(?P<pk>[0-9]+)/$', views.OrganizationDetails.as_view(),name='Organization-detail'),
 ]

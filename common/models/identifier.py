@@ -24,5 +24,5 @@ class Identifier(models.Model):
     type = models.ForeignKey("IdentifierType", null=True, on_delete=models.SET_NULL)                     #Description of identifier
     system = models.URLField()                                                              #The namespace for the identifier
     value = models.TextField(unique=True)                                                   #The value that is unique
-    period = models.OneToOneField("IdentifierPeriod", null=True, on_delete=models.SET_NULL)
-    assigner = models.ForeignKey("Organization", related_name="assign_for")
+    period = models.OneToOneField("IdentifierPeriod", null=True, on_delete=models.SET_NULL) #Periodo de validez del Identifier
+    assigner = models.TextField(null=True)                                                  #Organización que generó el ID (según HL7 puede ser solo texto para evitar dependencia cruzada)

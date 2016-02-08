@@ -1,58 +1,5 @@
 from rest_framework import serializers
-from common.models import IdentifierPeriod, IdentifierType
-
-class IdentifierTypeSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializador de un IdentifierType
-    """
-    id = serializers.IntegerField(read_only=True)
-    coding = serializers.CharField(max_length=4)
-    text = serializers.CharField()
-
-    def create(self, validated_data):
-        """
-        Create the IdentifierType
-        :param validated_data:
-        :return:
-        """
-        return IdentifierType.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.coding = validated_data.get('coding', instance.coding)
-        instance.text = validated_data.get('text', instance.text)
-        instance.save()
-        return instance
-
-    class Meta:
-        model = IdentifierType
-        fields = ('id', 'coding', 'text')
-
-class IdentifierPeriodSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializador de IdentifierPeriod
-    """
-    id = serializers.ReadOnlyField()
-    start = serializers.DateTimeField()
-    end = serializers.DateTimeField()
-
-    def create(self, validated_data):
-        """
-        Create an IdentifierPeriod
-        :param validated_data:
-        :return:
-        """
-        return IdentifierPeriod.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.start = validated_data.get('start', instance.start)
-        instance.end = validated_data.get('end', instance.end)
-        instance.save()
-        return instance
-
-    class Meta:
-        model = IdentifierPeriod
-        fields = ('id', 'start', 'end')
-
+from common.models import IdentifierPeriod, IdentifierType, Identifier
 
 class IdentifierSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -60,3 +7,40 @@ class IdentifierSerializer(serializers.HyperlinkedModelSerializer):
     """
 
     id = serializers.ReadOnlyField()
+    type = serializers.HyperlinkedRelatedField(
+        view_name="common:IdentifierType-detail",
+        queryset=IdentifierType.objects
+    )
+    period = serializers.HyperlinkedRelatedField(
+        view_name="common:IdentifierPeriod-detail",
+        queryset=IdentifierPeriod.objects
+    )
+
+    def create(self, validated_data):
+        """
+        Crea un Identifier
+        :param validated_data:
+        :return:
+        """
+        return Identifier(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Modifica un identifier
+        :param instance:
+        :param validated_data:
+        :return:
+        """
+        instance.use = validated_data['use']
+        instance.type = validated_data['type']
+        instance.system = validated_data['system']
+        instance.value = validated_data['value']
+        instance.period = validated_data['period']
+        instance.assigner = validated_data['assigner']
+        instance.save()
+        return instance
+
+
+    class Meta:
+        model = Identifier
+        fields = ('id', 'use', 'type', 'system', 'value', 'period', 'assigner')

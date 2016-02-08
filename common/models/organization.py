@@ -32,11 +32,11 @@ class Organization(models.Model):
         (OTHER,'Other')
     )
 
-    identifier = models.ForeignKey("Identifier", on_delete=models.CASCADE)                           #Identifies this organization across multiple systems
+    identifier = models.ForeignKey("Identifier", on_delete=models.CASCADE, null=True)                           #Identifies this organization across multiple systems
     active = models.BooleanField()                                                          #Whether the organization's record is still in active use
     type = models.CharField(max_length=5, choices=TYPE_CHOICES, default=DEPARTMENT)         #Kind of organization
     name = models.TextField()                                                               #Name used for the organization
     telecom = models.ManyToManyField("ContactPoint")                                          #A contact detail for the organization The telecom of an organization can never be of use 'home'
     address = models.ManyToManyField("Address")                                               #An address for the organization. An address of an organization can never be of use 'home'
-    partOf = models.ForeignKey('self')                                                      #The organization of which this organization forms a part
+    partOf = models.ForeignKey('self', null=True)                                                      #The organization of which this organization forms a part
     contact = models.ManyToManyField("OrganizationContact")                                   #Contact for the organization for a certain purpose

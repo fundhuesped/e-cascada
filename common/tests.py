@@ -768,3 +768,5 @@ class OrganizationContactTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['purpose'],'adm')
         self.assertEqual(response.json()['name'],'http://testserver/common/human-name/2/')
+
+#TODO: Agregar test de organización
