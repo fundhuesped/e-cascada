@@ -661,7 +661,7 @@ class IdentifierTest(APITestCase):
         """
         helper = CommonTestHelper()
         helper.createIdentifier()
-        response = self.client.get('/common/organization-contact/?use=US',format='json')
+        response = self.client.get('/common/identifier/?use=US',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.json())
 

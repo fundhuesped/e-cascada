@@ -1,25 +1,12 @@
 from django.db import models
-from common.models import Organization, Identifier, ContactPoint,DayOfWeek, Coding
-
-#Clase ServiceCategory
-#Son las diferentes categorías a las que puede pertenecer un servicio
-class ServiceCategory(models.Model):
-    coding = models.ForeignKey(Coding)
-    text = models.TextField()
-
-
-#Según FHIR = "Times the Service Site is available"
-class AvailableTime(models.Model):
-    daysOfWeek = models.ManyToManyField(DayOfWeek)                                  #mon | tue | wed | thu | fri | sat | sun
-    allDay = models.BooleanField()                                                  #Always available? e.g. 24 hour service
-    availableStartTime = models.TimeField()                                         #Opening time of day (ignored if allDay = true)
-    availableEndTime=models.TimeField()                                             #Closing time of day (ignored if allDay = true)
-
+from common.models import Organization, Identifier, ContactPoint
+from .availabletime import AvailableTime
+from .servicecategory import ServiceCategory
 
 # Clase HealtcareService
-# Define las prácticas que una entidad de salud puede brindar
-# Según FHIR: "The HealthcareService resource is used to describe a single healthcare service or category of services that are provided by an organization at a location. The location of the services could be virtual, as with TeleMedicine Services."
-# Clase siguiendo las definiciones de FHIR. Mas información en : https://www.hl7.org/fhir/healthcareservice.html
+# Define las prï¿½cticas que una entidad de salud puede brindar
+# Segï¿½n FHIR: "The HealthcareService resource is used to describe a single healthcare service or category of services that are provided by an organization at a location. The location of the services could be virtual, as with TeleMedicine Services."
+# Clase siguiendo las definiciones de FHIR. Mas informaciï¿½n en : https://www.hl7.org/fhir/healthcareservice.html
 class HealthcareService(models.Model):
     identifier = models.ForeignKey(Identifier, on_delete=models.CASCADE)            #External identifiers for this item
     providedBy = models.ForeignKey(Organization, on_delete=models.CASCADE)          #Organization that provides this service
