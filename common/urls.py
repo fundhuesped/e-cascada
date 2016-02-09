@@ -3,8 +3,8 @@ from common import views
 
 app_name = "common"
 urlpatterns = [
-    url(r'^coding/$', views.CodingList.as_view(), name='coding-list'),
-    url(r'^coding/(?P<pk>[0-9]+)/$', views.CodingDetail.as_view(),name='coding-detail'),
+    url(r'^coding/$', views.CodingList.as_view(), name='Coding-list'),
+    url(r'^coding/(?P<pk>[0-9]+)/$', views.CodingDetail.as_view(),name='Coding-detail'),
     url(r'^identifier/$', views.IdentifierList.as_view(), name='Identifier-list'),
     url(r'^identifier/(?P<pk>[0-9]+)/$', views.IdentifierDetail.as_view(),name='Identifier-detail'),
     url(r'^identifier-type/$', views.IdentifierTypeList.as_view(), name='IdentifierType-list'),
