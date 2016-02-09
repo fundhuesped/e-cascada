@@ -1,8 +1,8 @@
-import json
+import json, string, random
 from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import DayOfWeek, Coding, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact, Identifier
+from common.models import DayOfWeek, Coding, Organization, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact, Identifier
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -778,7 +778,7 @@ class CommonTestHelper():
             use = "US",
             type = identifierType,
             system = "http://www.ingenia.la",
-            value = "12345",
+            value = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)),
             period = identifierPeriod,
             assigner = "Test"
         )
@@ -820,18 +820,43 @@ class CommonTestHelper():
             period = contactPointPeriod
         )
         contactPoint.save()
+        return contactPoint
 
     def createOrganizationContact(self):
         address = self.createAddress()
         contactPoint = self.createContactPoint()
         name = self.createHumanName()
 
-        return OrganizationContact.objects.create(
+        contact= OrganizationContact.objects.create(
             purpose = 'bill',
             name = name,
             telecom = contactPoint,
             address = address
         )
+        return contact
+
+    def createOrganization(self):
+        helper = CommonTestHelper()
+        identifier = helper.createIdentifier()
+        active = True
+        type = 'DEPT'
+        name = 'Prueba'
+        telecom = helper.createContactPoint()
+        address = helper.createAddress()
+        partOf = None
+        contact = helper.createOrganizationContact()
+        org = Organization(
+            identifier = identifier,
+            active = active,
+            type = type,
+            name = name,
+            partOf = partOf
+        )
+        org.save()
+        org.telecom = [telecom]
+        org.address = [address]
+        org.contact = [contact]
+        return org
 
     def createAddresPointPeriod(self):
         addressPointPeriod = AddressPointPeriod.objects.create(

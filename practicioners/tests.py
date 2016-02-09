@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from practicioners.models import AvailableTime, Characteristic, Eligibility, ReferralMethod, ServiceCategory, ServiceProvisioningCode, Speciality, TypeService
+from practicioners.models import AvailableTime, Characteristic, Eligibility, HealthcareService, ReferralMethod, ServiceCategory, ServiceProvisioningCode, ServiceType, Speciality, TypeService, NotAvailable, NotAvailablePeriod
 from common.tests import CommonTestHelper
 from datetime import datetime
 from rest_framework import status
@@ -187,6 +187,237 @@ class EligibilityTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['text'],'Prueba 2')
 
+class HealthCareServiceTest(APITestCase):
+    def test_createHealthCareService(self):
+        """
+        Asegura crear un HealthCareService(
+        :return:
+        """
+        commonHelper = CommonTestHelper()
+        practHelper = PracticionerTestHelper()
+        commonHelper.createIdentifier()
+        commonHelper.createOrganization()
+        practHelper.createServiceCategory()
+        practHelper.createServiceType()
+        commonHelper.createContactPoint()
+        practHelper.createServiceProvisioningCode()
+        practHelper.createCharacteristic()
+        practHelper.createEligibility()
+        practHelper.createReferralMethod()
+        practHelper.createAvailableTime()
+        practHelper.createNotAvailable()
+
+
+        data= {
+            'identifier': ['http://localhost:8000/common/identifier/1/'],
+            'providedBy': 'http://localhost:8000/common/organization/1/',
+            'serviceCategory': 'http://localhost:8000/practicioners/service-category/1/',
+            'serviceType': ['http://localhost:8000/practicioners/service-type/1/'],
+            'location':'Prueba',
+            'serviceName':'Prueba',
+            'comment':'Comentario',
+            'extraDetails':'Detalles',
+            'photo':'http://www.twitter.com/zentel',
+            'telecom':['http://localhost:8000/common/contact-point/1/'],
+            'coverageArea':'Location PRueba',
+            'serviceProvisioningCode': ['http://localhost:8000/practicioners/service-provisioning-code/1/'],
+            'eligibility':'http://localhost:8000/practicioners/eligibility/1/',
+            'eligibilityNote':'Nota',
+            'programName':'Nombre',
+            'characteristic':['http://localhost:8000/practicioners/characteristic/1/'],
+            'referralMethod':['http://localhost:8000/practicioners/referral-method/1/'],
+            'publicKey':'Clave',
+            'appointmentRequired':True,
+            'availableTime':['http://localhost:8000/practicioners/available-time/1/'],
+            'notAvailable':['http://localhost:8000/practicioners/not-available/1/'],
+            'availabilityExceptions':'Nada'
+        }
+        response = self.client.post('/practicioners/healthcare-service/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getHealthCareServices(self):
+        """
+        Obtiene todas las ServiceType(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createHealthCareService()
+        response = self.client.get('/practicioners/healthcare-service/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getHealthCareService(self):
+        """
+        Obtiene una ServiceType(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createHealthCareService()
+        response = self.client.get('/practicioners/healthcare-service/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteHealthCareService(self):
+        """
+        Elinima un ServiceType
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createHealthCareService()
+        response = self.client.delete('/practicioners/healthcare-service/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(HealthcareService.objects.count(),0)
+
+    def test_updateHealthCareService(self):
+        """
+        Modifica un ServiceType
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createHealthCareService()
+        chelper = CommonTestHelper()
+        chelper.createIdentifier()
+
+        data= {
+            'identifier': ['http://localhost:8000/common/identifier/1/', 'http://localhost:8000/common/identifier/2/'],
+            'providedBy': 'http://localhost:8000/common/organization/1/',
+            'serviceCategory': 'http://localhost:8000/practicioners/service-category/1/',
+            'serviceType': ['http://localhost:8000/practicioners/service-type/1/'],
+            'location':'Prueba 2',
+            'serviceName':'Prueba',
+            'comment':'Comentario',
+            'extraDetails':'Detalles',
+            'photo':'http://www.twitter.com/zentel',
+            'telecom':['http://localhost:8000/common/contact-point/1/'],
+            'coverageArea':'Location PRueba',
+            'serviceProvisioningCode': ['http://localhost:8000/practicioners/service-provisioning-code/1/'],
+            'eligibility':'http://localhost:8000/practicioners/eligibility/1/',
+            'eligibilityNote':'Nota',
+            'programName':'Nombre',
+            'characteristic':['http://localhost:8000/practicioners/characteristic/1/'],
+            'referralMethod':['http://localhost:8000/practicioners/referral-method/1/'],
+            'publicKey':'Clave',
+            'appointmentRequired':True,
+            'availableTime':['http://localhost:8000/practicioners/available-time/1/'],
+            'notAvailable':['http://localhost:8000/practicioners/not-available/1/'],
+            'availabilityExceptions':'Nada'
+        }
+        response = self.client.put('/practicioners/healthcare-service/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['identifier'][1],'http://testserver/common/identifier/2/')
+        self.assertEqual(response.json()['location'],'Prueba 2')
+
+class NotAvailableTest(APITestCase):
+    def test_createNotAvailable(self):
+        """
+        Asegura crear un NotAvailable(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailablePeriod()
+        data= {'description': 'Not Available','during': 'http://localhost:8000/practicioners/not-available-period/1/'}
+        response = self.client.post('/practicioners/not-available/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getNotAvailables(self):
+        """
+        Obtiene todas las NotAvailable(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailable()
+        response = self.client.get('/practicioners/not-available/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getNotAvailable(self):
+        """
+        Obtiene una NotAvailable(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailable()
+        response = self.client.get('/practicioners/not-available/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteNotAvailable(self):
+        """
+        Elinima un NotAvailable
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailable()
+        response = self.client.delete('/practicioners/not-available/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(NotAvailable.objects.count(),0)
+
+    def test_updateNotAvailable(self):
+        """
+        Modifica un NotAvailable
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailable()
+        helper.createNotAvailablePeriod()
+        data= {'description': 'Not Available 2','during': 'http://localhost:8000/practicioners/not-available-period/2/'}
+        response = self.client.put('/practicioners/not-available/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['description'],'Not Available 2')
+        self.assertEqual(response.json()['during'],'http://testserver/practicioners/not-available-period/2/')
+
+class NotAvailablePeriodTest(APITestCase):
+    def test_createNotAvailablePeriod(self):
+        """
+        Asegura crear un NotAvailablePeriod(
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createCoding()
+
+        data= {'start': '2016-05-01T10:00:00','end': '2017-03-05T11:00:00'}
+        response = self.client.post('/practicioners/not-available-period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getNotAvailablePeriods(self):
+        """
+        Obtiene todas las Eligibility(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailablePeriod()
+        response = self.client.get('/practicioners/not-available-period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getNotAvailablePeriod(self):
+        """
+        Obtiene una NotAvailablePeriod(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailablePeriod()
+        response = self.client.get('/practicioners/not-available-period/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteNotAvailablePeriod(self):
+        """
+        Elinima un NotAvailablePeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailablePeriod()
+        response = self.client.delete('/practicioners/not-available-period/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(NotAvailablePeriod.objects.count(),0)
+
+    def test_updateNotAvailablePeriod(self):
+        """
+        Modifica un NotAvailablePeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createNotAvailablePeriod()
+        data= {'start': '2016-05-02T10:00:00','end': '2017-03-05T11:00:00'}
+        response = self.client.put('/practicioners/not-available-period/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['start'],'2016-05-02T10:00:00')
+
 class ReferralMethodTest(APITestCase):
     def test_createReferralMethod(self):
         """
@@ -355,6 +586,64 @@ class ServiceProvisioningCodeTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['text'],'Prueba 2')
 
+class ServiceTypeTest(APITestCase):
+    def test_createServiceType(self):
+        """
+        Asegura crear un ServiceType(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createTypeService()
+        helper.createSpeciality()
+
+        data= {'type': 'http://localhost:8000/practicioners/type-service/1/','speciality': 'http://localhost:8000/practicioners/speciality/1/'}
+        response = self.client.post('/practicioners/service-type/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getServiceTypes(self):
+        """
+        Obtiene todas las ServiceType(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createServiceType()
+        response = self.client.get('/practicioners/service-type/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getServiceType(self):
+        """
+        Obtiene una ServiceType(
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createServiceType()
+        response = self.client.get('/practicioners/service-type/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteServiceType(self):
+        """
+        Elinima un ServiceType
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createServiceType()
+        response = self.client.delete('/practicioners/service-type/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(ServiceType.objects.count(),0)
+
+    def test_updateServiceType(self):
+        """
+        Modifica un ServiceType
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createServiceType()
+        helper.createTypeService()
+        data= {'type': 'http://localhost:8000/practicioners/type-service/2/','speciality': 'http://localhost:8000/practicioners/speciality/1/'}
+        response = self.client.put('/practicioners/service-type/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['type'],'http://testserver/practicioners/type-service/2/')
+
 class SpecialityTest(APITestCase):
     def test_createSpeciality(self):
         """
@@ -425,7 +714,7 @@ class PracticionerTestHelper:
         atime.daysOfWeek.add(dayOfWeek)
         atime.save()
 
-        return dayOfWeek
+        return atime
 
     def createCharacteristic(self):
         commonHelper = CommonTestHelper()
@@ -444,6 +733,73 @@ class PracticionerTestHelper:
             text = "Eligibility"
         )
         return eligibility
+
+    def createHealthCareService(self):
+        commonHelper = CommonTestHelper()
+        practHelper = PracticionerTestHelper()
+        identifier = commonHelper.createIdentifier()
+        providedBy = commonHelper.createOrganization()
+        serviceCategory = practHelper.createServiceCategory()
+        serviceType = practHelper.createServiceType()
+        location = 'Location a cambiar'
+        serviceName = 'Servicio de prueba'
+        comment = None
+        extraDetails = None
+        photo = None
+        telecom = commonHelper.createContactPoint()
+        coverageArea = 'Location a cambiar'
+        serviceProvisioningCode = practHelper.createServiceProvisioningCode()
+        eligibility = practHelper.createEligibility()
+        eligibilityNote = None
+        programName = None
+        characteristic = practHelper.createCharacteristic()
+        referralMethod = practHelper.createReferralMethod()
+        publicKey = None
+        appointmentRequired = True
+        availableTime = practHelper.createAvailableTime()
+        notAvailable = practHelper.createNotAvailable()
+        availabilityExceptions = None
+
+        hcs = HealthcareService.objects.create(
+            providedBy = providedBy,
+            serviceCategory = serviceCategory,
+            location = location,
+            serviceName = serviceName,
+            comment = comment,
+            extraDetails = extraDetails,
+            photo = photo,
+            coverageArea = coverageArea,
+            eligibility = eligibility,
+            eligibilityNote = eligibilityNote,
+            programName = programName,
+            publicKey = publicKey,
+            appointmentRequired = appointmentRequired,
+            availabilityExceptions = availabilityExceptions
+        )
+        hcs.identifier.add(identifier)
+        hcs.serviceType.add(serviceType)
+        hcs.telecom.add(telecom)
+        hcs.serviceProvisioningCode.add(serviceProvisioningCode)
+        hcs.characteristic.add(characteristic)
+        hcs.referralMethod.add(referralMethod)
+        hcs.availableTime.add(availableTime)
+        hcs.notAvailable.add(notAvailable)
+        return hcs
+
+    def createNotAvailable(self):
+        nap = self.createNotAvailablePeriod()
+        na = NotAvailable.objects.create(
+            description = 'Not Available',
+            during = nap
+        )
+        return na
+
+    def createNotAvailablePeriod(self):
+        nap = NotAvailablePeriod.objects.create(
+            start = datetime.now(),
+            end = datetime.now()
+        )
+        return nap
 
     def createReferralMethod(self):
         commonHelper = CommonTestHelper()
@@ -471,6 +827,16 @@ class PracticionerTestHelper:
             text = "ServiceProvisioningCode"
         )
         return sprovcode
+
+    def createServiceType(self):
+        helper = PracticionerTestHelper()
+        type = helper.createTypeService()
+        spec = helper.createSpeciality()
+        stype = ServiceType.objects.create(
+            type = type,
+            speciality = spec
+        )
+        return stype
 
     def createSpeciality(self):
         commonHelper = CommonTestHelper()
