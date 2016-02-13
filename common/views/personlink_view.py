@@ -5,7 +5,7 @@ from common.models import PersonLink
 
 class PersonLinkList(generics.ListCreateAPIView):
     """
-    Vista para listar PersonLin existentes, o crear un nuevo PersonLin
+    Vista para listar PersonLinks existentes, o crear un nuevo PersonLin
     """
     serializer_class = PersonLinkSerializer
     queryset = PersonLink.objects.all()

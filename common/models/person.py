@@ -3,7 +3,7 @@ from common.models import Identifier, HumanName, ContactPoint, Address, Organiza
 
 class Person(models.Model):
     """
-    Implementada siguiendo la definición de https://www.hl7.org/fhir/person.py.html
+    Implementada siguiendo la definicion de https://www.hl7.org/fhir/person.py.html
     """
 
     #Constantes para género (https://www.hl7.org/fhir/valueset-administrative-gender.html)

@@ -5,7 +5,7 @@ from common.models import Person
 
 class PersonList(generics.ListCreateAPIView):
     """
-    Vista para listar Address existentes, o crear un nuevo Address
+    Vista para listado de Person existentes, o crear un nuevo Address
     """
     serializer_class = PersonSerializer
     queryset = Person.objects.all()

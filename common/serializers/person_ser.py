@@ -3,7 +3,7 @@ from common.models import Person, Identifier, HumanName, ContactPoint, Address, 
 
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     """
-    Serializa un person
+    Serializa una person
     """
     id = serializers.ReadOnlyField()
 

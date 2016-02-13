@@ -2,7 +2,7 @@ from django.db import models
 
 class PersonLink(models.Model):
     """
-    Segun HL7: Link to a resource that concerns the same actual person.py
+    Segun HL7: Link to a resource that concerns the same actual person
     """
 
     #Constantes para assurance

@@ -3,7 +3,7 @@ from common.models import PersonLink
 
 class PersonLinkSerializer(serializers.HyperlinkedModelSerializer):
     """
-    Serializer de un PersonLink
+    Serializer de PersonLink
     """
     id = serializers.ReadOnlyField()
 
