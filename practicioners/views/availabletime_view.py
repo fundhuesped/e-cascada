@@ -15,7 +15,7 @@ class AvailableTimeList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         """
-        Búsqueda opcional de AvailableTime, en base a allDay
+        Bsqueda opcional de AvailableTime, en base a allDay
         :return:
         """
         queryset = AvailableTime.objects.all()

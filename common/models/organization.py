@@ -1,10 +1,10 @@
 from django.db import models
 
 #Clase Organization
-#Seg�n FHIR: "A formally or informally recognized grouping of people or organizations formed for the purpose of achieving some form of collective action. Includes companies, institutions, corporations, departments, community groups, healthcare practice groups, etc."
-#Mas informaci�n: https://www.hl7.org/fhir/organization.html
+#Segn FHIR: "A formally or informally recognized grouping of people or organizations formed for the purpose of achieving some form of collective action. Includes companies, institutions, corporations, departments, community groups, healthcare practice groups, etc."
+#Mas informacin: https://www.hl7.org/fhir/organization.html
 class Organization(models.Model):
-    #Constantes para tipo de organizaci�n (https://www.hl7.org/fhir/valueset-organization-type.html)
+    #Constantes para tipo de organizacin (https://www.hl7.org/fhir/valueset-organization-type.html)
     PROVIDER = 'PROV'
     DEPARTMENT = 'DEPT'
     ORG_TEAM = 'TEAM'
@@ -17,7 +17,7 @@ class Organization(models.Model):
     BUSS_OR_CORP = 'BUS'
     OTHER = 'OTHER'
 
-    #Opciones de tipo de organizaci�n
+    #Opciones de tipo de organizacin
     TYPE_CHOICES = (
         (PROVIDER, 'Healthcare Provider'),
         (DEPARTMENT, 'Hospital Department'),

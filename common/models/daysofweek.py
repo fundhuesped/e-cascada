@@ -21,4 +21,4 @@ class DayOfWeek(models.Model):
         (SAT, 'Saturday'),
         (SUN, 'Sunday')
     )
-    value = models.CharField(max_length=3, choices=DOW_CHOICES, default=MON)                 #Valor del d�a de la semana
+    value = models.CharField(max_length=3, choices=DOW_CHOICES, default=MON)                 #Valor del da de la semana

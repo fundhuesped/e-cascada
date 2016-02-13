@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from common.serializers import AddressLineSerializer, AddressPointPeriodSerializer, AddressSerializer
 from common.models import AddressLine, AddressPointPeriod, Address
-from _datetime import datetime
+from datetime import datetime
 
 class AddressList(generics.ListCreateAPIView):
     """
@@ -15,7 +15,7 @@ class AddressList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         """
-        Búsqueda opcional de Address, en base a use, type, city, district, state, postalCode o country
+        Bsqueda opcional de Address, en base a use, type, city, district, state, postalCode o country
         :return:
         """
         queryset = Address.objects.all()

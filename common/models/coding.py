@@ -1,8 +1,8 @@
 from django.db import models
 
 #Clase Coding
-#Seg�n FHIR: "A Coding is a representation of a defined concept using a symbol from a defined "code system" - see Using Codes in resources for more details."
-#Mas informaci�n: https://www.hl7.org/fhir/datatypes.html#Coding
+#Segn FHIR: "A Coding is a representation of a defined concept using a symbol from a defined "code system" - see Using Codes in resources for more details."
+#Mas informacin: https://www.hl7.org/fhir/datatypes.html#Coding
 class Coding(models.Model):
     system = models.URLField()                                  #Identity of the terminology system
     version = models.TextField()                                #Version of the system - if relevant

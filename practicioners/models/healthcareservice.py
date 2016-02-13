@@ -10,9 +10,9 @@ from .servicetype import ServiceType
 from .notavailable import NotAvailable
 
 # Clase HealtcareService
-# Define las pr�cticas que una entidad de salud puede brindar
-# Seg�n FHIR: "The HealthcareService resource is used to describe a single healthcare service or category of services that are provided by an organization at a location. The location of the services could be virtual, as with TeleMedicine Services."
-# Clase siguiendo las definiciones de FHIR. Mas informaci�n en : https://www.hl7.org/fhir/healthcareservice.html
+# Define las prcticas que una entidad de salud puede brindar
+# Segn FHIR: "The HealthcareService resource is used to describe a single healthcare service or category of services that are provided by an organization at a location. The location of the services could be virtual, as with TeleMedicine Services."
+# Clase siguiendo las definiciones de FHIR. Mas informacin en : https://www.hl7.org/fhir/healthcareservice.html
 class HealthcareService(models.Model):
     identifier = models.ManyToManyField(Identifier)                                 #External identifiers for this item
     providedBy = models.ForeignKey(Organization, on_delete=models.CASCADE)          #Organization that provides this service
