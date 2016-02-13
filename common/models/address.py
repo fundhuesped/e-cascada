@@ -3,8 +3,8 @@ from .addresspointperiod import *
 from .addressline import *
 
 #Clase Address
-#Seg�n FHIR: "A postal address. There are a variety of postal address formats defined around the world. Postal addresses are often also used to record a location that can be visited to find a patient or person."
-#M�s informaci�n: https://www.hl7.org/fhir/datatypes.html#Address
+#Segn FHIR: "A postal address. There are a variety of postal address formats defined around the world. Postal addresses are often also used to record a location that can be visited to find a patient or person."
+#Ms informacin: https://www.hl7.org/fhir/datatypes.html#Address
 class Address(models.Model):
     #Constantes para use
     HOME = 'home'

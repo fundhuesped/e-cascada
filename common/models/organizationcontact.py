@@ -4,7 +4,7 @@ from .contactpoint import ContactPoint
 from .address import Address
 
 #Clase OrganizationContact
-#Seg�n FHIR= "Contact for the organization for a certain purpose"
+#Segn FHIR= "Contact for the organization for a certain purpose"
 class OrganizationContact(models.Model):
     #Constantes para type (https://www.hl7.org/fhir/valueset-contactentity-type.html)
     BILL = 'bill'
