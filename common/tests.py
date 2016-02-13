@@ -2,7 +2,7 @@ import json, string, random
 from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import DayOfWeek, Coding, Organization, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact, Identifier
+from common.models import DayOfWeek, Coding, Person, PersonLink, Organization, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact, Identifier
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -544,6 +544,142 @@ class AddressTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['country'],'Brazil')
 
+class PersonTest(APITestCase):
+
+    def test_createAddress(self):
+        """
+        Asegura crear un Person
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifier()
+        helper.createHumanName()
+        helper.createContactPoint()
+        helper.createAddress()
+        helper.createPersonLink()
+        helper.createOrganization()
+
+        data= {'identifier': 'http://localhost:8000/common/identifier/1/','name': 'http://localhost:8000/common/human-name/1/','telecom': ['http://localhost:8000/common/contact-point/1/'],'gender': 'male','birthDate': '2000-01-01','address': ['http://localhost:8000/common/address/1/'],'photo': 'http://www.facebook.com/','managingOrganization': 'http://localhost:8000/common/organization/1/', 'active': True,'link': ['http://localhost:8000/common/person-link/1/']}
+        cantPerson= Person.objects.count()
+        response = self.client.post('/common/person/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(Person.objects.count(),cantPerson)
+
+    def test_getPersons(self):
+        """
+        Obtiene todas las Person
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPerson()
+        response = self.client.get('/common/person/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getPerson(self):
+        """
+        Obtiene una Person
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPerson()
+        response = self.client.get('/common/person/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredPerson(self):
+        """
+        Obtiene un Person filtrado
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPerson()
+        response = self.client.get('/common/person/?first_name=Rober',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+    def test_deletePerson(self):
+        """
+        Elinima un Person
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPerson()
+        response = self.client.delete('/common/person/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Person.objects.count(),0)
+
+    def test_updatePerson(self):
+        """
+        Modifica un Person
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPerson()
+        helper.createContactPoint()
+        data= {'identifier': 'http://localhost:8000/common/identifier/1/','name': 'http://localhost:8000/common/human-name/1/','telecom': ['http://localhost:8000/common/contact-point/1/','http://localhost:8000/common/contact-point/2/'],'gender': 'male','birthDate': '2000-01-01','address': ['http://localhost:8000/common/address/1/'],'photo': 'http://www.facebook.com/','managingOrganization': 'http://localhost:8000/common/organization/1/', 'active': True,'link': ['http://localhost:8000/common/person-link/1/']}
+        response = self.client.put('/common/person/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['telecom'][1],'http://testserver/common/contact-point/2/')
+
+class PersonLinkTest(APITestCase):
+
+    def test_crearPersonLink(self):
+        """
+        Asegura crear un PersonLink
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createAddresPointPeriod()
+        helper.createAddressLine()
+
+        data= {'target': 'http://localhost:8000/common/person/1/', 'assurance':'level1'}
+        response = self.client.post('/common/person-link/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertGreater(PersonLink.objects.count(),0)
+
+    def test_getPersonLinks(self):
+        """
+        Obtiene todas las PersonLink
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPersonLink()
+        response = self.client.get('/common/person-link/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getPersonLink(self):
+        """
+        Obtiene una PersonLink
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPersonLink()
+        response = self.client.get('/common/person-link/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deletePersonLink(self):
+        """
+        Elinima un address
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPersonLink()
+        response = self.client.delete('/common/person-link/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(PersonLink.objects.count(),0)
+
+    def test_updatePersonLink(self):
+        """
+        Modifica un Address
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createPersonLink()
+        data= {'target': 'http://localhost:8000/common/person/2/', 'assurance':'level4'}
+        response = self.client.put('/common/person-link/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['target'],'http://localhost:8000/common/person/2/')
+        self.assertEqual(response.json()['assurance'],'level4')
+
 class OrganizationContactTest(APITestCase):
 
     def test_createOrganizationContact(self):
@@ -902,3 +1038,27 @@ class CommonTestHelper():
             userSelected = False
         )
         return coding
+
+    def createPersonLink(self):
+        personlink = PersonLink.objects.create(
+            target='http://localhost:8000/common/person/1/',
+            assurance = PersonLink.LEVEL2
+        )
+        return personlink
+
+    def createPerson(self):
+        helper = CommonTestHelper()
+
+        person = Person.objects.create(
+            identifier = helper.createIdentifier(),
+            name = helper.createHumanName(),
+            gender = Person.MALE,
+            birthDate = datetime.now(),
+            photo = 'http://www.facebook.com',
+            managingOrganization = helper.createOrganization(),
+            active = True
+        )
+        person.telecom.add(helper.createContactPoint())
+        person.address.add(helper.createAddress())
+        person.link.add(helper.createPersonLink())
+        return person

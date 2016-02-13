@@ -13,3 +13,5 @@ from .identifiertype_view import *
 from .organizationcontact_view import *
 from .organization_view import *
 from .daysofweek_view import *
+from .person_view import *
+from .personlink_view import *

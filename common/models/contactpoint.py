@@ -3,7 +3,7 @@ from .contactpointperiod import *
 
 __author__ = 'Santi'
 #Clase ContactPoint
-#Seg�n FHIR> Details for all kinds of technology-mediated contact points for a person or organization, including telephone, email, etc.
+#Seg�n FHIR> Details for all kinds of technology-mediated contact points for a person.py or organization, including telephone, email, etc.
 #Mas informaci�n: https://www.hl7.org/fhir/datatypes.html#ContactPoint
 class ContactPoint(models.Model):
     #Constantes para system

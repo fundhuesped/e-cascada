@@ -12,3 +12,5 @@ from .identifiertype_ser import *
 from .organizationcontact_ser import *
 from .organization_ser import *
 from .daysofweek_ser import *
+from .person_ser import *
+from .personlink_ser import *

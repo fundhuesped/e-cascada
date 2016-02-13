@@ -12,3 +12,5 @@ from .coding import *
 from .nameperiod import *
 from .humanname import *
 from .daysofweek import *
+from .personlink import *
+from .person import *
