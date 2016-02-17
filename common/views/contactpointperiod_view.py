@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from common.models import ContactPointPeriod
 from common.serializers import ContactPointPeriodSerializer
 from rest_framework import generics

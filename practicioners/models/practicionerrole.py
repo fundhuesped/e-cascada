@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from common.models import Organization, Location
 from practicioners.models import Speciality, Role, PracticionerRolePeriod, HealthcareService

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from practicioners.models import NotAvailablePeriod
 from practicioners.serializers import NotAvailablePeriodSerializer
 from rest_framework import generics

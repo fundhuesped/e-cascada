@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from django.db import models
 
 #Periodo de tiempo en el que un nombre es valido

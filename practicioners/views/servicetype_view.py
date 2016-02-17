@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from practicioners.models import ServiceType
 from practicioners.serializers import ServiceTypeSerializer
 from rest_framework import generics
