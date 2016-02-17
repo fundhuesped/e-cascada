@@ -12,3 +12,9 @@ from .speciality import *
 from .servicetype import *
 from .notavailable import *
 from .notavailableperiod import *
+from .role import *
+from .practicionerroleperiod import *
+from .practicionerrole import *
+from .practicionerqualificationperiod import *
+from .practicionerqualification import *
+from .practicioner import *

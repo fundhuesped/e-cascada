@@ -2,7 +2,7 @@ import json, string, random
 from datetime import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from common.models import DayOfWeek, Coding, Person, PersonLink, Organization, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact, Identifier
+from common.models import DayOfWeek, Coding, Person, PersonLink, Organization, IdentifierType, IdentifierPeriod, ContactPointPeriod, AddressPointPeriod, NamePeriod, AddressLine, ContactPoint, Address, HumanName, OrganizationContact, Identifier, Location
 
 class CodingTest(APITestCase):
     def test_createCoding(self):
@@ -620,65 +620,94 @@ class PersonTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['telecom'][1],'http://testserver/common/contact-point/2/')
 
-class PersonLinkTest(APITestCase):
+class LocationTest(APITestCase):
 
-    def test_crearPersonLink(self):
+    def test_crearLocation(self):
         """
-        Asegura crear un PersonLink
+        Asegura crear un Location
         :return:
         """
         helper = CommonTestHelper()
-        helper.createAddresPointPeriod()
-        helper.createAddressLine()
+        helper.createIdentifier()
+        helper.createAddress()
+        helper.createContactPoint()
+        helper.createOrganization()
+        helper.createLocation()
 
-        data= {'target': 'http://localhost:8000/common/person/1/', 'assurance':'level1'}
-        response = self.client.post('/common/person-link/', data, format='json')
+        data= {'identifier': 'http://localhost:8000/common/identifier/1/',
+               'status': 'active',
+               'name':'prueba',
+               'description':'re prueba',
+               'mode':'kind',
+               'type':'AA',
+               'telecom':['http://localhost:8000/common/contact-point/1/'],
+               'address':['http://localhost:8000/common/address/1/'],
+               'physicalType':'bu',
+               'positionLongitude':1,
+               'positionLatitude':1,
+               'positionAltitude':0,
+               'managingOrganization':'http://localhost:8000/common/organization/1/',
+               'partOf':'http://localhost:8000/common/location/1/'}
+
+
+        response = self.client.post('/common/location/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertGreater(PersonLink.objects.count(),0)
+        self.assertGreater(Location.objects.count(),0)
 
-    def test_getPersonLinks(self):
+    def test_getLocations(self):
         """
-        Obtiene todas las PersonLink
+        Obtiene todas las Location
         :return:
         """
         helper = CommonTestHelper()
-        helper.createPersonLink()
-        response = self.client.get('/common/person-link/',format='json')
+        helper.createLocation()
+        response = self.client.get('/common/location/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getPersonLink(self):
+    def test_getLocation(self):
         """
-        Obtiene una PersonLink
+        Obtiene una Location
         :return:
         """
         helper = CommonTestHelper()
-        helper.createPersonLink()
-        response = self.client.get('/common/person-link/1/',format='json')
+        helper.createLocation()
+        response = self.client.get('/common/location/1/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_deletePersonLink(self):
+    def test_getFilteredLocation(self):
         """
-        Elinima un address
+        Obtiene una Location filtrada por name y type
         :return:
         """
         helper = CommonTestHelper()
-        helper.createPersonLink()
-        response = self.client.delete('/common/person-link/1/', format='json')
+        helper.createLocation()
+        response = self.client.get('/common/location/1/?name=Location%20Prueba&type=AA',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteLocation(self):
+        """
+        Elinima un Location
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createLocation()
+        response = self.client.delete('/common/location/1/', format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(PersonLink.objects.count(),0)
+        self.assertEqual(Location.objects.count(),0)
 
-    def test_updatePersonLink(self):
+    def test_updateLocation(self):
         """
-        Modifica un Address
+        Modifica un Location
         :return:
         """
         helper = CommonTestHelper()
-        helper.createPersonLink()
-        data= {'target': 'http://localhost:8000/common/person/2/', 'assurance':'level4'}
-        response = self.client.put('/common/person-link/1/', data, format='json')
+        helper.createLocation()
+        helper.createContactPoint()
+        data= {'identifier': 'http://localhost:8000/common/identifier/1/', 'status': 'inactive', 'name':'prueba', 'description':'re prueba', 'mode':'kind','type':'AA','telecom':['http://localhost:8000/common/contact-point/2/'],'address':['http://localhost:8000/common/address/1/'],'physicalType':'bu', 'positionLongitude':1, 'positionLatitude':1, 'positionAltitude':0,'managingOrganization':'http://localhost:8000/common/organization/1/','partOf':'http://localhost:8000/common/location/1/'}
+        response = self.client.put('/common/location/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['target'],'http://localhost:8000/common/person/2/')
-        self.assertEqual(response.json()['assurance'],'level4')
+        self.assertEqual(response.json()['telecom'][0],'http://testserver/common/contact-point/2/')
+        self.assertEqual(response.json()['status'],'inactive')
 
 class OrganizationContactTest(APITestCase):
 
@@ -826,6 +855,78 @@ class IdentifierTest(APITestCase):
         self.assertEqual(response.json()['use'],'OF')
         self.assertEqual(response.json()['type'],'http://testserver/common/identifier-type/2/')
 
+class IdentifierTest(APITestCase):
+
+
+    def test_createIdentifier(self):
+        """
+        Asegura crear un Identifier(
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifierType()
+        helper.createIdentifierPeriod()
+
+        data= {'use': 'US','type': 'http://localhost:8000/common/identifier-type/1/','system': 'http://www.ingenia.la','value': '12345','period': 'http://localhost:8000/common/identifier-period/1/','assigner': 'Test'}
+        response = self.client.post('/common/identifier/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getIdentifiers(self):
+        """
+        Obtiene todas las Identifier(
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifier()
+        response = self.client.get('/common/identifier/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getOrganizationContact(self):
+        """
+        Obtiene una Identifier(
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifier()
+        response = self.client.get('/common/identifier/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredIdentifier(self):
+        """
+        Obtiene un Identifier filtrado
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifier()
+        response = self.client.get('/common/identifier/?use=US',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+    def test_deleteIdentifier(self):
+        """
+        Elinima un Identifier
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifier()
+        response = self.client.delete('/common/identifier/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Identifier.objects.count(),0)
+
+    def test_updateIdentifier(self):
+        """
+        Modifica un Identifier
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createIdentifier()
+        helper.createIdentifierType()
+        data= {'use': 'OF','type': 'http://localhost:8000/common/identifier-type/2/','system': 'http://www.ingenia.la','value': '12345','period': 'http://localhost:8000/common/identifier-period/1/','assigner': 'Test'}
+        response = self.client.put('/common/identifier/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['use'],'OF')
+        self.assertEqual(response.json()['type'],'http://testserver/common/identifier-type/2/')
+
 
 class DayOfWeekTest(APITestCase):
 
@@ -871,6 +972,35 @@ class DayOfWeekTest(APITestCase):
         self.assertEqual(Identifier.objects.count(),0)
 
 class CommonTestHelper():
+    def createLocation(self):
+        """
+        Crea un location
+        :return:
+        """
+        helper = CommonTestHelper()
+        id = helper.createIdentifier()
+        org = helper.createOrganization()
+        tel = helper.createContactPoint()
+        add = helper.createAddress()
+
+        location = Location.objects.create(
+            identifier = id,
+            status = Location.STATUS_ACTIVE,
+            name = 'Location Prueba',
+            description = 'Descripcion',
+            mode = Location.MODE_INSTANCE,
+            type = 'AA',
+            physicalType = Location.PT_BUILDING,
+            positionLongitude = 1,
+            positionLatitude = 1,
+            positionAltitude = 0,
+            managingOrganization = org,
+            partOf = None
+        )
+        location.telecom.add(tel)
+        location.address.add(add)
+        return location
+
     def createDayOfWeek(self):
         """
         Crea un DayOfWeek

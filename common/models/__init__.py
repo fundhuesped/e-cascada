@@ -14,3 +14,4 @@ from .humanname import *
 from .daysofweek import *
 from .personlink import *
 from .person import *
+from .location import *

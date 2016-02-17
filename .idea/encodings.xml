@@ -4,7 +4,10 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/models/address.py" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/models/contactpoint.py" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/models/location.py" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/practicioners/apps.py" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/practicioners/models/practicioner.py" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/practicioners/models/practicionerrole.py" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

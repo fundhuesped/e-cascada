@@ -14,3 +14,4 @@ from .organization_ser import *
 from .daysofweek_ser import *
 from .person_ser import *
 from .personlink_ser import *
+from .location_ser import *
