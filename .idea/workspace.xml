@@ -2,23 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7e95597-8e4e-460e-b5eb-e522978a0b2b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/models/location.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/serializers/location_ser.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/common/views/location_view.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/models/practicioner.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/models/practicionerqualification.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/models/practicionerqualificationperiod.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/models/practicionerrole.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/models/practicionerroleperiod.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/models/role.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/serializers/practicionerqualificationperiod_ser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/serializers/practicionerrole_ser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/serializers/practicionerroleperiod_ser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/serializers/role_ser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/views/practicionerqualificationperiod_view.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/views/practicionerrole_view.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/views/practicionerroleperiod_view.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/practicioners/views/role_view.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/models/__init__.py" afterPath="$PROJECT_DIR$/common/models/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/serializers/__init__.py" afterPath="$PROJECT_DIR$/common/serializers/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/tests.py" afterPath="$PROJECT_DIR$/common/tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/urls.py" afterPath="$PROJECT_DIR$/common/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/views/__init__.py" afterPath="$PROJECT_DIR$/common/views/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/practicioners/models/__init__.py" afterPath="$PROJECT_DIR$/practicioners/models/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/practicioners/serializers/__init__.py" afterPath="$PROJECT_DIR$/practicioners/serializers/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/practicioners/tests.py" afterPath="$PROJECT_DIR$/practicioners/tests.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/practicioners/urls.py" afterPath="$PROJECT_DIR$/practicioners/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/practicioners/views/__init__.py" afterPath="$PROJECT_DIR$/practicioners/views/__init__.py" />
     </list>
     <ignored path="huesped_backend.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,66 +36,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="60" selection-start-line="24" selection-start-column="60" selection-end-line="24" selection-end-column="60" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tests.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/common/tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8930818">
-              <caret line="708" column="94" selection-start-line="708" selection-start-column="94" selection-end-line="708" selection-end-column="94" />
-              <folding>
-                <element signature="e#0#27#0" expanded="true" />
-                <element signature="e#426#2416#0" expanded="false" />
-                <element signature="e#2461#4539#0" expanded="false" />
-                <element signature="e#4586#6339#0" expanded="false" />
-                <element signature="e#6388#8185#0" expanded="false" />
-                <element signature="e#8234#10028#0" expanded="false" />
-                <element signature="e#10069#11702#0" expanded="false" />
-                <element signature="e#11742#14269#0" expanded="false" />
-                <element signature="e#14311#15931#0" expanded="false" />
-                <element signature="e#15974#17804#0" expanded="false" />
-                <element signature="e#17843#20693#0" expanded="false" />
-                <element signature="e#20731#24110#0" expanded="false" />
-                <element signature="e#20769#21793#0" expanded="false" />
-                <element signature="e#27794#30864#0" expanded="false" />
-                <element signature="e#30907#33660#0" expanded="false" />
-                <element signature="e#33703#36456#0" expanded="false" />
-                <element signature="e#36499#37814#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/practicioners/models/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="37" selection-start-line="15" selection-start-column="37" selection-end-line="15" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/practicioners/views/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="12" column="38" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="practicioner.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/practicioners/models/practicioner.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -112,37 +48,81 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="location.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/models/location.py">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/practicioners/serializers/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="87" column="20" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
+              <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="practicionerrole_view.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/practicioners/views/practicionerrole_view.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
               <folding>
-                <element signature="e#0#28#0" expanded="true" />
+                <element signature="e#0#49#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="location_ser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/serializers/location_ser.py">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/practicioners/views/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="52" column="30" selection-start-line="52" selection-start-column="30" selection-end-line="52" selection-end-column="30" />
+              <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/practicioners/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="120" selection-start-line="12" selection-start-column="96" selection-end-line="12" selection-end-column="120" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tests.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/practicioners/tests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.60587">
+              <caret line="489" column="0" selection-start-line="489" selection-start-column="0" selection-end-line="489" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#43#0" expanded="true" />
+                <element signature="e#499#3378#0" expanded="false" />
+                <element signature="e#3423#5480#0" expanded="false" />
+                <element signature="e#5522#7520#0" expanded="false" />
+                <element signature="e#7568#13000#0" expanded="false" />
+                <element signature="e#13043#15318#0" expanded="false" />
+                <element signature="e#15367#17501#0" expanded="false" />
+                <element signature="e#17554#19707#0" expanded="false" />
+                <element signature="e#23328#25661#0" expanded="false" />
+                <element signature="e#25706#27768#0" expanded="false" />
+                <element signature="e#27803#29671#0" expanded="false" />
+                <element signature="e#29717#31800#0" expanded="false" />
+                <element signature="e#31854#34101#0" expanded="false" />
+                <element signature="e#34143#36382#0" expanded="false" />
+                <element signature="e#36423#38401#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="practicionerrole_ser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/practicioners/serializers/practicionerrole_ser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="5" selection-start-line="10" selection-start-column="4" selection-end-line="41" selection-end-column="5" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="location_view.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/views/location_view.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -163,14 +143,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/practicioners/serializers/typeservice_ser.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/characteristic_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/eligibility_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/referralmethod_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/serviceprovisioningcode_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/speciality_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/typeservice_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/serializers/notavailableperiod_ser.py" />
         <option value="$PROJECT_DIR$/practicioners/views/notavailableperiod_view.py" />
         <option value="$PROJECT_DIR$/practicioners/views/notavailable_view.py" />
         <option value="$PROJECT_DIR$/practicioners/serializers/notavailable_ser.py" />
@@ -179,12 +151,9 @@
         <option value="$PROJECT_DIR$/practicioners/serializers/healthcareservice_py.py" />
         <option value="$PROJECT_DIR$/practicioners/serializers/healthcareservice_ser.py" />
         <option value="$PROJECT_DIR$/practicioners/models/healthcareservice.py" />
-        <option value="$PROJECT_DIR$/practicioners/serializers/__init__.py" />
         <option value="$PROJECT_DIR$/practicioners/views/healthcareservice_view.py" />
-        <option value="$PROJECT_DIR$/practicioners/urls.py" />
         <option value="$PROJECT_DIR$/common/models/identifier.py" />
         <option value="$PROJECT_DIR$/common/models/organization.py" />
-        <option value="$PROJECT_DIR$/practicioners/tests.py" />
         <option value="$PROJECT_DIR$/huesped_backend/settings.py" />
         <option value="$PROJECT_DIR$/huesped_backend/critical_settings.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
@@ -198,7 +167,6 @@
         <option value="$PROJECT_DIR$/common/models/address.py" />
         <option value="$PROJECT_DIR$/common/models/contactpoint.py" />
         <option value="$PROJECT_DIR$/practicioners/models/role.py" />
-        <option value="$PROJECT_DIR$/practicioners/models/practicionerroleperiod.py" />
         <option value="$PROJECT_DIR$/common/models/__init__.py" />
         <option value="$PROJECT_DIR$/practicioners/models/practicionerrole.py" />
         <option value="$PROJECT_DIR$/practicioners/models/practicionerqualificationperiod.py" />
@@ -207,13 +175,25 @@
         <option value="$PROJECT_DIR$/common/views/location_view.py" />
         <option value="$PROJECT_DIR$/common/urls.py" />
         <option value="$PROJECT_DIR$/practicioners/models/__init__.py" />
-        <option value="$PROJECT_DIR$/practicioners/views/__init__.py" />
         <option value="$PROJECT_DIR$/common/views/__init__.py" />
         <option value="$PROJECT_DIR$/practicioners/models/practicioner.py" />
         <option value="$PROJECT_DIR$/practicioners/models/practicionerqualification.py" />
         <option value="$PROJECT_DIR$/common/models/location.py" />
         <option value="$PROJECT_DIR$/common/serializers/location_ser.py" />
         <option value="$PROJECT_DIR$/common/tests.py" />
+        <option value="$PROJECT_DIR$/practicioners/serializers/role_ser.py" />
+        <option value="$PROJECT_DIR$/practicioners/views/role_view.py" />
+        <option value="$PROJECT_DIR$/practicioners/models/practicionerroleperiod.py" />
+        <option value="$PROJECT_DIR$/practicioners/serializers/practicionerroleperiod_ser.py" />
+        <option value="$PROJECT_DIR$/practicioners/views/practicionerroleperiod_view.py" />
+        <option value="$PROJECT_DIR$/practicioners/serializers/practicionerqualificationperiod_ser.py" />
+        <option value="$PROJECT_DIR$/practicioners/views/practicionerqualificationperiod_view.py" />
+        <option value="$PROJECT_DIR$/practicioners/serializers/__init__.py" />
+        <option value="$PROJECT_DIR$/practicioners/views/practicionerrole_view.py" />
+        <option value="$PROJECT_DIR$/practicioners/views/__init__.py" />
+        <option value="$PROJECT_DIR$/practicioners/urls.py" />
+        <option value="$PROJECT_DIR$/practicioners/serializers/practicionerrole_ser.py" />
+        <option value="$PROJECT_DIR$/practicioners/tests.py" />
       </list>
     </option>
   </component>
@@ -316,71 +296,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="huesped_backend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="serializers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="huesped_backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="huesped_backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="practicioners" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -406,10 +340,11 @@
       <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\common" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\practicioners\views" />
+      <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\practicioners\serializers" />
       <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\common\views" />
       <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\common\serializers" />
       <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\practicioners\models" />
-      <recent name="C:\Users\Santi\Documents\Proyectos\Ingenia\Huesped\dev\huesped_backend\common\models" />
     </key>
   </component>
   <component name="RunManager">
@@ -742,7 +677,13 @@
       <option name="project" value="LOCAL" />
       <updated>1455392996639</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Cubriendo:&#10;https://huesped.atlassian.net/browse/HUES-61&#10;https://huesped.atlassian.net/browse/HUES-62&#10;https://huesped.atlassian.net/browse/HUES-63&#10;https://huesped.atlassian.net/browse/HUES-124&#10;https://huesped.atlassian.net/browse/HUES-121&#10;https://huesped.atlassian.net/browse/HUES-125&#10;&#10;Se crearon:&#10;- API Common.Location&#10;- Models (en practicioner):&#10;   - practicioner&#10;   - practicionerqualification&#10;   - practicionerqualificationperiod&#10;   - practicionerrole&#10;   - practicionerroleperiod&#10;   - role">
+      <created>1455671128416</created>
+      <option name="number" value="00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1455671128416</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -804,117 +745,16 @@
     <MESSAGE value="Cambios en Practicioners:&#10;- API HealthcareService&#10;- API NotAvailable&#10;- API NotAvailablePeriod&#10;- API ServiceType&#10;- Pruebas para todas las APIS&#10;&#10;Cambios en Common&#10;- Mejora en Identifier (creacion de value unique)&#10;- Mejora en tests, en la creacion de Organization" />
     <MESSAGE value="Soporte a CORS" />
     <MESSAGE value="Cubriendo:&#10;https://huesped.atlassian.net/browse/HUES-61&#10;https://huesped.atlassian.net/browse/HUES-62&#10;https://huesped.atlassian.net/browse/HUES-63&#10;https://huesped.atlassian.net/browse/HUES-124&#10;https://huesped.atlassian.net/browse/HUES-121&#10;https://huesped.atlassian.net/browse/HUES-125&#10;&#10;Se crearon:&#10;- API Person&#10;- API PersonLink" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cubriendo:&#10;https://huesped.atlassian.net/browse/HUES-61&#10;https://huesped.atlassian.net/browse/HUES-62&#10;https://huesped.atlassian.net/browse/HUES-63&#10;https://huesped.atlassian.net/browse/HUES-124&#10;https://huesped.atlassian.net/browse/HUES-121&#10;https://huesped.atlassian.net/browse/HUES-125&#10;&#10;Se crearon:&#10;- API Person&#10;- API PersonLink" />
+    <MESSAGE value="Cubriendo:&#10;https://huesped.atlassian.net/browse/HUES-61&#10;https://huesped.atlassian.net/browse/HUES-62&#10;https://huesped.atlassian.net/browse/HUES-63&#10;https://huesped.atlassian.net/browse/HUES-124&#10;https://huesped.atlassian.net/browse/HUES-121&#10;https://huesped.atlassian.net/browse/HUES-125&#10;&#10;Se crearon:&#10;- API Common.Location&#10;- Models (en practicioner):&#10;   - practicioner&#10;   - practicionerqualification&#10;   - practicionerqualificationperiod&#10;   - practicionerrole&#10;   - practicionerroleperiod&#10;   - role" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cubriendo:&#10;https://huesped.atlassian.net/browse/HUES-61&#10;https://huesped.atlassian.net/browse/HUES-62&#10;https://huesped.atlassian.net/browse/HUES-63&#10;https://huesped.atlassian.net/browse/HUES-124&#10;https://huesped.atlassian.net/browse/HUES-121&#10;https://huesped.atlassian.net/browse/HUES-125&#10;&#10;Se crearon:&#10;- API Common.Location&#10;- Models (en practicioner):&#10;   - practicioner&#10;   - practicionerqualification&#10;   - practicionerqualificationperiod&#10;   - practicionerrole&#10;   - practicionerroleperiod&#10;   - role" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="17" />
+      <option name="time" value="19" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/practicioners/views/referralmethod_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31070495">
-          <caret line="17" column="7" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/views/organization_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#35#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/serializers/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="36" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/views/healthcareservice_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="32" selection-start-line="29" selection-start-column="32" selection-end-line="29" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="25" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#32#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/huesped_backend/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46605745">
-          <caret line="22" column="24" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="189" column="41" selection-start-line="189" selection-start-column="41" selection-end-line="189" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="e#418#3297#0" expanded="false" />
-            <element signature="e#3342#5399#0" expanded="false" />
-            <element signature="e#5441#7439#0" expanded="false" />
-            <element signature="e#15286#17420#0" expanded="false" />
-            <element signature="e#17465#19527#0" expanded="false" />
-            <element signature="e#19573#21656#0" expanded="false" />
-            <element signature="e#21710#23957#0" expanded="false" />
-            <element signature="e#23999#26238#0" expanded="false" />
-            <element signature="e#26279#28257#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/models/coding.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/serializers/addresspointperiod_ser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/views/addresspointperiod_view.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#35#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/models/addresspointperiod.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13492064">
-          <caret line="4" column="24" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1092,22 +932,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/models/role.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="57" selection-start-line="4" selection-start-column="57" selection-end-line="4" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerroleperiod.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/models/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5702306">
@@ -1154,22 +978,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerrole.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="48" selection-start-line="1" selection-start-column="48" selection-end-line="1" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerqualificationperiod.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/serializers/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1188,16 +996,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/views/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="38" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/common/views/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1206,28 +1004,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/practicioners/models/practicioner.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="80" selection-start-line="44" selection-start-column="80" selection-end-line="44" selection-end-column="80" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerqualification.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="52" selection-start-line="9" selection-start-column="52" selection-end-line="9" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="60" selection-start-line="24" selection-start-column="60" selection-end-line="24" selection-end-column="60" />
           <folding />
         </state>
       </provider>
@@ -1284,6 +1064,186 @@
             <element signature="e#30907#33660#0" expanded="false" />
             <element signature="e#33703#36456#0" expanded="false" />
             <element signature="e#36499#37814#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8197065">
+          <caret line="24" column="60" selection-start-line="24" selection-start-column="60" selection-end-line="24" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/models/practicioner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="80" selection-start-line="44" selection-start-column="80" selection-end-line="44" selection-end-column="80" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/models/role.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="57" selection-start-line="4" selection-start-column="57" selection-end-line="4" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/serializers/role_ser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="41" selection-start-line="36" selection-start-column="41" selection-end-line="36" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/views/role_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerroleperiod.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="30" selection-start-line="6" selection-start-column="30" selection-end-line="6" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/serializers/practicionerroleperiod_ser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="32" selection-start-line="32" selection-start-column="32" selection-end-line="32" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/views/practicionerroleperiod_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerqualificationperiod.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21383648">
+          <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/serializers/practicionerqualificationperiod_ser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/views/practicionerqualificationperiod_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="78" selection-start-line="42" selection-start-column="78" selection-end-line="42" selection-end-column="78" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/views/practicionerrole_view.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/models/practicionerrole.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="0" selection-start-line="8" selection-start-column="4" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/views/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/serializers/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="120" selection-start-line="12" selection-start-column="96" selection-end-line="12" selection-end-column="120" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/serializers/practicionerrole_ser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="5" selection-start-line="10" selection-start-column="4" selection-end-line="41" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/practicioners/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.60587">
+          <caret line="489" column="0" selection-start-line="489" selection-start-column="0" selection-end-line="489" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+            <element signature="e#499#3378#0" expanded="false" />
+            <element signature="e#3423#5480#0" expanded="false" />
+            <element signature="e#5522#7520#0" expanded="false" />
+            <element signature="e#7568#13000#0" expanded="false" />
+            <element signature="e#13043#15318#0" expanded="false" />
+            <element signature="e#15367#17501#0" expanded="false" />
+            <element signature="e#17554#19707#0" expanded="false" />
+            <element signature="e#23328#25661#0" expanded="false" />
+            <element signature="e#25706#27768#0" expanded="false" />
+            <element signature="e#27803#29671#0" expanded="false" />
+            <element signature="e#29717#31800#0" expanded="false" />
+            <element signature="e#31854#34101#0" expanded="false" />
+            <element signature="e#34143#36382#0" expanded="false" />
+            <element signature="e#36423#38401#0" expanded="false" />
           </folding>
         </state>
       </provider>

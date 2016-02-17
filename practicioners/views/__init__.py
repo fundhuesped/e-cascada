@@ -4,7 +4,11 @@ from .eligibility_view import *
 from .healthcareservice_view import *
 from .notavailable_view import *
 from .notavailableperiod_view import *
+from .practicionerrole_view import *
+from .practicionerroleperiod_view import *
+from .practicionerqualificationperiod_view import *
 from .referralmethod_view import *
+from .role_view import *
 from .servicecategory_view import *
 from .serviceprovisioningcode_view import *
 from .servicetype_view import *

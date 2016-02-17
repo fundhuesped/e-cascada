@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from practicioners.models import AvailableTime, Characteristic, Eligibility, HealthcareService, ReferralMethod, ServiceCategory, ServiceProvisioningCode, ServiceType, Speciality, TypeService, NotAvailable, NotAvailablePeriod
+from practicioners.models import AvailableTime, Characteristic, Eligibility, HealthcareService, ReferralMethod, PracticionerQualificationPeriod, PracticionerRolePeriod, PracticionerRole, ServiceCategory, ServiceProvisioningCode, ServiceType, Speciality, TypeService, NotAvailable, NotAvailablePeriod, Role
 from common.tests import CommonTestHelper
 from datetime import datetime
 from rest_framework import status
@@ -418,6 +418,190 @@ class NotAvailablePeriodTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['start'],'2016-05-02T10:00:00')
 
+class PracticionerRolePeriodTest(APITestCase):
+    def test_createPracticionerRolePeriod(self):
+        """
+        Asegura crear un PracticionerRolePeriod(
+        :return:
+        """
+
+        data= {'start': '2016-05-01T10:00:00','end': '2017-03-05T11:00:00'}
+        response = self.client.post('/practicioners/practicioner-role-period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getPracticionerRolePeriods(self):
+        """
+        Obtiene todos los PracticionerRolePeriods
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRolePeriod()
+        response = self.client.get('/practicioners/practicioner-role-period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getPracticionerRolePeriod(self):
+        """
+        Obtiene un PracticionerRolePeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRolePeriod()
+        response = self.client.get('/practicioners/practicioner-role-period/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deletePracticionerRolePeriod(self):
+        """
+        Elinima un PracticionerRolePeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRolePeriod()
+        response = self.client.delete('/practicioners/practicioner-role-period/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(PracticionerRolePeriod.objects.count(),0)
+
+    def test_updatePracticionerRolePeriod(self):
+        """
+        Modifica un PracticionerRolePeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRolePeriod()
+        data= {'start': '2016-05-02T10:00:00','end': '2017-03-05T11:00:00'}
+        response = self.client.put('/practicioners/practicioner-role-period/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['start'],'2016-05-02T10:00:00')
+
+class PracticionerRoleTest(APITestCase):
+    def test_createPracticionerRole(self):
+        """
+        Asegura crear un PracticionerRole
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        chelper = CommonTestHelper()
+
+        managingOrganization = chelper.createOrganization()
+        role = helper.createRole()
+        speciality = helper.createSpeciality()
+        period = helper.createPracticionerRolePeriod()
+        location = chelper.createLocation()
+        healthCareService = helper.createHealthCareService()
+
+        data= {'managingOrganization': 'http://localhost:8000/common/organization/1/',
+               'role': 'http://localhost:8000/practicioners/role/1/',
+               'speciality': ['http://localhost:8000/practicioners/speciality/1/'],
+               'period':'http://localhost:8000/practicioners/practicioner-role-period/1/',
+               'location': ['http://localhost:8000/common/location/1/'],
+               'healthCareService': ['http://localhost:8000/practicioners/healthcare-service/1/']}
+        response = self.client.post('/practicioners/practicioner-role/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getPracticionerRoles(self):
+        """
+        Obtiene todos los PracticionerRole
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRole()
+        response = self.client.get('/practicioners/practicioner-role/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getPracticionerRole(self):
+        """
+        Obtiene un PracticionerRole
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRole()
+        response = self.client.get('/practicioners/practicioner-role/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deletePracticionerRole(self):
+        """
+        Elinima un PracticionerRole
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRole()
+        response = self.client.delete('/practicioners/practicioner-role/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(PracticionerRole.objects.count(),0)
+
+    def test_updatePracticionerRole(self):
+        """
+        Modifica un PracticionerRole
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerRole()
+        helper.createSpeciality()
+        helper.createRole()
+        data= {'managingOrganization': 'http://localhost:8000/common/organization/1/',
+               'role': 'http://localhost:8000/practicioners/role/2/',
+               'speciality': ['http://localhost:8000/practicioners/speciality/1/', 'http://localhost:8000/practicioners/speciality/2/'],
+               'period':'http://localhost:8000/practicioners/practicioner-role-period/1/',
+               'location': ['http://localhost:8000/common/location/1/'],
+               'healthCareService': ['http://localhost:8000/practicioners/healthcare-service/1/']}
+        response = self.client.put('/practicioners/practicioner-role-period/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['role'],'http://testserver/practicioners/role/2/')
+        self.assertEqual(response.json()['speciality'][2],'http://testserver/practicioners/speciality/2/')
+
+class PracticionerQualificationPeriodTest(APITestCase):
+    def test_createPracticionerQualificationPeriod(self):
+        """
+        Asegura crear un PracticionerQualificationPeriod(
+        :return:
+        """
+
+        data= {'start': '2016-05-01T10:00:00','end': '2017-03-05T11:00:00'}
+        response = self.client.post('/practicioners/practicioner-qualification-period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getPracticionerQualificationPeriods(self):
+        """
+        Obtiene todos los PracticionerQualificationPeriods
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerQualificationPeriod()
+        response = self.client.get('/practicioners/practicioner-qualification-period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getPracticionerQualificationPeriod(self):
+        """
+        Obtiene un PracticionerQualificationPeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerQualificationPeriod()
+        response = self.client.get('/practicioners/practicioner-qualification-period/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deletePracticionerQualificationPeriod(self):
+        """
+        Elinima un PracticionerQualificationPeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerQualificationPeriod()
+        response = self.client.delete('/practicioners/practicioner-qualification-period/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(PracticionerQualificationPeriod.objects.count(),0)
+
+    def test_updatePracticionerQualificationPeriod(self):
+        """
+        Modifica un PracticionerQualificationPeriod
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createPracticionerQualificationPeriod()
+        data= {'start': '2016-05-02T10:00:00','end': '2017-03-05T11:00:00'}
+        response = self.client.put('/practicioners/practicioner-qualification-period/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['start'],'2016-05-02T10:00:00')
+
 class ReferralMethodTest(APITestCase):
     def test_createReferralMethod(self):
         """
@@ -471,6 +655,62 @@ class ReferralMethodTest(APITestCase):
         helper.createReferralMethod()
         data= {'coding': 'http://localhost:8000/common/coding/1/','text': 'Prueba 2'}
         response = self.client.put('/practicioners/referral-method/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['text'],'Prueba 2')
+
+class RoleTest(APITestCase):
+    def test_createRole(self):
+        """
+        Asegura crear un Role(
+        :return:
+        """
+        helper = CommonTestHelper()
+        helper.createCoding()
+
+        data= {'coding': 'http://localhost:8000/common/coding/1/','text': 'Prueba'}
+        response = self.client.post('/practicioners/role/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_getRoles(self):
+        """
+        Obtiene todos los Role
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createRole()
+        response = self.client.get('/practicioners/role/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getRole(self):
+        """
+        Obtiene un Role
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createRole()
+        response = self.client.get('/practicioners/role/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteRole(self):
+        """
+        Elinima un Role
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createRole()
+        response = self.client.delete('/practicioners/role/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Role.objects.count(),0)
+
+    def test_updateEligibility(self):
+        """
+        Modifica un Eligibility
+        :return:
+        """
+        helper = PracticionerTestHelper()
+        helper.createRole()
+        data= {'coding': 'http://localhost:8000/common/coding/1/','text': 'Prueba 2'}
+        response = self.client.put('/practicioners/role/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['text'],'Prueba 2')
 
@@ -801,6 +1041,43 @@ class PracticionerTestHelper:
         )
         return nap
 
+    def createPracticionerQualificationPeriod(self):
+        pqp = PracticionerQualificationPeriod.objects.create(
+            start = datetime.now(),
+            end = datetime.now()
+        )
+        return pqp
+
+    def createPracticionerRole(self):
+        helper = PracticionerTestHelper()
+        chelper = CommonTestHelper()
+
+        managingOrganization = chelper.createOrganization()
+        role = helper.createRole()
+        speciality = helper.createSpeciality()
+        period = helper.createPracticionerRolePeriod()
+        location = chelper.createLocation()
+        healthCareService = helper.createHealthCareService()
+
+        pr = PracticionerRole.objects.create(
+            managingOrganization = managingOrganization,
+            role = role,
+            period = period
+        )
+        pr.speciality.add(speciality)
+        pr.location.add(location)
+        pr.healthCareService.add(healthCareService)
+
+        return pr
+
+
+    def createPracticionerRolePeriod(self):
+        nap = PracticionerRolePeriod.objects.create(
+            start = datetime.now(),
+            end = datetime.now()
+        )
+        return nap
+
     def createReferralMethod(self):
         commonHelper = CommonTestHelper()
         coding = commonHelper.createCoding()
@@ -809,6 +1086,15 @@ class PracticionerTestHelper:
             text = "ReferralMethod"
         )
         return rmethod
+
+    def createRole(self):
+        commonHelper = CommonTestHelper()
+        coding = commonHelper.createCoding()
+        rol = Role.objects.create(
+            coding = coding,
+            text = "Role"
+        )
+        return rol
 
     def createServiceCategory(self):
         commonHelper = CommonTestHelper()
