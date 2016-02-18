@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.getenv('SECRET_KEY'],'SECRET_KEY_HARDCODED')
+SECRET_KEY = os.getenv('SECRET_KEY','SECRET_KEY_HARDCODED')
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
