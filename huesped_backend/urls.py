@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^common/', include('common.urls')),
     url(r'^practicioners/', include('practicioners.urls')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^procedures/', include('procedures.urls')),
 ]

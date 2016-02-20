@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'corsheaders',
     'common',
-    'practicioners'
+    'practicioners',
+    'procedures',
 ]
 
 MIDDLEWARE_CLASSES = [
