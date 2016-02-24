@@ -29,7 +29,8 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
     )
     partOf = serializers.HyperlinkedRelatedField(
         view_name="common:Location-detail",
-        queryset=Location.objects
+        queryset=Location.objects,
+        allow_null=True
     )
 
     def create(self, validated_data):

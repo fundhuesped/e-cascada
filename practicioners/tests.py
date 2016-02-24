@@ -488,12 +488,21 @@ class PracticionerRoleTest(APITestCase):
         location = chelper.createLocation()
         healthCareService = helper.createHealthCareService()
 
-        data= {'managingOrganization': 'http://localhost:8000/common/organization/1/',
-               'role': 'http://localhost:8000/practicioners/role/1/',
-               'speciality': ['http://localhost:8000/practicioners/speciality/1/'],
-               'period':'http://localhost:8000/practicioners/practicioner-role-period/1/',
-               'location': ['http://localhost:8000/common/location/1/'],
-               'healthCareService': ['http://localhost:8000/practicioners/healthcare-service/1/']}
+        data = {
+                "managingOrganization": "http://localhost:8000/common/organization/1/",
+                "role": "http://localhost:8000/practicioners/role/1/",
+                "speciality": [
+                    "http://localhost:8000/practicioners/speciality/1/"
+                ],
+                "period": "http://localhost:8000/practicioners/practicioner-role-period/1/",
+                "location": [
+                    "http://localhost:8000/common/location/1/"
+                ],
+                "healthCareService": [
+                    "http://localhost:8000/practicioners/healthcare-service/1/"
+                ]
+        }
+
         response = self.client.post('/practicioners/practicioner-role/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -537,16 +546,27 @@ class PracticionerRoleTest(APITestCase):
         helper.createPracticionerRole()
         helper.createSpeciality()
         helper.createRole()
-        data= {'managingOrganization': 'http://localhost:8000/common/organization/1/',
-               'role': 'http://localhost:8000/practicioners/role/2/',
-               'speciality': ['http://localhost:8000/practicioners/speciality/1/', 'http://localhost:8000/practicioners/speciality/2/'],
-               'period':'http://localhost:8000/practicioners/practicioner-role-period/1/',
-               'location': ['http://localhost:8000/common/location/1/'],
-               'healthCareService': ['http://localhost:8000/practicioners/healthcare-service/1/']}
-        response = self.client.put('/practicioners/practicioner-role-period/1/', data, format='json')
+
+        data = {
+                "managingOrganization": "http://localhost:8000/common/organization/1/",
+                "role": "http://localhost:8000/practicioners/role/2/",
+                "speciality": [
+                    "http://localhost:8000/practicioners/speciality/1/",
+                    "http://localhost:8000/practicioners/speciality/2/"
+                ],
+                "period": "http://localhost:8000/practicioners/practicioner-role-period/1/",
+                "location": [
+                    "http://localhost:8000/common/location/1/"
+                ],
+                "healthCareService": [
+                    "http://localhost:8000/practicioners/healthcare-service/1/"
+                ]
+        }
+
+        response = self.client.put('/practicioners/practicioner-role/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['role'],'http://testserver/practicioners/role/2/')
-        self.assertEqual(response.json()['speciality'][2],'http://testserver/practicioners/speciality/2/')
+        self.assertEqual(response.json()['speciality'][1],'http://testserver/practicioners/speciality/2/')
 
 class PracticionerQualificationPeriodTest(APITestCase):
     def test_createPracticionerQualificationPeriod(self):

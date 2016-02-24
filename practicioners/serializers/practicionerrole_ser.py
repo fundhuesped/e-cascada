@@ -25,7 +25,7 @@ class PracticionerRoleSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     period = serializers.HyperlinkedRelatedField(
-        view_name="practicioners:PracticionerRole-detail",
+        view_name="practicioners:PracticionerRolePeriod-detail",
         queryset=PracticionerRolePeriod.objects
     )
 
