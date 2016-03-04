@@ -1,1 +1,2 @@
-from .period_view import *
+from .procedureperiod_view import *
+from .performed_view import *
