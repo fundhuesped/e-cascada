@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from procedures.models import Period
+from procedures.models import ProcedurePeriod
 
-class PeriodSerializer(serializers.HyperlinkedModelSerializer):
+class ProcedurePeriodSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializa un Period
     """
@@ -13,7 +13,7 @@ class PeriodSerializer(serializers.HyperlinkedModelSerializer):
         :param validated_data: Valores con los cuales crear el Period
         :return: Una nueva instancia de Period
         """
-        return Period.objects.create(**validated_data)
+        return ProcedurePeriod.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """
@@ -28,5 +28,5 @@ class PeriodSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
     class Meta:
-        model = Period
+        model = ProcedurePeriod
         fields = ('id', 'start', 'end')
