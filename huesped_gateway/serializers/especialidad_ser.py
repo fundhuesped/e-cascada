@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from huesped_gateway.models import Especialidad
 
-
 class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializa una Especialidad
