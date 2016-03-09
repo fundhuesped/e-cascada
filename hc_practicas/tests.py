@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework.test import APITestCase
-from huesped_gateway.models import Especialidad
+from hc_practicas.models import Especialidad
 from common.tests import CommonTestHelper
 from rest_framework import status
 

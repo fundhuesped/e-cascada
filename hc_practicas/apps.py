@@ -4,4 +4,4 @@
 from django.apps import AppConfig
 
 class GatewayConfig(AppConfig):
-    name = 'huesped_gateway'
+    name = 'hc_practicas'

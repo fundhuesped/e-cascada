@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^practicioners/', include('practicioners.urls')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^procedures/', include('procedures.urls')),
-    url(r'^huesped/', include('huesped_gateway.urls')),
+    url(r'^huesped/', include('hc_practicas.urls')),
 ]

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'common',
     'practicioners',
     'procedures',
-    'huesped_gateway'
+    'hc_practicas'
 ]
 
 MIDDLEWARE_CLASSES = [

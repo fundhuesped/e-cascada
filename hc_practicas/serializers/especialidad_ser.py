@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from huesped_gateway.models import Especialidad
+from hc_practicas.models import Especialidad
 
 class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
     """
