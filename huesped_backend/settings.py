@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'common',
     'practicioners',
     'procedures',
-    'hc_practicas'
+    'hc_practicas',
+    'hc_common',
+    'hc_pacientes'
 ]
 
 MIDDLEWARE_CLASSES = [
