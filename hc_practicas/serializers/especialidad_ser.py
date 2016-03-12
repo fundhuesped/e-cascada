@@ -25,9 +25,10 @@ class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
         """
         instance.name = validated_data['name']
         instance.description = validated_data['description']
+        instance.status = validated_data['status']
         instance.save()
         return instance
 
     class Meta:
         model = Especialidad
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description','status')

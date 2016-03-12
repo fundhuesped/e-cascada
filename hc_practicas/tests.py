@@ -16,6 +16,7 @@ class EspecialidadTest(APITestCase):
         response = self.client.post('/huesped/especialidad/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Especialidad.objects.count(),1)
+        self.assertEqual(Especialidad.objects.latest('id').status,'active')
 
     def test_getEspecialidades(self):
         """
@@ -66,11 +67,27 @@ class EspecialidadTest(APITestCase):
         """
         helperp = GatewayTestHelper()
         helperp.createEspecialidad()
-        data= {'name': 'Pediatría pediatrica', 'description':'Especialidad dedicada a personas no mayores de 15 años'}
+        data= {'name': 'Pediatría pediatrica', 'description':'Especialidad dedicada a personas no mayores de 15 años','status': 'active'}
         response = self.client.put('/huesped/especialidad/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['name'],'Pediatría pediatrica')
         self.assertEqual(response.json()['description'],'Especialidad dedicada a personas no mayores de 15 años')
+        self.assertEqual(response.json()['status'],'active')
+
+    def test_updateEspecialidadStatus(self):
+        """
+        Modifica una Especialidad
+        :return:
+        """
+        helperp = GatewayTestHelper()
+        helperp.createEspecialidad()
+        data= {'name':'Pediatria','description':'Especialidad dedicada a menores de 15 años','status': 'inactive'}
+        response = self.client.put('/huesped/especialidad/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['name'],'Pediatria')
+        self.assertEqual(response.json()['description'],'Especialidad dedicada a menores de 15 años')
+        self.assertEqual(response.json()['status'],'inactive')
+
 
 class GatewayTestHelper():
     def createEspecialidad(self):

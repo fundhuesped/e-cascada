@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from rest_framework.test import APITestCase
 from practicioners.models import AvailableTime, Characteristic, Eligibility, HealthcareService, ReferralMethod, PracticionerQualificationPeriod, PracticionerRolePeriod, PracticionerRole, ServiceCategory, ServiceProvisioningCode, ServiceType, Speciality, TypeService, NotAvailable, NotAvailablePeriod, Role
 from common.tests import CommonTestHelper
