@@ -1,5 +1,8 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from rest_framework import serializers
-from hc_practicas.models import Especialidad
+from hc_practicas.models import Especialidad, Prestacion
 
 class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -7,27 +10,21 @@ class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
     """
     id = serializers.ReadOnlyField()
 
+    prestaciones = serializers.HyperlinkedRelatedField( #colección read only, con las prestaciones asociadas a una especialidad
+        read_only=True,
+        many=True,
+        view_name='hc_practicas:Especialidad-detail')
+
     def create(self, validated_data):
         """
         Crea una Especialidad
         :param validated_data: Valores con los cuales crear la Especialidad
         :return: Una nueva instancia de Especialidad
         """
-        return Especialidad.objects.create(**validated_data)
+        especialidad =  Especialidad.objects.create(**validated_data)
+        return especialidad
 
-
-    def update(self, instance, validated_data):
-        """
-        Modifica una Especialidad
-        :param instance: Instancia de Especialidad a modificar
-        :param validated_data: Nuevos valores con los que modificar Especialidad
-        :return: Instancia de Especialidad modificada
-        """
-        instance.name = validated_data['name']
-        instance.description = validated_data['description']
-        instance.save()
-        return instance
 
     class Meta:
         model = Especialidad
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'status', 'prestaciones')

@@ -37,7 +37,7 @@ class HealthcareService(models.Model):
     publicKey = models.TextField(null=True)                                                     #PKI Public keys to support secure communications
     appointmentRequired = models.BooleanField(default=True)                                     #If an appointment is required for access to this service
     availableTime = models.ManyToManyField(AvailableTime)                                       #Times the Service Site is available
-    notAvailable = models.ManyToManyField(NotAvailable, null=True)                              #Not available during this time due to provided reason
+    notAvailable = models.ManyToManyField(NotAvailable)                              #Not available during this time due to provided reason
     availabilityExceptions = models.TextField(null=True)                                        #Description of availability exceptions
 
     class Meta:
