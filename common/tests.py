@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import json, string, random
 from datetime import datetime
 from rest_framework import status

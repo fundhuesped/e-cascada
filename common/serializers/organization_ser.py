@@ -22,10 +22,11 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
     )
     partOf = serializers.HyperlinkedRelatedField(
         view_name="common:Organization-detail",
-        queryset=Organization.objects
+        queryset=Organization.objects,
+        allow_null=True
     )
     contact = serializers.HyperlinkedRelatedField(
-        view_name="common:OrganizationContact",
+        view_name="common:OrganizationContact-detail",
         queryset=OrganizationContact.objects,
         many=True
     )

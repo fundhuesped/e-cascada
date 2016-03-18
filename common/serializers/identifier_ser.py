@@ -16,14 +16,6 @@ class IdentifierSerializer(serializers.HyperlinkedModelSerializer):
         queryset=IdentifierPeriod.objects
     )
 
-    def create(self, validated_data):
-        """
-        Crea un Identifier
-        :param validated_data:
-        :return:
-        """
-        return Identifier(**validated_data)
-
     def update(self, instance, validated_data):
         """
         Modifica un identifier

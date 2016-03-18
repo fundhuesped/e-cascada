@@ -24,6 +24,7 @@ class HealthCareServiceList(generics.ListCreateAPIView):
         serviceName = self.request.query_params.get('serviceName')
         if serviceName is not None:
             queryset = queryset.filter(serviceName=serviceName)
+        return queryset
 
 class HealthCareServiceDetails(generics.RetrieveUpdateDestroyAPIView):
     """
