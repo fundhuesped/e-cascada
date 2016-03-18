@@ -21,9 +21,14 @@ class PrestacionList(generics.ListCreateAPIView):
         """
         queryset = Prestacion.objects.all()
         name = self.request.query_params.get('name')
+        status = self.request.query_params.get('status')
+        especialidad = self.request.query_params.get('especialidad')
         if name is not None:
             queryset = queryset.filter(name__startswith=name)
-
+        if status is not None:
+            queryset = queryset.filter(status=status)
+        if especialidad is not None:
+            queryset = queryset.filter(especialidad=especialidad)
         return queryset
 
 class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):
