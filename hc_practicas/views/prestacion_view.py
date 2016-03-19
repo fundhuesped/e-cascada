@@ -3,14 +3,14 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_practicas.serializers import PrestacionSerializer
+from hc_practicas.serializers import PrestacionNestSerializer, PrestacionSerializer
 from hc_practicas.models import Prestacion
 
 class PrestacionList(generics.ListCreateAPIView):
     """
     Vista para listar Prestaciones existentes, o crear una nueva Prestacion
     """
-    serializer_class = PrestacionSerializer
+    serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -28,13 +28,13 @@ class PrestacionList(generics.ListCreateAPIView):
         if status is not None:
             queryset = queryset.filter(status=status)
         if especialidad is not None:
-            queryset = queryset.filter(especialidad=especialidad)
+            queryset = queryset.filter(especialidad__id=especialidad)
         return queryset
 
 class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     Vista para ver del detalle, modificar, o eliminar una Prestacion
     """
-    serializer_class = PrestacionSerializer
+    serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
     permission_classes = (AllowAny,)

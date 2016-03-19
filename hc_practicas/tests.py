@@ -87,7 +87,7 @@ class PrestacionTest(APITestCase):
             'status': Prestacion.STATUS_INACTIVE,
             'notes': 'Consulta infectología 2',
             'default': False,
-            'especialidad': 'http://localhost:8000/practicas/especialidad/1/'
+            'especialidad': {'id':1}
         }
 
         response = self.client.post('/practicas/prestacion/', data, format='json')
@@ -152,7 +152,7 @@ class PrestacionTest(APITestCase):
             'status': Prestacion.STATUS_INACTIVE,
             'notes': 'Consulta infectología 2',
             'default': False,
-            'especialidad': 'http://localhost:8000/practicas/especialidad/2/'
+            'especialidad': {'id':2}
         }
         response = self.client.put('/practicas/prestacion/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -161,7 +161,7 @@ class PrestacionTest(APITestCase):
         self.assertEqual(response.json()['duration'],40)
         self.assertEqual(response.json()['notes'],'Consulta infectología 2')
         self.assertEqual(response.json()['default'],False)
-        self.assertEqual(response.json()['especialidad'],'http://testserver/practicas/especialidad/2/')
+        self.assertEqual(response.json()['especialidad']['id'],2)
 
 class GatewayTestHelper():
     def createEspecialidad(self):
