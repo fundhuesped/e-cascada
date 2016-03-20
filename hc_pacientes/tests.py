@@ -98,7 +98,7 @@ class PacienteMetaTest(APITestCase):
         helper.createPaciente()
 
         data= {
-            'paciente': 'http://localhost/pacientes/paciente/1/',
+            'paciente': {'id':1},
             'metaType': 'PNS',
             'metaValue': 'Sucutrule'
         }
@@ -116,7 +116,7 @@ class PacienteMetaTest(APITestCase):
         response = self.client.get('/pacientes/meta-paciente/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getPaciente(self):
+    def test_getPacienteMeta(self):
         """
         Obtiene un Paciente
         :return:
@@ -126,7 +126,7 @@ class PacienteMetaTest(APITestCase):
         response = self.client.get('/pacientes/meta-paciente/1/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getFilteredPaciente(self):
+    def test_getFilteredPacienteMeta(self):
         """
         Obtiene un Paciente filtrado por nombre y apellido
         :return:
@@ -136,7 +136,7 @@ class PacienteMetaTest(APITestCase):
         response = self.client.get('/pacientes/meta-paciente/?metaType=PNS',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_deletePaciente(self):
+    def test_deletePacienteMeta(self):
         """
         Elinima un Paciente
         :return:
@@ -147,7 +147,7 @@ class PacienteMetaTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(PacienteMeta.objects.count(),0)
 
-    def test_updatePaciente(self):
+    def test_updatePacienteMeta(self):
         """
         Modifica un Paciente
         :return:
@@ -155,7 +155,7 @@ class PacienteMetaTest(APITestCase):
         helperp = PacienteTestHelper()
         helperp.createPacienteMeta()
         data= {
-             'paciente': 'http://localhost/pacientes/paciente/1/',
+            'paciente': {'id':1},
             'metaType': 'PND',
             'metaValue': 'SARANDUNGA'
         }

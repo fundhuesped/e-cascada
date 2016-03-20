@@ -3,14 +3,14 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_pacientes.serializers import PacienteSerializer
+from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 
 class PacienteList(generics.ListCreateAPIView):
     """
     Vista para listar Pacientes existentes, o crear un nuevo Paciente
     """
-    serializer_class = PacienteSerializer
+    serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -36,6 +36,6 @@ class PacienteDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     Vista para ver del detalle, modificar, o eliminar un Documento
     """
-    serializer_class = PacienteSerializer
+    serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
     permission_classes = (AllowAny,)
