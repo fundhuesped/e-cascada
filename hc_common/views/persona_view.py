@@ -3,14 +3,14 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_common.serializers import PersonaSerializer
+from hc_common.serializers import PersonaNestSerializer
 from hc_common.models import Persona
 
 class PersonaList(generics.ListCreateAPIView):
     """
     Vista para listar Personas existentes, o crear una nueva Persona
     """
-    serializer_class = PersonaSerializer
+    serializer_class = PersonaNestSerializer
     queryset = Persona.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -36,6 +36,6 @@ class PersonaDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     Vista para ver del detalle, modificar, o eliminar un Documento
     """
-    serializer_class = PersonaSerializer
+    serializer_class = PersonaNestSerializer
     queryset = Persona.objects.all()
     permission_classes = (AllowAny,)
