@@ -2,18 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_practicas.models import Especialidad, Prestacion
+from hc_practicas.models import Especialidad
 
 class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializa una Especialidad
     """
     id = serializers.ReadOnlyField()
-
-    prestaciones = serializers.HyperlinkedRelatedField( #colección read only, con las prestaciones asociadas a una especialidad
-        read_only=True,
-        many=True,
-        view_name='hc_practicas:Especialidad-detail')
 
     def create(self, validated_data):
         """
@@ -27,4 +22,4 @@ class EspecialidadSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Especialidad
-        fields = ('id', 'name', 'description', 'status', 'prestaciones')
+        fields = ('id', 'name', 'description', 'status')

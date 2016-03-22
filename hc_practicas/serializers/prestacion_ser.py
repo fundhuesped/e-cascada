@@ -13,6 +13,8 @@ class PrestacionSerializer(serializers.HyperlinkedModelSerializer):
         view_name="hc_practicas:Especialidad-detail",
         queryset=Especialidad.objects
     )
+
+
     def create(self, validated_data):
         """
         Crea una Prestacion

@@ -19,7 +19,7 @@ class DocumentoTest(APITestCase):
             'type': Documento.TYPE_DNI,
             'number': 28508869,
             'comments': 'Prueba',
-            'persona':'http://localhost:80/comun/persona/1/'
+            'persona':{'id':1}
         }
         response = self.client.post('/comun/documento/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -69,14 +69,14 @@ class DocumentoTest(APITestCase):
             'type': Documento.TYPE_PASSPORT,
             'number': 30916044,
             'comments': 'Prueba 2',
-            'persona':'http://localhost:80/comun/persona/2/'
+            'persona':{'id':2}
         }
         response = self.client.put('/comun/documento/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['type'],Documento.TYPE_PASSPORT)
         self.assertEqual(response.json()['number'],30916044)
         self.assertEqual(response.json()['comments'],'Prueba 2')
-        self.assertEqual(response.json()['persona'],'http://testserver/comun/persona/2/')
+        self.assertEqual(response.json()['persona']['id'],2)
 
 
 class PersonaTest(APITestCase):
