@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from rest_framework import serializers
 from hc_practicas.models import Prestacion, Especialidad
 from hc_practicas.serializers import EspecialidadNestedSerializer

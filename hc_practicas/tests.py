@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework.test import APITestCase
-from hc_practicas.models import Especialidad, Prestacion
+from hc_practicas.models import Especialidad, Prestacion, Profesional, ProfesionalMeta
+import datetime
 from rest_framework import status
 
 class EspecialidadTest(APITestCase):
@@ -163,6 +164,190 @@ class PrestacionTest(APITestCase):
         self.assertEqual(response.json()['default'],False)
         self.assertEqual(response.json()['especialidad']['id'],2)
 
+class PacienteTest(APITestCase):
+    def createPaciente(self):
+        paciente = Paciente.objects.create(
+            firstName = 'Cacho',
+            otherNames = 'Ruben Adolfo',
+            fatherSurname = 'Castaña',
+            motherSurname = 'De los Limones',
+            birthDate = datetime.date(1942,6,11),
+            idpaciente = 'AADDAEDD'
+        )
+
+        return paciente
+
+    def createPacienteMeta(self):
+        paciente = self.createPaciente()
+        meta = PacienteMeta.objects.create(
+            paciente = paciente,
+            metaType = 'PNS',
+            metaValue = 'Sucutrule'
+        )
+
+        return meta
+
+    def test_createPaciente(self):
+        """
+        Asegura crear un Paciente
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createPrestacion()
+
+        data= {
+            'firstName': 'Cacho',
+            'otherNames': 'Humberto Vicente',
+            'fatherSurname': 'Castaña',
+            'motherSurname': 'De los Limones',
+            'birthDate': datetime.date(1942,6,11),
+            'prestaciones':[{'id':1}]
+        }
+        response = self.client.post('/practicas/profesional/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Profesional.objects.count(),1)
+
+    def test_getPacientes(self):
+        """
+        Obtiene todos los Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.get('/practicas/profesional/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getProfesional(self):
+        """
+        Obtiene un Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.get('/practicas/profesional/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredProfesional(self):
+        """
+        Obtiene un Profesional filtrado por nombre y apellido
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.get('/practicas/profesional/?firstName=Cac&fatherSurename=Cas',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteProfesional(self):
+        """
+        Elinima un Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.delete('/practicas/profesional/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Profesional.objects.count(),0)
+
+    def test_updateProfesional(self):
+        """
+        Modifica un Profesional
+        :return:
+        """
+        helperp = GatewayTestHelper()
+        helperp.createProfesional()
+        helperp.createPrestacion()
+        data= {
+            'firstName': 'Pepito',
+            'otherNames': 'Jiminy',
+            'fatherSurname': 'Grillo',
+            'motherSurname': 'Cricket',
+            'birthDate': datetime.date(1882,6,11),
+            'prestaciones':[{'id':1},{'id':2}]
+        }
+        response = self.client.put('/practicas/profesional/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['firstName'],'Pepito')
+        self.assertEqual(response.json()['otherNames'],'Jiminy')
+        self.assertEqual(response.json()['fatherSurname'],'Grillo')
+        self.assertEqual(response.json()['motherSurname'],'Cricket')
+
+class ProfesionalMetaTest(APITestCase):
+    def test_createProfesionalMeta(self):
+        """
+        Asegura crear un Meta Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+
+        data= {
+            'profesional': {'id':1},
+            'metaType': 'PNS',
+            'metaValue': 'Sucutrule'
+        }
+        response = self.client.post('/practicas/meta-profesional/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(ProfesionalMeta.objects.count(),1)
+
+    def test_getProfesionalMetas(self):
+        """
+        Obtiene todos los Profesionales Metas
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesionalMeta()
+        response = self.client.get('/practicas/meta-profesional/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getProfesionalMeta(self):
+        """
+        Obtiene un Meta Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesionalMeta()
+        response = self.client.get('/practicas/meta-profesional/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredProfesionalMeta(self):
+        """
+        Obtiene un Meta Paciente filtrado por metaType
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesionalMeta()
+        response = self.client.get('/practicas/meta-profesional/?metaType=PNS',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteProfesionalMeta(self):
+        """
+        Elinima un MEta Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesionalMeta()
+        response = self.client.delete('/practicas/meta-profesional/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(ProfesionalMeta.objects.count(),0)
+
+    def test_updateProfesionalMeta(self):
+        """
+        Modifica un Meta Profesional
+        :return:
+        """
+        helperp = GatewayTestHelper()
+        helperp.createProfesionalMeta()
+        data= {
+            'profesional': {'id':1},
+            'metaType': 'PND',
+            'metaValue': 'SARANDUNGA'
+        }
+        response = self.client.put('/practicas/meta-profesional/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['metaType'],'PND')
+        self.assertEqual(response.json()['metaValue'],'SARANDUNGA')
+
+
 class GatewayTestHelper():
     def createEspecialidad(self):
         especialidad = Especialidad.objects.create(
@@ -184,3 +369,27 @@ class GatewayTestHelper():
             especialidad = especialidad
         )
         return prestacion
+
+    def createProfesional(self):
+        prestacion = self.createPrestacion()
+        profesional = Profesional.objects.create(
+            firstName = 'Cacho',
+            otherNames = 'Ruben Adolfo',
+            fatherSurname = 'Castaña',
+            motherSurname = 'De los Limones',
+            birthDate = datetime.date(1942,6,11)
+        )
+        profesional.prestaciones.add(prestacion)
+        profesional.save()
+
+        return profesional
+
+    def createProfesionalMeta(self):
+        profesional = self.createProfesional()
+        meta = ProfesionalMeta.objects.create(
+            profesional = profesional,
+            metaType = 'PNS',
+            metaValue = 'Sucutrule'
+        )
+
+        return meta
