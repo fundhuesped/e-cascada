@@ -19,5 +19,5 @@ class Prestacion(models.Model):
     duration = models.IntegerField(default=0)
     status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
     notes = models.CharField(max_length=150, null=False)
-    default = models.BooleanField(default=False)
+    default = models.NullBooleanField(default=False)
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE, related_name='prestaciones')
