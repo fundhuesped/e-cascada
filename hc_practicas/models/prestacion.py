@@ -18,6 +18,6 @@ class Prestacion(models.Model):
     description = models.CharField(max_length=150, null=False)
     duration = models.IntegerField(default=0)
     status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
-    notes = models.CharField(max_length=150, null=True)
+    notes = models.CharField(blank=True, max_length=150, null=True)
     default = models.NullBooleanField(default=False)
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE, related_name='prestaciones')
