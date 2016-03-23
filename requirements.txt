@@ -8,4 +8,4 @@ django-rest-swagger
 django-extensions
 django-audit-log
 django-cors-headers
-
+psycopg2
