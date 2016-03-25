@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_practicas.models import Prestacion, Especialidad
+from hc_practicas.models import Prestacion
 from hc_practicas.serializers import EspecialidadNestedSerializer
 
 class PrestacionNestSerializer(serializers.ModelSerializer):
@@ -41,7 +41,6 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
 
     class Meta:
         model = Prestacion

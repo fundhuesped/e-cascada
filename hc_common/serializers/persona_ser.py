@@ -2,27 +2,29 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.models import Persona
+from hc_common.models import Persona, DocumentType, SexType
 
 class PersonaSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializa una Persona
-    """
     id = serializers.ReadOnlyField()
-    documento = serializers.HyperlinkedRelatedField( #elemento read only, para relacionarlo con el documento
-        read_only=True,
-        view_name='hc_common:Documento-detail')
+
+    documentType = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:DocumentType-detail",
+        queryset=DocumentType.objects
+    )
+
+    genderAtBirth = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:SexType-detail",
+        queryset=SexType.objects
+    )
+
+    genderOfChoice = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:SexType-detail",
+        queryset=SexType.objects
+    )
 
     def create(self, validated_data):
-        """
-        Crea una Persona
-        :param validated_data: Valores con los cuales crear la Persona
-        :return: Una nueva instancia de Persona
-        """
-        persona =  Persona.objects.create(**validated_data)
-        return persona
-
+        return Persona.objects.create(**validated_data)
 
     class Meta:
         model = Persona
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'documento', 'birthDate')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'documentNumber', 'documentType', 'genderAtBirth', 'genderOfChoice', 'email', 'telephone')

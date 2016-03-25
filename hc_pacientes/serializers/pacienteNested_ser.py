@@ -15,7 +15,6 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
     motherSurname = serializers.ReadOnlyField()
     birthDate = serializers.ReadOnlyField()
     idpaciente = serializers.ReadOnlyField()
-
     url = serializers.HyperlinkedIdentityField(
         view_name='hc_pacientes:Paciente-detail',
         lookup_field='pk'
@@ -27,7 +26,6 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
             return personas[0]
         else:
             raise ValueError('Paciente not found')
-
 
     class Meta:
         model = Paciente
