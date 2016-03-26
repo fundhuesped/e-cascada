@@ -23,10 +23,13 @@ class PersonaList(generics.ListCreateAPIView):
         queryset = Persona.objects.all()
         firstName = self.request.query_params.get('firstName')
         fatherSurename = self.request.query_params.get('fatherSurename')
-        if (firstName is not None and len(firstName)>3):
+        status = self.request.query_params.get('status')
+        if firstName is not None and len(firstName)>3:
             queryset = queryset.filter(firstName__startswith=firstName)
-        if (fatherSurename is not None and len(fatherSurename)>3):
+        if fatherSurename is not None and len(fatherSurename)>3:
             queryset = queryset.filter(fatherSurename__startswith=fatherSurename)
+        if status is not None:
+            queryset = queryset.filter(status=status)
         return queryset
 
 class PersonaDetails(generics.RetrieveUpdateDestroyAPIView):
