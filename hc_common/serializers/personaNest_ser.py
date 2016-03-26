@@ -56,7 +56,7 @@ class PersonaNestSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.telephone = validated_data.get('telephone', instance.telephone)
         instance.status = validated_data.get('status', instance.status)
-        instance.documetType = documentType
+        instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice
         instance.save()

@@ -31,7 +31,7 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         especialidad = validated_data.pop('especialidad')
-        instance.name= validated_data.get('name', instance.name)
+        instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.status = validated_data.get('status', instance.status)
         instance.duration = validated_data.get('duration', instance.duration)
