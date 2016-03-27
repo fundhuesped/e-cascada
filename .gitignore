@@ -3,3 +3,4 @@ db.sqlite3
 */critical_settings.py
 **/*.pyc
 .idea/**
+
