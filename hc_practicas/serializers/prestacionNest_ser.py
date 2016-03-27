@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_practicas.models import Prestacion, Especialidad
+from hc_practicas.models import Prestacion
 from hc_practicas.serializers import EspecialidadNestedSerializer
 
 class PrestacionNestSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         especialidad = validated_data.pop('especialidad')
-        instance.name= validated_data.get('name', instance.name)
+        instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.status = validated_data.get('status', instance.status)
         instance.duration = validated_data.get('duration', instance.duration)
@@ -41,7 +41,6 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
 
     class Meta:
         model = Prestacion

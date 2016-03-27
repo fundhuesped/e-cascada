@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
+from hc_common.models import DocumentType, SexType
 from hc_pacientes.models import Paciente
 
 class PacienteSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,9 +10,21 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
     Serializa un Paciente
     """
     id = serializers.ReadOnlyField()
-    documento = serializers.HyperlinkedRelatedField( #elemento read only, para relacionarlo con el documento
-        read_only=True,
-        view_name='hc_common:Documento-detail')
+
+    documentType = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:DocumentType-detail",
+        queryset=DocumentType.objects
+    )
+
+    genderAtBirth = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:SexType-detail",
+        queryset=SexType.objects
+    )
+
+    genderOfChoice = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:SexType-detail",
+        queryset=SexType.objects
+    )
 
     meta = serializers.HyperlinkedRelatedField( #elemento read only, para relacionarlo con el meta del paciente
         read_only=True,
@@ -24,10 +37,9 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
         :param validated_data: Valores con los cuales crear el Paciente
         :return: Una nueva instancia de Paciente
         """
-        persona =  Paciente.objects.create(**validated_data)
+        persona = Paciente.objects.create(**validated_data)
         return persona
-
 
     class Meta:
         model = Paciente
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'documento', 'birthDate', 'idpaciente', 'meta')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'telephone', 'meta', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')
