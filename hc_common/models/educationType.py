@@ -4,5 +4,5 @@
 from hc_common.models import AbstractType
 
 
-class DocumentType(AbstractType):
+class EducationType(AbstractType):
     pass

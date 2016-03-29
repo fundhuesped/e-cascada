@@ -4,6 +4,7 @@
 from rest_framework import serializers
 from hc_practicas.models import Especialidad, Prestacion
 
+
 class PrestacionNestedSerializer(serializers.ModelSerializer):
     """
     Serializa una especialidad, para ser incluida como objeto nested en otro objeto
@@ -22,12 +23,11 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
     )
 
     def to_internal_value(self, data):
-        prestaciones= Prestacion.objects.filter(pk=data['id'])
+        prestaciones = Prestacion.objects.filter(pk=data['id'])
         if prestaciones[0] is not None:
             return prestaciones[0]
         else:
             raise ValueError('Prestacion not found')
-
 
     class Meta:
         model = Prestacion

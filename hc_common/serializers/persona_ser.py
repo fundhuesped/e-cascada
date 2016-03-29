@@ -4,6 +4,7 @@
 from rest_framework import serializers
 from hc_common.models import Persona, DocumentType, SexType
 
+
 class PersonaSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
 
@@ -27,4 +28,5 @@ class PersonaSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Persona
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'documentNumber', 'documentType', 'genderAtBirth', 'genderOfChoice', 'email', 'telephone')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'documentNumber',
+                  'documentType', 'genderAtBirth', 'genderOfChoice', 'email', 'telephone')

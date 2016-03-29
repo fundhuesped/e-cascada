@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.models import DocumentType, SexType
+from hc_common.models import DocumentType, SexType, Phone, Address, CivilStatusType, SocialService, EducationType
 from hc_pacientes.models import Paciente
+
 
 class PacienteSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -26,7 +27,32 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
         queryset=SexType.objects
     )
 
-    meta = serializers.HyperlinkedRelatedField( #elemento read only, para relacionarlo con el meta del paciente
+    telephones = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:Phone-detail",
+        queryset=Phone.objects
+    )
+
+    address = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:Address-detail",
+        queryset=Address.objects
+    )
+
+    civilStatus = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:CivilStatusType-detail",
+        queryset=CivilStatusType.objects
+    )
+
+    socialService = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:SocialService-detail",
+        queryset=SocialService.objects
+    )
+
+    education = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:EducationType-detail",
+        queryset=EducationType.objects
+    )
+
+    meta = serializers.HyperlinkedRelatedField(
         read_only=True,
         many=True,
         view_name='hc_pacientes:PacienteMeta-detail')
@@ -42,4 +68,6 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'telephone', 'meta', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'occupation',
+                  'telephones', 'meta', 'address', 'civilStatus', 'socialService', 'socialNumber', 'education', 'terms',
+                  'status', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')
