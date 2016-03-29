@@ -115,6 +115,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'occupation',
-                  'telephones', 'meta', 'address', 'civilStatus', 'socialService', 'socialNumber', 'education', 'terms',
-                  'status', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'terms',
+                  'status', 'occupation', 'telephones', 'meta', 'address', 'civilStatus', 'socialService',
+                  'socialNumber', 'education', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')

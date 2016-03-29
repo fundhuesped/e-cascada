@@ -7,7 +7,10 @@ from hc_common.serializers import ProvinceNestSerializer
 
 
 class DistrictNestSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = serializers.IntegerField()
+    name = serializers.ReadOnlyField()
+    description = serializers.ReadOnlyField()
+    status = serializers.ReadOnlyField()
 
     province = ProvinceNestSerializer(
         many=False

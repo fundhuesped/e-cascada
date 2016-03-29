@@ -5,7 +5,10 @@ from rest_framework import serializers
 
 
 class TypeNestSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = serializers.IntegerField()
+    name = serializers.ReadOnlyField()
+    description = serializers.ReadOnlyField()
+    status = serializers.ReadOnlyField()
 
     def create(self, validated_data):
         custom = self.Meta.model.objects.create(
