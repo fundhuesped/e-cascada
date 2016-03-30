@@ -16,45 +16,8 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
     motherSurname = serializers.ReadOnlyField()
     birthDate = serializers.ReadOnlyField()
     idpaciente = serializers.ReadOnlyField()
-    documentNumber = serializers.ReadOnlyField()
-    email = serializers.ReadOnlyField()
-    telephone = serializers.ReadOnlyField()
-    status = serializers.ReadOnlyField()
-
-    documentType = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:DocumentType-detail',
-        lookup_field='pk'
-    )
-    genderAtBirth = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:SexType-detail',
-        lookup_field='pk'
-    )
-    genderOfChoice = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:SexType-detail',
-        lookup_field='pk'
-    )
-    telephones = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:Phone-detail',
-        lookup_field='pk'
-    )
-    address = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:Address-detail',
-        lookup_field='pk'
-    )
-    civilStatus = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:CivilStatusType-detail',
-        lookup_field='pk'
-    )
-    socialService = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:SocialService-detail',
-        lookup_field='pk'
-    )
-    education = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:EducationType-detail',
-        lookup_field='pk'
-    )
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:Paciente-detail',
+        view_name='hc_pacientes:Paciente-detail',
         lookup_field='pk'
     )
 
@@ -67,6 +30,4 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'occupation',
-                  'telephones', 'meta', 'address', 'civilStatus', 'socialService', 'socialNumber', 'education', 'terms',
-                  'status', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice', 'url')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'idpaciente', 'url')
