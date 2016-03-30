@@ -1,5 +1,6 @@
 from .type_ser import *
 from .typeNested_ser import *
+from .typeNest_ser import *
 from .sexType_ser import *
 from .sexTypeNested_ser import *
 from .province_ser import *
@@ -13,3 +14,10 @@ from .location_ser import *
 from .locationNested_ser import *
 from .documentType_ser import *
 from .documentTypeNested_ser import *
+from .educationType_ser import *
+from .educationTypeNested_ser import *
+from .civilStatusType_ser import *
+from .civilStatusTypeNested_ser import *
+from .socialService_ser import *
+from .socialServiceNested_ser import *
+from .documentType_ser import *

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from hc_common.models import DocumentType, SexType, Location, ActiveModel
+from hc_common.models import DocumentType, SexType, Location, SocialService, CivilStatusType, EducationType, ActiveModel
 
 
 class Persona(ActiveModel):
@@ -24,3 +24,12 @@ class Persona(ActiveModel):
     street = models.CharField(max_length=150, null=True)
     postal = models.CharField(max_length=10, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='personLocation', null=True)
+    primaryPhoneNumber = models.CharField(max_length=20, null=True)
+    primaryPhoneContact = models.CharField(max_length=70, null=True)
+    primaryPhoneMessage = models.BooleanField(null=False, default=False)
+    occupation = models.CharField(max_length=150, null=True)
+    terms = models.BooleanField(default=False)
+    socialService = models.ForeignKey(SocialService, null=True)
+    socialServiceNumber = models.CharField(max_length=20, null=True)
+    civilStatus = models.ForeignKey(CivilStatusType, null=True)
+    education = models.ForeignKey(EducationType, null=True)

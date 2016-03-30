@@ -20,4 +20,13 @@ urlpatterns = [
 
     url(r'^location/$', views.LocationList.as_view(), name='Location-list'),
     url(r'^location/(?P<pk>[0-9]+)/$', views.LocationDetails.as_view(), name='Location-detail'),
+
+    url(r'^educationType/$', views.EducationTypeList.as_view(), name='EducationType-list'),
+    url(r'^educationType/(?P<pk>[0-9]+)/$', views.EducationTypeDetails.as_view(), name='EducationType-detail'),
+
+    url(r'^civilStatusType/$', views.CivilStatusTypeList.as_view(), name='CivilStatusType-list'),
+    url(r'^civilStatusType/(?P<pk>[0-9]+)/$', views.CivilStatusTypeDetails.as_view(), name='CivilStatusType-detail'),
+
+    url(r'^socialService/$', views.SocialServiceList.as_view(), name='SocialService-list'),
+    url(r'^socialService/(?P<pk>[0-9]+)/$', views.SocialServiceDetails.as_view(), name='SocialService-detail'),
 ]

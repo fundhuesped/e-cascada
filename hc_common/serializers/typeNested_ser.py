@@ -18,4 +18,4 @@ class TypeNestedSerializer(serializers.ModelSerializer):
             raise ValueError('Type not found')
 
     class Meta:
-        fields = ('id', 'name', 'description', 'status', 'url')
+        fields = ('id', 'name', 'description', 'status')

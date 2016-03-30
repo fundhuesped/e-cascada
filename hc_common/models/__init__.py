@@ -8,4 +8,7 @@ from .district import *
 from .location import *
 from .sexType import *
 from .documentType import *
+from .civilStatusType import *
+from .educationType import *
+from .socialService import *
 from .persona import *
