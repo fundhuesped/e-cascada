@@ -3,13 +3,13 @@
 
 from rest_framework import serializers
 from hc_common.models import Location
-from hc_common.serializers import DistrictNestedSerializer
+from hc_common.serializers import DistrictNestSerializer
 
 
 class LocationNestSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
-    district = DistrictNestedSerializer(
+    district = DistrictNestSerializer(
         many=False
     )
 

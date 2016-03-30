@@ -3,7 +3,7 @@
 
 from rest_framework import serializers
 from hc_common.models import District
-from hc_common.serializers import ProvinceNestedSerializer
+from hc_common.serializers import ProvinceNestSerializer
 
 
 class DistrictNestSerializer(serializers.ModelSerializer):
@@ -14,7 +14,7 @@ class DistrictNestSerializer(serializers.ModelSerializer):
         lookup_field='pk'
     )
 
-    province = ProvinceNestedSerializer(
+    province = ProvinceNestSerializer(
         many=False
     )
 
