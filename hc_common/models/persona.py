@@ -19,7 +19,6 @@ class Persona(ActiveModel):
     genderAtBirth = models.ForeignKey(SexType, on_delete=models.CASCADE, related_name='personGenderBirth', null=True)
     genderOfChoice = models.ForeignKey(SexType, on_delete=models.CASCADE, related_name='personGenderChoice', null=True)
     email = models.CharField(max_length=70, null=True)
-    telephone = models.CharField(max_length=20, null=True)
     status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES, default=ActiveModel.STATUS_ACTIVE)
     street = models.CharField(max_length=150, null=True)
     postal = models.CharField(max_length=10, null=True)

@@ -59,7 +59,6 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Paciente
         fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
-                  'telephone',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage',
                   'occupation', 'civilStatus', 'education', 'socialService', 'socialServiceNumber', 'terms')

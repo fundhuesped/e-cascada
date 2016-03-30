@@ -58,7 +58,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             birthDate=validated_data.get('birthDate'),
             documentNumber=validated_data.get('documentNumber'),
             email=validated_data.get('email'),
-            telephone=validated_data.get('telephone'),
             street=validated_data.get('street'),
             postal=validated_data.get('postal'),
             status=validated_data.get('status'),
@@ -94,7 +93,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.birthDate = validated_data.get('birthDate', instance.birthDate)
         instance.documentNumber = validated_data.get('documentNumber', instance.documentNumber)
         instance.email = validated_data.get('email', instance.email)
-        instance.telephone = validated_data.get('telephone', instance.telephone)
         instance.street = validated_data.get('street', instance.street)
         instance.postal = validated_data.get('postal', instance.postal)
         instance.status = validated_data.get('status', instance.status)
@@ -118,7 +116,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paciente
         fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
-                  'telephone',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage',
                   'occupation', 'civilStatus', 'education', 'socialService', 'socialServiceNumber', 'terms')

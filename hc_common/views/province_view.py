@@ -11,7 +11,17 @@ class ProvinceList(generics.ListCreateAPIView):
     serializer_class = ProvinceSerializer
     queryset = Province.objects.all()
     permission_classes = (AllowAny,)
-    paginate_by = 5
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Province.objects.all()
+        name = self.request.query_params.get('name')
+        status = self.request.query_params.get('status')
+        if name is not None:
+            queryset = queryset.filter(name__startswith=name)
+        if status is not None:
+            queryset = queryset.filter(status=status)
+        return queryset
 
 
 class ProvinceDetails(generics.RetrieveUpdateDestroyAPIView):
