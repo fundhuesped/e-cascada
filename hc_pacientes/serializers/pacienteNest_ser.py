@@ -30,15 +30,15 @@ class PacienteNestSerializer(serializers.ModelSerializer):
     )
 
     civilStatus = CivilStatusTypeNestedSerializer(
-        many=False
+        many=False, allow_null=True
     )
 
     education = EducationTypeNestedSerializer(
-        many=False
+        many=False, allow_null=True
     )
 
     socialService = SocialServiceNestedSerializer(
-        many=False
+        many=False, allow_null=True
     )
 
     def create(self, validated_data):
