@@ -3,7 +3,8 @@
 
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
-from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestedSerializer, \
+from hc_common.models import Location
+from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestSerializer, \
     CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer
 
 
@@ -25,7 +26,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         many=False
     )
 
-    location = LocationNestedSerializer(
+    location = LocationNestSerializer(
         many=False
     )
 
@@ -46,6 +47,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         genderAtBirth = validated_data.pop('genderAtBirth')
         genderOfChoice = validated_data.pop('genderOfChoice')
         location = validated_data.pop('location')
+        location = Location.objects.filter(pk=location['id'])
         civilStatus = validated_data.pop('civilStatus')
         education = validated_data.pop('education')
         socialService = validated_data.pop('socialService')
@@ -70,7 +72,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             documentType=documentType,
             genderAtBirth=genderAtBirth,
             genderOfChoice=genderOfChoice,
-            location=location,
+            location=location[0],
             civilStatus=civilStatus,
             education=education,
             socialService=socialService
@@ -82,6 +84,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         genderAtBirth = validated_data.pop('genderAtBirth')
         genderOfChoice = validated_data.pop('genderOfChoice')
         location = validated_data.pop('location')
+        location = Location.objects.filter(pk=location['id'])
         civilStatus = validated_data.pop('civilStatus')
         education = validated_data.pop('education')
         socialService = validated_data.pop('socialService')
@@ -105,7 +108,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice
-        instance.location = location
+        instance.location = location[0]
         instance.civilStatus = civilStatus
         instance.education = education
         instance.socialService = socialService

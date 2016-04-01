@@ -3,12 +3,12 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_common.serializers import DistrictSerializer
+from hc_common.serializers import DistrictNestSerializer
 from hc_common.models import District
 
 
 class DistrictList(generics.ListCreateAPIView):
-    serializer_class = DistrictSerializer
+    serializer_class = DistrictNestSerializer
     queryset = District.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -28,6 +28,6 @@ class DistrictList(generics.ListCreateAPIView):
 
 
 class DistrictDetails(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = DistrictSerializer
+    serializer_class = DistrictNestSerializer
     queryset = District.objects.all()
     permission_classes = (AllowAny,)

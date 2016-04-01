@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.models import Location
+from hc_common.models import Location, District
 from hc_common.serializers import DistrictNestSerializer
 
 
 class LocationNestSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+    id = serializers.IntegerField()
 
     district = DistrictNestSerializer(
         many=False
@@ -15,11 +15,12 @@ class LocationNestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         district = validated_data.pop('district')
+        district = District.objects.filter(pk=district['id'])
         location = Location.objects.create(
             name=validated_data.get('name'),
             description=validated_data.get('description'),
             status=validated_data.get('status'),
-            district=district
+            district=district[0]
         )
         return location
 

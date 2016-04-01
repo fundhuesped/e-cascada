@@ -2,17 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.models import District
+from hc_common.models import District, Province
 from hc_common.serializers import ProvinceNestSerializer
 
 
 class DistrictNestSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-
-    url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:District-detail',
-        lookup_field='pk'
-    )
+    id = serializers.IntegerField()
 
     province = ProvinceNestSerializer(
         many=False
@@ -20,11 +15,12 @@ class DistrictNestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         province = validated_data.pop('province')
+        province = Province.objects.filter(pk=province['id'])
         location = District.objects.create(
             name=validated_data.get('name'),
             description=validated_data.get('description'),
             status=validated_data.get('status'),
-            province=province
+            province=province[0]
         )
         return location
 
@@ -40,4 +36,4 @@ class DistrictNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = District
-        fields = ('id', 'name', 'description', 'status', 'url', 'province')
+        fields = ('id', 'name', 'description', 'status', 'province')
