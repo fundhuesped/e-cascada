@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.models import DocumentType, SexType, Location, CivilStatusType, EducationType, SocialService
+from hc_common.models import DocumentType, SexType, Location, CivilStatusType, EducationType, SocialService, Phone
 from hc_pacientes.models import Paciente
 
 
@@ -47,6 +47,21 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
         queryset=SocialService.objects
     )
 
+    primaryPhone = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:Phone-detail",
+        queryset=Phone.objects
+    )
+
+    secondPhone = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:Phone-detail",
+        queryset=Phone.objects
+    )
+
+    thirdPhone = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:Phone-detail",
+        queryset=Phone.objects
+    )
+
     def create(self, validated_data):
         """
         Crea un paciente
@@ -60,5 +75,6 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
         model = Paciente
         fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
-                  'genderOfChoice', 'location', 'primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage',
-                  'occupation', 'civilStatus', 'education', 'socialService', 'socialServiceNumber', 'terms')
+                  'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
+                  'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhone', 'secondPhone',
+                  'thirdPhone')

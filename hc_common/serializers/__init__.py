@@ -21,3 +21,5 @@ from .civilStatusTypeNested_ser import *
 from .socialService_ser import *
 from .socialServiceNested_ser import *
 from .documentType_ser import *
+from .phone_ser import *
+from .phoneNest_ser import *

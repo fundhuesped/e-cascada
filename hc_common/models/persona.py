@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from hc_common.models import DocumentType, SexType, Location, SocialService, CivilStatusType, EducationType, ActiveModel
+from hc_common.models import DocumentType, SexType, Location, SocialService, CivilStatusType, EducationType, Phone, \
+    ActiveModel
 
 
 class Persona(ActiveModel):
@@ -23,12 +24,15 @@ class Persona(ActiveModel):
     street = models.CharField(max_length=150, null=True)
     postal = models.CharField(max_length=10, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='personLocation', null=True)
-    primaryPhoneNumber = models.CharField(max_length=20, null=True)
-    primaryPhoneContact = models.CharField(max_length=70, null=True)
-    primaryPhoneMessage = models.BooleanField(null=False, default=False)
     occupation = models.CharField(max_length=150, blank=True, null=True)
     terms = models.BooleanField(default=False)
     socialService = models.ForeignKey(SocialService, models.SET_NULL, blank=True, null=True)
     socialServiceNumber = models.CharField(max_length=20, null=True, blank=True)
     civilStatus = models.ForeignKey(CivilStatusType, models.SET_NULL, blank=True, null=True)
     education = models.ForeignKey(EducationType, models.SET_NULL, blank=True, null=True)
+    bornPlace = models.CharField(max_length=40, null=True)
+    primaryPhone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='personPhone', null=True)
+    secondPhone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='personSecondPhone', null=True)
+    thirdPhone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='personThirdPhone', null=True)
+    firstVisit = models.DateField(null=True)
+    notes = models.CharField(max_length=150, null=True)
