@@ -47,11 +47,11 @@ class PacienteNestSerializer(serializers.ModelSerializer):
     )
 
     secondPhone = PhoneNestSerializer(
-        many=False
+        many=False, allow_null=True
     )
 
     thirdPhone = PhoneNestSerializer(
-        many=False
+        many=False, allow_null=True
     )
 
     def create(self, validated_data):
@@ -99,9 +99,9 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
     def create_phone_instance(self, phone):
         instance = Phone.objects.create(
-            number=phone['number'],
-            contact=phone['contact'],
-            message=phone['message']
+            number=phone.get('number'),
+            contact=phone.get('contact'),
+            message=phone.get('message'),
         )
         return instance
 
@@ -151,9 +151,10 @@ class PacienteNestSerializer(serializers.ModelSerializer):
     def update_phone_instance(self, phone):
         phones = Phone.objects.filter(pk=phone['id'])
         updated_phone = phones[0]
-        updated_phone.number = phone['number']
-        updated_phone.contact = phone['contact']
-        updated_phone.message = phone['message']
+        updated_phone.number = phone.get('number', updated_phone.number)
+        updated_phone.contact = phone.get('contact', updated_phone.contact)
+        updated_phone.message = phone.get('message', updated_phone.message)
+        updated_phone.save()
         return updated_phone
 
     class Meta:
