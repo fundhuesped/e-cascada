@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from hc_common.serializers import TypeSerializer
-from hc_common.models import SexType
+from hc_common.models import EducationType
 
 
-class SexTypeSerializer(TypeSerializer):
+class EducationTypeSerializer(TypeSerializer):
     class Meta(TypeSerializer.Meta):
-        model = SexType
+        model = EducationType

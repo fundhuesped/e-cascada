@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.models import DocumentType, SexType
+from hc_common.models import DocumentType, SexType, Location, CivilStatusType, EducationType, SocialService
 from hc_pacientes.models import Paciente
+
 
 class PacienteSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -26,10 +27,25 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
         queryset=SexType.objects
     )
 
-    meta = serializers.HyperlinkedRelatedField( #elemento read only, para relacionarlo con el meta del paciente
-        read_only=True,
-        many=True,
-        view_name='hc_pacientes:PacienteMeta-detail')
+    location = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:Location-detail",
+        queryset=Location.objects
+    )
+
+    civilStatus = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:CivilStatusType-detail",
+        queryset=CivilStatusType.objects
+    )
+
+    education = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:EducationType-detail",
+        queryset=EducationType.objects
+    )
+
+    socialService = serializers.HyperlinkedRelatedField(
+        view_name="hc_common:SocialService-detail",
+        queryset=SocialService.objects
+    )
 
     def create(self, validated_data):
         """
@@ -42,4 +58,7 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'telephone', 'meta', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')
+        fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
+                  'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
+                  'genderOfChoice', 'location', 'primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage',
+                  'occupation', 'civilStatus', 'education', 'socialService', 'socialServiceNumber', 'terms')

@@ -3,19 +3,16 @@
 
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
-from hc_pacientes.serializers import PacienteMetaNestedSerializer
-from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer
+from hc_common.models import Location
+from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestSerializer, \
+    CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer
+
 
 class PacienteNestSerializer(serializers.ModelSerializer):
     """
     Serializa una Paciente
     """
     id = serializers.ReadOnlyField()
-
-    meta = PacienteMetaNestedSerializer(
-        many=True,
-        read_only=True
-    )
 
     documentType = DocumentTypeNestedSerializer(
         many=False
@@ -29,24 +26,56 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         many=False
     )
 
+    location = LocationNestSerializer(
+        many=False
+    )
+
+    civilStatus = CivilStatusTypeNestedSerializer(
+        many=False, allow_null=True
+    )
+
+    education = EducationTypeNestedSerializer(
+        many=False, allow_null=True
+    )
+
+    socialService = SocialServiceNestedSerializer(
+        many=False, allow_null=True
+    )
+
     def create(self, validated_data):
         documentType = validated_data.pop('documentType')
         genderAtBirth = validated_data.pop('genderAtBirth')
         genderOfChoice = validated_data.pop('genderOfChoice')
+        location = validated_data.pop('location')
+        location = Location.objects.filter(pk=location['id'])
+        civilStatus = validated_data.pop('civilStatus')
+        education = validated_data.pop('education')
+        socialService = validated_data.pop('socialService')
         paciente = Paciente.objects.create(
-            idpaciente = validated_data.get('idpaciente'),
-            firstName = validated_data.get('firstName'),
-            otherNames = validated_data.get('otherNames'),
-            fatherSurname = validated_data.get('fatherSurname'),
-            motherSurname = validated_data.get('motherSurname'),
-            birthDate = validated_data.get('birthDate'),
-            documentNumber = validated_data.get('documentNumber'),
-            email = validated_data.get('email'),
-            telephone = validated_data.get('telephone'),
-            status = validated_data.get('status'),
-            documentType = documentType,
-            genderAtBirth = genderAtBirth,
-            genderOfChoice = genderOfChoice
+            idpaciente=validated_data.get('idpaciente'),
+            firstName=validated_data.get('firstName'),
+            otherNames=validated_data.get('otherNames'),
+            fatherSurname=validated_data.get('fatherSurname'),
+            motherSurname=validated_data.get('motherSurname'),
+            birthDate=validated_data.get('birthDate'),
+            documentNumber=validated_data.get('documentNumber'),
+            email=validated_data.get('email'),
+            street=validated_data.get('street'),
+            postal=validated_data.get('postal'),
+            status=validated_data.get('status'),
+            primaryPhoneNumber=validated_data.get('primaryPhoneNumber'),
+            primaryPhoneContact=validated_data.get('primaryPhoneContact'),
+            primaryPhoneMessage=validated_data.get('primaryPhoneMessage'),
+            occupation=validated_data.get('occupation'),
+            socialServiceNumber=validated_data.get('socialServiceNumber'),
+            terms=validated_data.get('terms'),
+            documentType=documentType,
+            genderAtBirth=genderAtBirth,
+            genderOfChoice=genderOfChoice,
+            location=location[0],
+            civilStatus=civilStatus,
+            education=education,
+            socialService=socialService
         )
         return paciente
 
@@ -54,6 +83,11 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         documentType = validated_data.pop('documentType')
         genderAtBirth = validated_data.pop('genderAtBirth')
         genderOfChoice = validated_data.pop('genderOfChoice')
+        location = validated_data.pop('location')
+        location = Location.objects.filter(pk=location['id'])
+        civilStatus = validated_data.pop('civilStatus')
+        education = validated_data.pop('education')
+        socialService = validated_data.pop('socialService')
         instance.idpaciente = validated_data.get('idpaciente', instance.idpaciente)
         instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
@@ -62,15 +96,29 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.birthDate = validated_data.get('birthDate', instance.birthDate)
         instance.documentNumber = validated_data.get('documentNumber', instance.documentNumber)
         instance.email = validated_data.get('email', instance.email)
-        instance.telephone = validated_data.get('telephone', instance.telephone)
+        instance.street = validated_data.get('street', instance.street)
+        instance.postal = validated_data.get('postal', instance.postal)
         instance.status = validated_data.get('status', instance.status)
+        instance.primaryPhoneNumber = validated_data.get('primaryPhoneNumber', instance.primaryPhoneNumber)
+        instance.primaryPhoneContact = validated_data.get('primaryPhoneContact', instance.primaryPhoneContact)
+        instance.primaryPhoneMessage = validated_data.get('primaryPhoneMessage', instance.primaryPhoneMessage)
+        instance.occupation = validated_data.get('occupation', instance.occupation)
+        instance.socialServiceNumber = validated_data.get('socialServiceNumber', instance.socialServiceNumber)
+        instance.terms = validated_data.get('terms', instance.terms)
         instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice
+        instance.location = location[0]
+        instance.civilStatus = civilStatus
+        instance.education = education
+        instance.socialService = socialService
         instance.save()
 
         return instance
 
     class Meta:
         model = Paciente
-        fields = ('id', 'idpaciente', 'status', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email', 'telephone', 'meta', 'documentType', 'documentNumber', 'genderAtBirth', 'genderOfChoice')
+        fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
+                  'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
+                  'genderOfChoice', 'location', 'primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage',
+                  'occupation', 'civilStatus', 'education', 'socialService', 'socialServiceNumber', 'terms')

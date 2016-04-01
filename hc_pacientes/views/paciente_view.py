@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 
+
 class PacienteList(generics.ListCreateAPIView):
     """
     Vista para listar Pacientes existentes, o crear un nuevo Paciente
@@ -24,13 +25,14 @@ class PacienteList(generics.ListCreateAPIView):
         firstName = self.request.query_params.get('firstName')
         fatherSurename = self.request.query_params.get('fatherSurename')
         status = self.request.query_params.get('status')
-        if firstName is not None and len(firstName)>3:
+        if firstName is not None and len(firstName) > 3:
             queryset = queryset.filter(firstName__startswith=firstName)
-        if fatherSurename is not None and len(fatherSurename)>3:
+        if fatherSurename is not None and len(fatherSurename) > 3:
             queryset = queryset.filter(fatherSurename__startswith=fatherSurename)
         if status is not None:
             queryset = queryset.filter(status=status)
         return queryset
+
 
 class PacienteDetails(generics.RetrieveUpdateDestroyAPIView):
     """
