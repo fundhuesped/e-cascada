@@ -63,12 +63,21 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             street=validated_data.get('street'),
             postal=validated_data.get('postal'),
             status=validated_data.get('status'),
-            primaryPhoneNumber=validated_data.get('primaryPhoneNumber'),
-            primaryPhoneContact=validated_data.get('primaryPhoneContact'),
-            primaryPhoneMessage=validated_data.get('primaryPhoneMessage'),
             occupation=validated_data.get('occupation'),
             socialServiceNumber=validated_data.get('socialServiceNumber'),
             terms=validated_data.get('terms'),
+            bornPlace=validated_data.get('bornPlace'),
+            firstVisit=validated_data.get('firstVisit'),
+            notes=validated_data.get('notes'),
+            primaryPhoneNumber=validated_data.get('primaryPhoneNumber'),
+            primaryPhoneContact=validated_data.get('primaryPhoneContact'),
+            primaryPhoneMessage=validated_data.get('primaryPhoneMessage'),
+            secondPhoneNumber=validated_data.get('secondPhoneNumber'),
+            secondPhoneContact=validated_data.get('secondPhoneContact'),
+            secondPhoneMessage=validated_data.get('secondPhoneMessage'),
+            thirdPhoneNumber=validated_data.get('thirdPhoneNumber'),
+            thirdPhoneContact=validated_data.get('thirdPhoneContact'),
+            thirdPhoneMessage=validated_data.get('thirdPhoneMessage'),
             documentType=documentType,
             genderAtBirth=genderAtBirth,
             genderOfChoice=genderOfChoice,
@@ -99,12 +108,21 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.street = validated_data.get('street', instance.street)
         instance.postal = validated_data.get('postal', instance.postal)
         instance.status = validated_data.get('status', instance.status)
-        instance.primaryPhoneNumber = validated_data.get('primaryPhoneNumber', instance.primaryPhoneNumber)
-        instance.primaryPhoneContact = validated_data.get('primaryPhoneContact', instance.primaryPhoneContact)
-        instance.primaryPhoneMessage = validated_data.get('primaryPhoneMessage', instance.primaryPhoneMessage)
         instance.occupation = validated_data.get('occupation', instance.occupation)
         instance.socialServiceNumber = validated_data.get('socialServiceNumber', instance.socialServiceNumber)
         instance.terms = validated_data.get('terms', instance.terms)
+        instance.bornPlace = validated_data.get('bornPlace', instance.bornPlace)
+        instance.firstVisit = validated_data.get('firstVisit', instance.firstVisit)
+        instance.notes = validated_data.get('notes', instance.notes)
+        instance.primaryPhoneNumber = validated_data.get('primaryPhoneNumber', instance.primaryPhoneNumber)
+        instance.primaryPhoneContact = validated_data.get('primaryPhoneContact', instance.primaryPhoneContact)
+        instance.primaryPhoneMessage = validated_data.get('primaryPhoneMessage', instance.primaryPhoneMessage)
+        instance.secondPhoneNumber = validated_data.get('secondPhoneNumber', instance.secondPhoneNumber)
+        instance.secondPhoneContact = validated_data.get('secondPhoneContact', instance.secondPhoneContact)
+        instance.secondPhoneMessage = validated_data.get('secondPhoneMessage', instance.secondPhoneMessage)
+        instance.thirdPhoneNumber = validated_data.get('thirdPhoneNumber', instance.thirdPhoneNumber)
+        instance.thirdPhoneContact = validated_data.get('thirdPhoneContact', instance.thirdPhoneContact)
+        instance.thirdPhoneMessage = validated_data.get('primaryPhoneMessage', instance.thirdPhoneMessage)
         instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice
@@ -120,5 +138,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         model = Paciente
         fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
-                  'genderOfChoice', 'location', 'primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage',
-                  'occupation', 'civilStatus', 'education', 'socialService', 'socialServiceNumber', 'terms')
+                  'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
+                  'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
+                  'primaryPhoneContact', 'primaryPhoneMessage', 'secondPhoneNumber', 'secondPhoneContact',
+                  'secondPhoneMessage', 'thirdPhoneNumber', 'thirdPhoneContact', 'thirdPhoneMessage')
