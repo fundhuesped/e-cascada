@@ -29,7 +29,4 @@ urlpatterns = [
 
     url(r'^socialService/$', views.SocialServiceList.as_view(), name='SocialService-list'),
     url(r'^socialService/(?P<pk>[0-9]+)/$', views.SocialServiceList.as_view(), name='SocialService-detail'),
-
-    url(r'^phone/$', views.PhoneList.as_view(), name='Phone-list'),
-    url(r'^phone/(?P<pk>[0-9]+)/$', views.SocialServiceDetails.as_view(), name='Phone-detail'),
 ]

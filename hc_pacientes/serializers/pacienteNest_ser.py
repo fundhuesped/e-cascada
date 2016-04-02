@@ -3,9 +3,9 @@
 
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
-from hc_common.models import Location, Phone
+from hc_common.models import Location
 from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestSerializer, \
-    CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer, PhoneNestSerializer
+    CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer
 
 
 class PacienteNestSerializer(serializers.ModelSerializer):
@@ -42,18 +42,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         many=False, allow_null=True
     )
 
-    primaryPhone = PhoneNestSerializer(
-        many=False
-    )
-
-    secondPhone = PhoneNestSerializer(
-        many=False, allow_null=True
-    )
-
-    thirdPhone = PhoneNestSerializer(
-        many=False, allow_null=True
-    )
-
     def create(self, validated_data):
         documentType = validated_data.pop('documentType')
         genderAtBirth = validated_data.pop('genderAtBirth')
@@ -63,9 +51,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         civilStatus = validated_data.pop('civilStatus')
         education = validated_data.pop('education')
         socialService = validated_data.pop('socialService')
-        primaryPhone = self.create_phone_instance(validated_data.pop('primaryPhone'))
-        secondPhone = self.create_phone_instance(validated_data.pop('secondPhone'))
-        thirdPhone = self.create_phone_instance(validated_data.pop('thirdPhone'))
         paciente = Paciente.objects.create(
             idpaciente=validated_data.get('idpaciente'),
             firstName=validated_data.get('firstName'),
@@ -84,26 +69,24 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             bornPlace=validated_data.get('bornPlace'),
             firstVisit=validated_data.get('firstVisit'),
             notes=validated_data.get('notes'),
+            primaryPhoneNumber=validated_data.get('primaryPhoneNumber'),
+            primaryPhoneContact=validated_data.get('primaryPhoneContact'),
+            primaryPhoneMessage=validated_data.get('primaryPhoneMessage'),
+            secondPhoneNumber=validated_data.get('secondPhoneNumber'),
+            secondPhoneContact=validated_data.get('secondPhoneContact'),
+            secondPhoneMessage=validated_data.get('secondPhoneMessage'),
+            thirdPhoneNumber=validated_data.get('thirdPhoneNumber'),
+            thirdPhoneContact=validated_data.get('thirdPhoneContact'),
+            thirdPhoneMessage=validated_data.get('thirdPhoneMessage'),
             documentType=documentType,
             genderAtBirth=genderAtBirth,
             genderOfChoice=genderOfChoice,
             location=location[0],
             civilStatus=civilStatus,
             education=education,
-            socialService=socialService,
-            primaryPhone=primaryPhone,
-            secondPhone=secondPhone,
-            thirdPhone=thirdPhone
+            socialService=socialService
         )
         return paciente
-
-    def create_phone_instance(self, phone):
-        instance = Phone.objects.create(
-            number=phone.get('number'),
-            contact=phone.get('contact'),
-            message=phone.get('message'),
-        )
-        return instance
 
     def update(self, instance, validated_data):
         documentType = validated_data.pop('documentType')
@@ -114,9 +97,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         civilStatus = validated_data.pop('civilStatus')
         education = validated_data.pop('education')
         socialService = validated_data.pop('socialService')
-        primaryPhone = self.update_phone_instance(validated_data.pop('primaryPhone'))
-        secondPhone = self.update_phone_instance(validated_data.pop('secondPhone'))
-        thirdPhone = self.update_phone_instance(validated_data.pop('thirdPhone'))
         instance.idpaciente = validated_data.get('idpaciente', instance.idpaciente)
         instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
@@ -134,6 +114,15 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.bornPlace = validated_data.get('bornPlace', instance.bornPlace)
         instance.firstVisit = validated_data.get('firstVisit', instance.firstVisit)
         instance.notes = validated_data.get('notes', instance.notes)
+        instance.primaryPhoneNumber = validated_data.get('primaryPhoneNumber', instance.primaryPhoneNumber)
+        instance.primaryPhoneContact = validated_data.get('primaryPhoneContact', instance.primaryPhoneContact)
+        instance.primaryPhoneMessage = validated_data.get('primaryPhoneMessage', instance.primaryPhoneMessage)
+        instance.secondPhoneNumber = validated_data.get('secondPhoneNumber', instance.secondPhoneNumber)
+        instance.secondPhoneContact = validated_data.get('secondPhoneContact', instance.secondPhoneContact)
+        instance.secondPhoneMessage = validated_data.get('secondPhoneMessage', instance.secondPhoneMessage)
+        instance.thirdPhoneNumber = validated_data.get('thirdPhoneNumber', instance.thirdPhoneNumber)
+        instance.thirdPhoneContact = validated_data.get('thirdPhoneContact', instance.thirdPhoneContact)
+        instance.thirdPhoneMessage = validated_data.get('primaryPhoneMessage', instance.thirdPhoneMessage)
         instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice
@@ -141,26 +130,15 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.civilStatus = civilStatus
         instance.education = education
         instance.socialService = socialService
-        instance.primaryPhone = primaryPhone
-        instance.secondPhone = secondPhone
-        instance.thirdPhone = thirdPhone
         instance.save()
 
         return instance
-
-    def update_phone_instance(self, phone):
-        phones = Phone.objects.filter(pk=phone['id'])
-        updated_phone = phones[0]
-        updated_phone.number = phone.get('number', updated_phone.number)
-        updated_phone.contact = phone.get('contact', updated_phone.contact)
-        updated_phone.message = phone.get('message', updated_phone.message)
-        updated_phone.save()
-        return updated_phone
 
     class Meta:
         model = Paciente
         fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
-                  'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhone', 'secondPhone',
-                  'thirdPhone')
+                  'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
+                  'primaryPhoneContact', 'primaryPhoneMessage', 'secondPhoneNumber', 'secondPhoneContact',
+                  'secondPhoneMessage', 'thirdPhoneNumber', 'thirdPhoneContact', 'thirdPhoneMessage')
