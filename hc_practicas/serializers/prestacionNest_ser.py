@@ -5,12 +5,8 @@ from rest_framework import serializers
 from hc_practicas.models import Prestacion
 from hc_practicas.serializers import EspecialidadNestedSerializer
 
-class PrestacionNestSerializer(serializers.ModelSerializer):
-    """
-    Serializa una Prestación
-    """
-    id = serializers.ReadOnlyField()
 
+class PrestacionNestSerializer(serializers.ModelSerializer):
     especialidad = EspecialidadNestedSerializer(
         many=False
     )
@@ -18,13 +14,13 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         especialidad = validated_data.pop('especialidad')
         prestacion = Prestacion.objects.create(
-            name = validated_data.get('name'),
-            description = validated_data.get('description'),
-            status = validated_data.get('status'),
-            duration = validated_data.get('duration'),
-            default = validated_data.get('default'),
-            notes = validated_data.get('notes'),
-            especialidad = especialidad
+            name=validated_data.get('name'),
+            description=validated_data.get('description'),
+            status=validated_data.get('status'),
+            duration=validated_data.get('duration'),
+            default=validated_data.get('default'),
+            notes=validated_data.get('notes'),
+            especialidad=especialidad
         )
 
         return prestacion
@@ -44,4 +40,10 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prestacion
+        extra_kwargs = {
+            "id": {
+                "read_only": False,
+                "required": False,
+            },
+        }
         fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'especialidad')
