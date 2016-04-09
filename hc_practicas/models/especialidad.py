@@ -2,19 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from hc_common.models import ActiveModel
 
-class Especialidad(models.Model):
-    """
-    Clase que representa la información mínima necesaria para gestionar una Especialidad
-    """
-    STATUS_ACTIVE = 'Active'
-    STATUS_INACTIVE = 'Inactive'
 
-    STATUS_CHOICES = (
-        (STATUS_ACTIVE, 'Activo'),
-        (STATUS_INACTIVE, 'Inactivo')
-    )
-
+class Especialidad(ActiveModel):
     name = models.CharField(max_length=70, null=False)
     description = models.CharField(max_length=150, null=False)
-    status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
+    status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES, default=ActiveModel.STATUS_ACTIVE)
