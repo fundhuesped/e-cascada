@@ -10,10 +10,8 @@ from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSer
 
 
 class ProfesionalNestSerializer(serializers.ModelSerializer):
-    """
-    Serializa un Profesional
-    """
-    id = serializers.ReadOnlyField()
+
+    #id = serializers.ReadOnlyField()
 
     prestaciones = PrestacionNestSerializer(
         many=True,
@@ -124,6 +122,12 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profesional
+        extra_kwargs = {
+            "id": {
+                "read_only": False,
+                "required": False,
+            },
+        }
         fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'notes', 'primaryPhoneNumber',

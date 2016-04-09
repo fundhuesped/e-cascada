@@ -14,4 +14,13 @@ urlpatterns = [
 
     url(r'^profesional/$', views.ProfesionalList.as_view(), name='Profesional-list'),
     url(r'^profesional/(?P<pk>[0-9]+)/$', views.ProfesionalDetails.as_view(), name='Profesional-detail'),
+
+    url(r'^dayOfWeek/$', views.DayOfWeekList.as_view(), name='DayOfWeek-list'),
+    url(r'^dayOfWeek/(?P<pk>[0-9]+)/$', views.DayOfWeekDetails.as_view(), name='DayOfWeek-detail'),
+
+    url(r'^agenda/$', views.AgendaList.as_view(), name='Agenda-list'),
+    url(r'^agenda/(?P<pk>[0-9]+)/$', views.AgendaDetails.as_view(), name='Agenda-detail'),
+
+    url(r'^period/$', views.PeriodList.as_view(), name='Period-list'),
+    url(r'^period/(?P<pk>[0-9]+)/$', views.PeriodDetails.as_view(), name='Period-detail'),
 ]
