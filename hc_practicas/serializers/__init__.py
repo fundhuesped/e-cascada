@@ -9,3 +9,4 @@ from .dayOfWeekNest_ser import *
 from .periodNest_ser import *
 from .profesionalNest_ser import *
 from .agendaNest_ser import *
+from .turnoNest_ser import *

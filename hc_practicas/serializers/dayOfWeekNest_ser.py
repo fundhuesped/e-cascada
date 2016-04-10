@@ -10,6 +10,7 @@ class DayOfWeekNestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         custom = DayOfWeek.objects.create(
+            index=validated_data.get('index'),
             name=validated_data.get('name'),
             selected=validated_data.get('selected')
         )
@@ -17,6 +18,7 @@ class DayOfWeekNestSerializer(serializers.ModelSerializer):
         return custom
 
     def update(self, instance, validated_data):
+        instance.index = validated_data.get('index', instance.index)
         instance.name = validated_data.get('name', instance.name)
         instance.selected = validated_data.get('selected', instance.selected)
         instance.save()
@@ -25,4 +27,4 @@ class DayOfWeekNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DayOfWeek
-        fields = ('id', 'name', 'selected')
+        fields = ('id', 'index', 'name', 'selected')

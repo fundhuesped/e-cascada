@@ -23,4 +23,7 @@ urlpatterns = [
 
     url(r'^period/$', views.PeriodList.as_view(), name='Period-list'),
     url(r'^period/(?P<pk>[0-9]+)/$', views.PeriodDetails.as_view(), name='Period-detail'),
+
+    url(r'^turno/$', views.TurnoList.as_view(), name='Turno-list'),
+    url(r'^turno/(?P<pk>[0-9]+)/$', views.TurnoDetails.as_view(), name='Turno-detail'),
 ]

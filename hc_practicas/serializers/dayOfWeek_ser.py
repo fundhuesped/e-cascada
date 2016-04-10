@@ -14,4 +14,4 @@ class DayOfWeekSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = DayOfWeek
-        fields = ('id', 'name', 'selected')
+        fields = ('id', 'index', 'name', 'selected')
