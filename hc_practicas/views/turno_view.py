@@ -16,21 +16,25 @@ class TurnoList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = Turno.objects.all()
-        status = self.request.query_params.get('status')
-        if status is not None:
-            queryset = queryset.filter(status=status)
-        dayFrom = self.request.query_params.get('from')
-        if dayFrom is None:
-            dayFrom = datetime.now()
-        dayTo = self.request.query_params.get('dayTo')
-        if dayTo is None:
-            dayTo = datetime.now()
+        taken = self.request.query_params.get('taken')
+        if taken is not None:
+            value = self.str2bool(taken)
+            queryset = queryset.filter(taken=value)
+        day_from = self.request.query_params.get('from')
+        if day_from is None:
+            day_from = datetime.now()
+        day_to = self.request.query_params.get('to')
+        if day_to is None:
+            day_to = datetime.now()
+        queryset = queryset.filter(day__range=(day_from, day_to))
+        prestacion = self.request.query_params.get('prestacion')
+        if prestacion is not None:
+            queryset = queryset.filter(prestacion=prestacion)
 
-        print dayFrom
-        print dayTo
-        queryset = queryset.filter(day__range=(dayFrom, dayTo))
-        print queryset
         return queryset
+
+    def str2bool(self, v):
+        return v.lower() in ("yes", "true", "t", "1")
 
 
 class TurnoDetails(generics.RetrieveUpdateDestroyAPIView):
