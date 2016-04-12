@@ -57,6 +57,8 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         instance.prestacion = prestacion[0]
         instance.paciente = paciente[0]
 
+        instance.save()
+
         return instance
 
     class Meta:

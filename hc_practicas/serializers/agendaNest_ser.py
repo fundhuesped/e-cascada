@@ -88,7 +88,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         return agenda_instance
 
-    def insert_period_days(self, agenda, period, dayOfWeek, profesional, prestacion):
+    def insert_period_days(self, agenda, period, day_of_week, profesional, prestacion):
         start_date = agenda.validFrom
         end_date = agenda.validTo
 
@@ -96,15 +96,16 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         for day_number in range(total_days):
             current_date = (start_date + dt.timedelta(days=day_number))
-            if current_date.weekday() == dayOfWeek.index:
-                turno_instance = Turno.objects.create(
-                    day=current_date,
-                    start=period.start,
-                    end=period.end,
-                    profesional=profesional,
-                    prestacion=prestacion
-                )
-                turno_instance.save()
+            if current_date.weekday() == day_of_week.index:
+                if day_of_week.selected is True:
+                    turno_instance = Turno.objects.create(
+                        day=current_date,
+                        start=period.start,
+                        end=period.end,
+                        profesional=profesional,
+                        prestacion=prestacion
+                    )
+                    turno_instance.save()
 
     class Meta:
         model = Agenda

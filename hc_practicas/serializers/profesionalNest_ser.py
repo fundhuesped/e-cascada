@@ -10,9 +10,6 @@ from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSer
 
 
 class ProfesionalNestSerializer(serializers.ModelSerializer):
-
-    #id = serializers.ReadOnlyField()
-
     prestaciones = PrestacionNestSerializer(
         many=True,
         read_only=False,
