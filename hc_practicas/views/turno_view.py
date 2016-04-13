@@ -15,7 +15,8 @@ class TurnoList(generics.ListCreateAPIView):
     paginate_by = 20
 
     def get_queryset(self):
-        value = self.str2bool('False')
+        taken = self.request.query_params.get('taken')
+        value = self.str2bool(taken)    
         queryset = Turno.objects.filter(taken=value)
         #day_from = self.request.query_params.get('from')
         #if day_from is None:
