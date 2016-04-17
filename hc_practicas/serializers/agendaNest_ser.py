@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from django.db import transaction
 from rest_framework import serializers
 from hc_practicas.models import Agenda, Period, DayOfWeek, Profesional, Prestacion, Turno
 from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestSerializer, PrestacionNestSerializer
@@ -22,6 +23,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         many=False
     )
 
+    @transaction.atomic
     def create(self, validated_data):
         profesional = validated_data.pop('profesional')
         profesional = Profesional.objects.filter(pk=profesional['id'])
@@ -41,6 +43,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         return self.load_agenda(periods, instance, profesional[0], prestacion[0])
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         profesional = validated_data.pop('profesional')
         profesional = Profesional.objects.filter(pk=profesional['id'])
