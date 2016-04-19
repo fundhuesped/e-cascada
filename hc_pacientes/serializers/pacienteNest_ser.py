@@ -9,11 +9,6 @@ from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSer
 
 
 class PacienteNestSerializer(serializers.ModelSerializer):
-    """
-    Serializa una Paciente
-    """
-    id = serializers.ReadOnlyField()
-
     documentType = DocumentTypeNestedSerializer(
         many=False
     )
@@ -136,6 +131,12 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
+        extra_kwargs = {
+            "id": {
+                "read_only": False,
+                "required": False,
+            },
+        }
         fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
