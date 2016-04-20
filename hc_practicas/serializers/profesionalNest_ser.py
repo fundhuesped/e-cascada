@@ -105,10 +105,10 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
 
         instance.prestaciones.clear()
         prestaciones = validated_data.pop('prestaciones')
-        print prestaciones
+        #print prestaciones
         if prestaciones:
             for prestacion in prestaciones:
-                print prestacion
+                #print prestacion
                 db_prestaciones = Prestacion.objects.filter(pk=prestacion.get('id'))
                 if db_prestaciones:
                     instance.prestaciones.add(db_prestaciones[0])

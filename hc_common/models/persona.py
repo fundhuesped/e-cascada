@@ -13,7 +13,7 @@ class Persona(ActiveModel):
     otherNames = models.CharField(max_length=60, null=True)
     fatherSurname = models.CharField(max_length=40, null=False)
     motherSurname = models.CharField(max_length=40, null=True)
-    birthDate = models.DateField(null=False)
+    birthDate = models.DateField(null=True)
     documentType = models.ForeignKey(DocumentType, null=True)
     documentNumber = models.CharField(max_length=10, null=True)
     genderAtBirth = models.ForeignKey(SexType, on_delete=models.CASCADE, related_name='personGenderBirth', null=True)

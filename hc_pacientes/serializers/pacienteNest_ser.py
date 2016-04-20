@@ -48,6 +48,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         socialService = validated_data.pop('socialService')
         paciente = Paciente.objects.create(
             idpaciente=validated_data.get('idpaciente'),
+            prospect = validated_data.get('prospect'),
             firstName=validated_data.get('firstName'),
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
@@ -92,6 +93,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         civilStatus = validated_data.pop('civilStatus')
         education = validated_data.pop('education')
         socialService = validated_data.pop('socialService')
+        instance.prospect = validated_data.get('prospect')
         instance.idpaciente = validated_data.get('idpaciente', instance.idpaciente)
         instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
@@ -137,7 +139,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
                 "required": False,
             },
         }
-        fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
+        fields = ('id', 'idpaciente', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
                   'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
