@@ -6,5 +6,6 @@ from hc_common.serializers import TypeNestedSerializer
 
 
 class DocumentTypeNestedSerializer(TypeNestedSerializer):
+
     class Meta(TypeNestedSerializer.Meta):
         model = DocumentType

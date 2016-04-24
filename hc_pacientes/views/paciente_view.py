@@ -16,27 +16,30 @@ class PacienteList(generics.ListCreateAPIView):
     permission_classes = (AllowAny,)
     paginate_by = 20
 
+
     def get_queryset(self):
-        """
-        Filtrado del queryset por nombre y primer apellido, si como mínimo tienen 3 caracteres
-        :return:
-        """
         queryset = Paciente.objects.all()
         firstName = self.request.query_params.get('firstName')
         fatherSurename = self.request.query_params.get('fatherSurename')
         status = self.request.query_params.get('status')
-        if firstName is not None and len(firstName) > 3:
+        documentType = self.request.query_params.get('documentType')
+        document = self.request.query_params.get('documentNumber')
+        if firstName is not None and len(firstName) >= 3:
             queryset = queryset.filter(firstName__startswith=firstName)
-        if fatherSurename is not None and len(fatherSurename) > 3:
+        if fatherSurename is not None and len(fatherSurename) >= 3:
             queryset = queryset.filter(fatherSurename__startswith=fatherSurename)
         if status is not None:
             queryset = queryset.filter(status=status)
+        if documentType is not None:
+            queryset = queryset.filter(documentType=documentType)
+        if document is not None:
+            queryset = queryset.filter(documentNumber=document)
         return queryset
 
 
 class PacienteDetails(generics.RetrieveUpdateDestroyAPIView):
     """
-    Vista para ver del detalle, modificar, o eliminar un Documento
+    Vista para ver del detalle, modificar, o eliminar un paciente
     """
     serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
