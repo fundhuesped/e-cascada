@@ -3,13 +3,13 @@
 
 from rest_framework import serializers
 from hc_common.models import District, Province
-from hc_common.serializers import ProvinceNestSerializer
+from hc_common.serializers import ProvinceNestedSerializer
 
 
 class DistrictNestSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
 
-    province = ProvinceNestSerializer(
+    province = ProvinceNestedSerializer(
         many=False
     )
 

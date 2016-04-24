@@ -47,13 +47,9 @@ class TurnoList(generics.ListCreateAPIView):
         order_field = self.request.query_params.get('order_field')
         order_by = self.request.query_params.get('order_by')
         if (order_field is not None) and (order_by is not None):
-            print order_field
-            print order_by
             if order_by is 'asc':
-                print 'es asc'
                 queryset = queryset.order_by(order_field)
             else:
-                print 'es desc'
                 if order_by is 'desc':
                     queryset = queryset.order_by('-'+order_field)
 
