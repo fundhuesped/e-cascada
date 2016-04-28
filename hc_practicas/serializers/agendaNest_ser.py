@@ -36,8 +36,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         queryset = Agenda.objects.filter(profesional = profesional, prestacion=prestacion)
 
         if queryset.count()>0:
-            max = queryset.aggregate(Max('validTo'))
-
+            maxDate = queryset.aggregate(Max('validTo'))['rating__max'] ##TODO:probar bien
+            day = maxDate.day
+            month = maxDate.month
+            year = maxDate.year
+            if(day==calendar.monthrange(year, month)): ##Si es el ultimo dia del mes
+                fromDate = dt.date(year=year if month <12 else year+1, month= month+1 if month < 12 else 1, day=1)
+            else:
+                fromDate = dt.date(year=year, month=month, day=day+1)
         return fromDate
 
     def getToDate(self, fromDate):
