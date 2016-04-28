@@ -4,9 +4,10 @@
 from django.db import transaction
 from rest_framework import serializers
 from hc_practicas.models import Agenda, Period, DayOfWeek, Profesional, Prestacion, Turno
-from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestSerializer, PrestacionNestSerializer
+from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestSerializer, PrestacionNestedSerializer ##TODO: Cambiar a nested serializers
 import datetime as dt
-
+import calendar
+from django.db.models import Max
 
 class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
@@ -19,24 +20,57 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         many=False
     )
 
-    prestacion = PrestacionNestSerializer(
+    prestacion = PrestacionNestedSerializer(
         many=False
     )
+
+    def getFromDate(self, profesional, prestacion):
+        """
+        Obtiene la fecha desde la cual se debe crear una agenda para un profesional y una prestación dada
+        :param profesional:
+        :param prestacion:
+        :return:
+        """
+        fromDate = dt.datetime.now().date()
+        #Filtrado de agenda por profesional y prestación
+        queryset = Agenda.objects.filter(profesional = profesional, prestacion=prestacion)
+
+        if queryset.count()>0:
+            max = queryset.aggregate(Max('validTo'))
+
+        return fromDate
+
+    def getToDate(self, fromDate):
+        """
+        Devuelve el máximo día del mes en el cual una agenda debe ser creada.
+        :param fromDate:
+        :return:
+        """
+        month = fromDate.month
+        year = fromDate.year
+        maxday = calendar.monthrange(year, month)[1]
+        return dt.date(year=year, month=month, day=maxday)
+
 
     @transaction.atomic
     def create(self, validated_data):
         profesional = validated_data.pop('profesional')
-        profesional = Profesional.objects.filter(pk=profesional['id'])
+        #profesional = Profesional.objects.filter(pk=profesional['id'])
         prestacion = validated_data.pop('prestacion')
-        prestacion = Prestacion.objects.filter(pk=prestacion['id'])
+        #prestacion = Prestacion.objects.filter(pk=prestacion['id'])
+        validFrom = validated_data.get('validFrom')
+        validFrom = validFrom if validFrom is not None else self.getFromDate(profesional, prestacion)
+        validTo = validated_data.get('validTo')
+        validTo = validTo if validTo is not None else self.getToDate(validFrom)
+
         instance = Agenda.objects.create(
             status=validated_data.get('status'),
-            start=validated_data.get('start'),
-            end=validated_data.get('end'),
-            validFrom=validated_data.get('validFrom'),
-            validTo=validated_data.get('validTo'),
-            profesional=profesional[0],
-            prestacion=prestacion[0]
+            start=validated_data.get('start'),          #Hora inicio de turnos
+            end=validated_data.get('end'),              #Hora fin de turnos
+            validFrom=validFrom,                        #Fecha desde la cual se debe crear la agenda
+            validTo=validTo,                            #Fecha hasta la cual se debe crear la agenda
+            profesional=profesional[0],                 #Profesional para el cual se desea crear una agenda
+            prestacion=prestacion[0]                    #Prestación para la cual se desea crear una agenda
         )
 
         periods = validated_data.pop('periods')

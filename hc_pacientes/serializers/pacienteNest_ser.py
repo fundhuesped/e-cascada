@@ -74,6 +74,8 @@ class PacienteNestSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'street': _('El domicilio es obligatorio')})
             if (not 'postal' in attrs) or attrs['postal'] is None:
                 raise serializers.ValidationError({'postal': _('El código postal es obligatorio')})
+            if (not 'location' in attrs) or attrs['location'] is None:
+                raise serializers.ValidationError({'location': _('La provincia, partido y localidad son obligatorios')})
 
 
         return attrs
