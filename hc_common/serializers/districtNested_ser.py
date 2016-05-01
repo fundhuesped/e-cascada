@@ -7,11 +7,11 @@ from hc_common.models import District
 
 
 class DistrictNestedSerializer(TypeNestedSerializer):
-    province = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:Province-detail',
+    url = serializers.HyperlinkedIdentityField(
+        view_name='hc_common:District-detail',
         lookup_field='pk'
     )
 
     class Meta(TypeNestedSerializer.Meta):
         model = District
-        fields = ('id', 'name', 'description', 'status', 'province')
+        fields = ('id', 'name', 'description', 'status', 'url')

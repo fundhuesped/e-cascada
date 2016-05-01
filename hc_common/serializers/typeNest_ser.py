@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 
 class TypeNestSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    id = serializers.ReadOnlyField()
 
     def create(self, validated_data):
         custom = self.Meta.model.objects.create(

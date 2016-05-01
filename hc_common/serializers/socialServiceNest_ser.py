@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from hc_common.serializers import TypeNestSerializer
-from hc_common.models import DocumentType
+from hc_common.models import SocialService
 
 
-class DocumentTypeSerializer(TypeNestSerializer):
+class SocialServiceNestSerializer(TypeNestSerializer):
     class Meta(TypeNestSerializer.Meta):
-        model = DocumentType
+        model = SocialService

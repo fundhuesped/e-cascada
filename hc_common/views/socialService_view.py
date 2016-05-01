@@ -3,12 +3,12 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_common.serializers import SocialServiceSerializer
+from hc_common.serializers import SocialServiceNestSerializer
 from hc_common.models import SocialService
 
 
 class SocialServiceList(generics.ListCreateAPIView):
-    serializer_class = SocialServiceSerializer
+    serializer_class = SocialServiceNestSerializer
     queryset = SocialService.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -25,6 +25,6 @@ class SocialServiceList(generics.ListCreateAPIView):
 
 
 class SocialServiceDetails(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = SocialServiceSerializer
+    serializer_class = SocialServiceNestSerializer
     queryset = SocialService.objects.all()
     permission_classes = (AllowAny,)

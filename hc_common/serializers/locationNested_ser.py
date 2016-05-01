@@ -12,6 +12,11 @@ class LocationNestedSerializer(TypeNestedSerializer):
         lookup_field='pk'
     )
 
+    url = serializers.HyperlinkedIdentityField(
+        view_name='hc_common:Location-detail',
+        lookup_field='pk'
+    )
+
     class Meta(TypeNestedSerializer.Meta):
         model = Location
-        fields = ('id', 'name', 'description', 'status', 'district')
+        fields = ('id', 'name', 'description', 'status', 'district', 'url')
