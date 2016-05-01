@@ -3,12 +3,12 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_common.serializers import CivilStatusTypeSerializer
+from hc_common.serializers import CivilStatusTypeNestSerializer
 from hc_common.models import CivilStatusType
 
 
 class CivilStatusTypeList(generics.ListCreateAPIView):
-    serializer_class = CivilStatusTypeSerializer
+    serializer_class = CivilStatusTypeNestSerializer
     queryset = CivilStatusType.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -25,6 +25,6 @@ class CivilStatusTypeList(generics.ListCreateAPIView):
 
 
 class CivilStatusTypeDetails(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CivilStatusTypeSerializer
+    serializer_class = CivilStatusTypeNestSerializer
     queryset = CivilStatusType.objects.all()
     permission_classes = (AllowAny,)

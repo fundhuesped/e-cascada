@@ -74,6 +74,8 @@ class PacienteNestSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'street': _('El domicilio es obligatorio')})
             if (not 'postal' in attrs) or attrs['postal'] is None:
                 raise serializers.ValidationError({'postal': _('El código postal es obligatorio')})
+            if (not 'location' in attrs) or attrs['location'] is None:
+                raise serializers.ValidationError({'location': _('La provincia, partido y localidad son obligatorios')})
 
 
         return attrs
@@ -214,7 +216,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.secondPhoneMessage = validated_data.get('secondPhoneMessage', instance.secondPhoneMessage)
         instance.thirdPhoneNumber = validated_data.get('thirdPhoneNumber', instance.thirdPhoneNumber)
         instance.thirdPhoneContact = validated_data.get('thirdPhoneContact', instance.thirdPhoneContact)
-        instance.thirdPhoneMessage = validated_data.get('primaryPhoneMessage', instance.thirdPhoneMessage)
+        instance.thirdPhoneMessage = validated_data.get('thirdPhoneMessage', instance.thirdPhoneMessage)
         instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice

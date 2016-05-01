@@ -7,7 +7,7 @@ from hc_common.serializers import ProvinceNestedSerializer
 
 
 class DistrictNestSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    id = serializers.ReadOnlyField()
 
     province = ProvinceNestedSerializer(
         many=False
@@ -15,12 +15,11 @@ class DistrictNestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         province = validated_data.pop('province')
-        province = Province.objects.filter(pk=province['id'])
         location = District.objects.create(
             name=validated_data.get('name'),
             description=validated_data.get('description'),
             status=validated_data.get('status'),
-            province=province[0]
+            province=province
         )
         return location
 

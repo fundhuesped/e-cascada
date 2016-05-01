@@ -34,9 +34,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'corsheaders',
-    'common',
-    'practicioners',
-    'procedures',
     'hc_practicas',
     'hc_common',
     'hc_pacientes'
