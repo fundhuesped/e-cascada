@@ -25,7 +25,7 @@ class PeriodNestedSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         periodos= Period.objects.filter(pk=data['id'])
-        if periodos[0] is not None:
+        if periodos.count()>0:
             return periodos[0]
         else:
             raise ValueError('Periodo not found')

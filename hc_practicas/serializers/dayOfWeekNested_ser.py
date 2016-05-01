@@ -23,7 +23,7 @@ class DayOfWeekNestedSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         days= DayOfWeek.objects.filter(pk=data['id'])
-        if days[0] is not None:
+        if days.count()>0:
             return days[0]
         else:
             raise ValueError('DaysOfWeek not found')
@@ -31,4 +31,4 @@ class DayOfWeekNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DayOfWeek
-        fields = ('id', 'start', 'index', 'name', 'selected')
+        fields = ('id', 'start', 'index', 'name', 'selected', 'url')

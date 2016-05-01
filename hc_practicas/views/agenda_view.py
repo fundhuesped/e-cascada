@@ -16,8 +16,15 @@ class AgendaList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Agenda.objects.all()
         status = self.request.query_params.get('status')
+        profesional = self.request.query_params.get('profesional')
+        prestacion = self.request.query_params.get('prestacion')
+
         if status is not None:
             queryset = queryset.filter(status=status)
+        if profesional is not None:
+            queryset = queryset.filter(profesional__id=profesional)
+        if prestacion is not None:
+            queryset = queryset.filter(prestacion__id=prestacion)
 
         return queryset
 

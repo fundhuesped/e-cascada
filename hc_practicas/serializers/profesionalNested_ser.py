@@ -3,28 +3,37 @@
 
 from rest_framework import serializers
 from hc_practicas.models import Profesional
+from hc_common.serializers import DocumentTypeNestedSerializer
 
 class ProfesionalNestedSerializer(serializers.ModelSerializer):
     """
     Serializa un profesional, para ser incluida como objeto nested en otro objeto
     """
-    ##TODO: Terminarlo como nested
+
     id = serializers.IntegerField()
-    name = serializers.ReadOnlyField()
-    description = serializers.ReadOnlyField()
-    status = serializers.ReadOnlyField()
-    duration = serializers.ReadOnlyField()
-    default = serializers.ReadOnlyField()
-    notes = serializers.ReadOnlyField()
+    firstName=serializers.ReadOnlyField()
+    otherNames=serializers.ReadOnlyField()
+    fatherSurname=serializers.ReadOnlyField()
+    motherSurname=serializers.ReadOnlyField()
+    birthDate=serializers.ReadOnlyField()
+    documentType= DocumentTypeNestedSerializer(
+        many=False,
+        read_only=True
+    )
+    documentNumber=serializers.ReadOnlyField()
+    email=serializers.ReadOnlyField()
+    primaryPhoneNumber=serializers.ReadOnlyField()
+    primaryPhoneContact=serializers.ReadOnlyField()
+    primaryPhoneMessage=serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Prestacion-detail',
+        view_name='hc_practicas:Profesional-detail',
         lookup_field='pk'
     )
 
     def to_internal_value(self, data):
         profesionales= Profesional.objects.filter(pk=data['id'])
-        if profesionales[0] is not None:
+        if profesionales.count()>0:
             return profesionales[0]
         else:
             raise ValueError('Profesional not found')
@@ -32,4 +41,4 @@ class ProfesionalNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profesional
-        fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'url')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'documentType', 'documentNumber', 'email','primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage', 'url')

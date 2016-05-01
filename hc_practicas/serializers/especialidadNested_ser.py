@@ -20,7 +20,7 @@ class EspecialidadNestedSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         especialidades= Especialidad.objects.filter(pk=data['id'])
-        if especialidades[0] is not None:
+        if especialidades.count()>0:
             return especialidades[0]
         else:
             raise ValueError('Especialidad not found')

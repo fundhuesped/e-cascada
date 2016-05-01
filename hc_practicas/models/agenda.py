@@ -9,8 +9,8 @@ from hc_practicas.models import Period, Profesional, Prestacion
 class Agenda(ActiveModel):
     start = models.TimeField()
     end = models.TimeField()
-    validFrom = models.DateField(null=False)
-    validTo = models.DateField(null=False)
+    validFrom = models.DateField(null=False, blank=True)
+    validTo = models.DateField(null=False, blank=True)
     periods = models.ManyToManyField(Period)
     status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES, default=ActiveModel.STATUS_ACTIVE)
     profesional = models.ForeignKey(Profesional, on_delete=models.CASCADE, related_name='profesional', null=True)

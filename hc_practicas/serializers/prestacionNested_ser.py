@@ -23,7 +23,7 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         prestaciones= Prestacion.objects.filter(pk=data['id'])
-        if prestaciones[0] is not None:
+        if prestaciones.count() >0:
             return prestaciones[0]
         else:
             raise ValueError('Prestacion not found')

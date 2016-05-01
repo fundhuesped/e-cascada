@@ -7,6 +7,7 @@ from hc_practicas.serializers import EspecialidadNestedSerializer
 
 
 class PrestacionNestSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     especialidad = EspecialidadNestedSerializer(
         many=False
     )

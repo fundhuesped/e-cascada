@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.serializers import TypeNestedSerializer
+from hc_common.serializers import TypeNestedSerializer, DistrictNestedSerializer
 from hc_common.models import Location
 
 
 class LocationNestedSerializer(TypeNestedSerializer):
-    district = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:District-detail',
-        lookup_field='pk'
+    district = DistrictNestedSerializer(
+        many=False,
+        read_only=True
     )
 
     url = serializers.HyperlinkedIdentityField(
