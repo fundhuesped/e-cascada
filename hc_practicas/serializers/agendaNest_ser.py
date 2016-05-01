@@ -8,6 +8,7 @@ from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestedSeri
 import datetime as dt
 import calendar
 from django.db.models import Max
+from django.utils.translation import gettext as _
 
 class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
@@ -57,6 +58,13 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         maxday = calendar.monthrange(year, month)[1]
         return dt.date(year=year, month=month, day=maxday)
 
+    def validate(self, attrs):
+        profesional = attrs['profesional']
+        prestacion = attrs['prestacion']
+
+        if not prestacion in profesional.prestaciones.all():
+            raise serializers.ValidationError({'Prestacion': _('La prestacion no coincide con el profesional')})
+        return attrs
 
     @transaction.atomic
     def create(self, validated_data):
