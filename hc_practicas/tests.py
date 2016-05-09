@@ -416,6 +416,21 @@ class PrestacionTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.json())
 
+    def test_getPrestacinFilteredByProf(self):
+        """
+        Obtiene una prestacion filtrada por pk del profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        pres = helper.createPrestacion()
+        prof = helper.createProfesional()
+        prof.prestaciones.add(pres)
+        prof.save()
+        response = self.client.get('/practicas/prestacion/?profesional=1',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+
     def test_deletePrestacion(self):
         """
         Elinima una Prestacion

@@ -23,11 +23,15 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
     )
 
     education = EducationTypeNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     socialService = SocialServiceNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     genderAtBirth = SexTypeNestedSerializer(
@@ -141,7 +145,7 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
             location=location,
             civilStatus=civilStatus,
         )
-
+        profesional.prestaciones.clear()
         prestaciones = validated_data.pop('prestaciones')
         if prestaciones:
             for prestacion in prestaciones:
