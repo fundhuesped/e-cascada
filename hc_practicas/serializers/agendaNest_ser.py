@@ -102,6 +102,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         for period in instance.periods.all():
             for dayOfWeek in period.daysOfWeek.all():
                 dayOfWeek.delete()
+            #TODO:Cancelar todos los turnos de un profesional, prestación y fecha
             period.delete()
 
         instance.periods.clear()
