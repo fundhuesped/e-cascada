@@ -25,19 +25,16 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         profesional = validated_data.pop('profesional')
-        profesional = Profesional.objects.filter(pk=profesional['id'])
         prestacion = validated_data.pop('prestacion')
-        prestacion = Prestacion.objects.filter(pk=prestacion['id'])
         paciente = validated_data.pop('paciente')
-        paciente = Paciente.objects.filter(pk=paciente['id'])
         instance = Turno.objects.create(
             day=validated_data.get('day'),
             start=validated_data.get('start'),
             end=validated_data.get('end'),
             taken=validated_data.get('taken'),
-            profesional=profesional[0],
-            prestacion=prestacion[0],
-            paciente=paciente[0]
+            profesional=profesional,
+            prestacion=prestacion,
+            paciente=paciente
         )
 
         return instance

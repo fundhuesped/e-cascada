@@ -4,6 +4,8 @@
 from rest_framework.test import APITestCase
 from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno
 from hc_common.tests import CommonTestHelper
+from hc_pacientes.tests import PacienteTestHelper
+from hc_pacientes.models import Paciente
 import datetime, calendar
 from rest_framework import status
 
@@ -635,169 +637,110 @@ class AgendaTest(APITestCase):
 
 class TurnoTest(APITestCase):
 
-    def test_createAgendaSinFecha(self):
+    def test_createTurno(self):
         """
-        Asegura crear una Agenda
+        Asegura crear un Turno
         :return:
         """
         helper = GatewayTestHelper()
+        phelper = PacienteTestHelper()
         prof = helper.createProfesional()
         pres = helper.createPrestacion()
-        prof.prestaciones.add(pres)
-        prof.save()
-        helper.createDayOfWeek()
-        helper.createDayOfWeek()
+        pas = phelper.createPaciente()
 
         data= {
-            'status':'Active',
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
             'start': datetime.datetime.now().strftime('%H:%M:%S'),
             'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'taken':'False',
             'profesional': {"id":1},
             'prestacion': {"id": 1},
-            'periods':[
-                {
-                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
-                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
-                    'selected': False,
-                    'daysOfWeek': [
-                        {"id":1},
-                        {"id":2}
-                    ]
-                }
-            ]
+            'paciente': {"id": Paciente.objects.all()[0].pk}
         }
-        response = self.client.post('/practicas/agenda/', data, format='json')
+        response = self.client.post('/practicas/turno/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Agenda.objects.count(),1)
-        self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
-        self.assertEqual(response.json()['validTo'],datetime.date(year=datetime.date.today().year,
-                                                                 month=datetime.date.today().month,
-                                                                 day=calendar.monthrange(datetime.date.today().year, datetime.date.today().month)[1]).strftime('%Y-%m-%d'))
+        self.assertEqual(Turno.objects.count(),1)
 
-    def test_createAgenda(self):
+    def test_getTurnos(self):
         """
-        Asegura crear una Agenda
+        Obtiene todos los Turnos
         :return:
         """
         helper = GatewayTestHelper()
-        prof = helper.createProfesional()
-        pres = helper.createPrestacion()
-
-        helper.createDayOfWeek()
-        helper.createDayOfWeek()
-
-        data= {
-            'status':'Active',
-            'start': datetime.datetime.now().strftime('%H:%M:%S'),
-            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
-            'validFrom':datetime.date.today().strftime('%Y-%m-%d'),
-            'validTo' : (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
-            'profesional': {"id":1},
-            'prestacion': {"id": 1},
-            'periods':[
-                {
-                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
-                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
-                    'selected': False,
-                    'daysOfWeek': [
-                        {"id":1},
-                        {"id":2}
-                    ]
-                }
-            ]
-        }
-        response = self.client.post('/practicas/agenda/', data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Agenda.objects.count(),1)
-
-    def test_getAgendas(self):
-        """
-        Obtiene todas las Especialidades
-        :return:
-        """
-        helper = GatewayTestHelper()
-        helper.createAgenda()
-        response = self.client.get('/practicas/agenda/',format='json')
+        helper.createTurno()
+        response = self.client.get('/practicas/turno/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getAgenda(self):
+    def test_getTurno(self):
         """
-        Obtiene una Agenda
+        Obtiene un Turno
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createAgenda()
-        response = self.client.get('/practicas/agenda/1/',format='json')
+        helper.createTurno()
+        response = self.client.get('/practicas/turno/1/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getFilteredAgenda(self):
-        """
-        Obtiene una Agenda filtrada
-        :return:
-        """
-        helper = GatewayTestHelper()
-        helper.createEspecialidad()
-        response = self.client.get('/practicas/agenda/?status=Active&profesional=1&prestacion=1',format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIsNotNone(response.json())
-
-    def test_deleteAgenda(self):
+    def test_deleteTurno(self):
         """
         Elinima una Agenda
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createAgenda()
-        response = self.client.delete('/practicas/agenda/1/', format='json')
+        helper.createTurno()
+        response = self.client.delete('/practicas/turno/1/', format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Agenda.objects.count(),0)
 
-    def test_updateAgenda(self):
+    def test_updateTurno(self):
         """
-        Modifica una Especialidad
+        Modifica un Turno
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createAgenda()
+        helper.createTurno()
         prof = helper.createProfesional()
         pres = helper.createPrestacion()
         prof.prestaciones.add(pres)
         prof.save()
-        helper.createDayOfWeek()
-        helper.createDayOfWeek()
+        phelper = PacienteTestHelper()
+        paciente = phelper.createPaciente()
 
         data= {
-            'status':'Inactive',
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
             'start': datetime.datetime.now().strftime('%H:%M:%S'),
             'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
-            'validFrom': datetime.date.today().strftime('%Y-%m-%d'),
-            'validTo': (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
-            'profesional': {"id":1},
-            'prestacion': {"id": 1},
-            'periods':[
-                {
-                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
-                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
-                    'selected': False,
-                    'daysOfWeek': [
-                        {"id":1},
-                        {"id":2}
-                    ]
-                }
-            ]
+            'taken':'True',
+            'profesional': {"id":prof.pk},
+            'prestacion': {"id": pres.pk},
+            'paciente': {"id": paciente.pk}
         }
-        response = self.client.put('/practicas/agenda/1/', data, format='json')
+        response = self.client.put('/practicas/turno/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['status'],'Inactive')
         self.assertEqual(response.json()['start'],datetime.datetime.now().strftime('%H:%M:%S'))
         self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'))
-        self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
-        self.assertEqual(response.json()['validTo'],(datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'))
-        self.assertEqual(response.json()['profesional']['id'],1)
-        self.assertEqual(response.json()['prestacion']['id'],1)
-
+        self.assertEqual(response.json()['taken'],True)
+        self.assertEqual(response.json()['profesional']['id'],prof.pk)
+        self.assertEqual(response.json()['prestacion']['id'],pres.pk)
+        self.assertEqual(response.json()['paciente']['id'],paciente.pk)
 
 class GatewayTestHelper():
+    def createTurno(self):
+        profesional = self.createProfesional()
+        prestacion = self.createPrestacion()
+        pasHelper = PacienteTestHelper()
+        paciente = pasHelper.createPaciente()
+        instance = Turno.objects.create(
+            day=datetime.date.today(),
+            start = datetime.datetime.now(),
+            end = datetime.datetime.now()+datetime.timedelta(hours=4),
+            taken=False,
+            profesional=profesional,
+            prestacion=prestacion,
+            paciente=paciente
+        )
+        return instance
+
     def createAgenda(self):
         prof = self.createProfesional()
         pres = self.createPrestacion()
