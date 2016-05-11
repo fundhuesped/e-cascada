@@ -44,18 +44,15 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         profesional = validated_data.pop('profesional')
-        profesional = Profesional.objects.filter(pk=profesional['id'])
         prestacion = validated_data.pop('prestacion')
-        prestacion = Prestacion.objects.filter(pk=prestacion['id'])
         paciente = validated_data.pop('paciente')
-        paciente = Paciente.objects.filter(pk=paciente['id'])
         instance.day = validated_data.get('day', instance.day)
         instance.start = validated_data.get('start', instance.start)
         instance.end = validated_data.get('end', instance.end)
         instance.taken = validated_data.get('taken', instance.taken)
-        instance.profesional = profesional[0]
-        instance.prestacion = prestacion[0]
-        instance.paciente = paciente[0]
+        instance.profesional = profesional
+        instance.prestacion = prestacion
+        instance.paciente = paciente
 
         instance.save()
 

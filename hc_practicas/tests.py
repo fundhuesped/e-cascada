@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework.test import APITestCase
-from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda
+from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno
 from hc_common.tests import CommonTestHelper
 import datetime, calendar
 from rest_framework import status
@@ -632,6 +632,170 @@ class AgendaTest(APITestCase):
         self.assertEqual(response.json()['validTo'],(datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'))
         self.assertEqual(response.json()['profesional']['id'],1)
         self.assertEqual(response.json()['prestacion']['id'],1)
+
+class TurnoTest(APITestCase):
+
+    def test_createAgendaSinFecha(self):
+        """
+        Asegura crear una Agenda
+        :return:
+        """
+        helper = GatewayTestHelper()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        prof.prestaciones.add(pres)
+        prof.save()
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
+
+        data= {
+            'status':'Active',
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[
+                {
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1},
+                        {"id":2}
+                    ]
+                }
+            ]
+        }
+        response = self.client.post('/practicas/agenda/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Agenda.objects.count(),1)
+        self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
+        self.assertEqual(response.json()['validTo'],datetime.date(year=datetime.date.today().year,
+                                                                 month=datetime.date.today().month,
+                                                                 day=calendar.monthrange(datetime.date.today().year, datetime.date.today().month)[1]).strftime('%Y-%m-%d'))
+
+    def test_createAgenda(self):
+        """
+        Asegura crear una Agenda
+        :return:
+        """
+        helper = GatewayTestHelper()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
+
+        data= {
+            'status':'Active',
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'validFrom':datetime.date.today().strftime('%Y-%m-%d'),
+            'validTo' : (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[
+                {
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1},
+                        {"id":2}
+                    ]
+                }
+            ]
+        }
+        response = self.client.post('/practicas/agenda/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Agenda.objects.count(),1)
+
+    def test_getAgendas(self):
+        """
+        Obtiene todas las Especialidades
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAgenda()
+        response = self.client.get('/practicas/agenda/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getAgenda(self):
+        """
+        Obtiene una Agenda
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAgenda()
+        response = self.client.get('/practicas/agenda/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredAgenda(self):
+        """
+        Obtiene una Agenda filtrada
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createEspecialidad()
+        response = self.client.get('/practicas/agenda/?status=Active&profesional=1&prestacion=1',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+    def test_deleteAgenda(self):
+        """
+        Elinima una Agenda
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAgenda()
+        response = self.client.delete('/practicas/agenda/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Agenda.objects.count(),0)
+
+    def test_updateAgenda(self):
+        """
+        Modifica una Especialidad
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAgenda()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        prof.prestaciones.add(pres)
+        prof.save()
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
+
+        data= {
+            'status':'Inactive',
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'validFrom': datetime.date.today().strftime('%Y-%m-%d'),
+            'validTo': (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[
+                {
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1},
+                        {"id":2}
+                    ]
+                }
+            ]
+        }
+        response = self.client.put('/practicas/agenda/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['status'],'Inactive')
+        self.assertEqual(response.json()['start'],datetime.datetime.now().strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
+        self.assertEqual(response.json()['validTo'],(datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'))
+        self.assertEqual(response.json()['profesional']['id'],1)
+        self.assertEqual(response.json()['prestacion']['id'],1)
+
 
 class GatewayTestHelper():
     def createAgenda(self):
