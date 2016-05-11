@@ -7,7 +7,7 @@ from hc_common.serializers import DocumentTypeNestedSerializer
 
 class PacienteNestedSerializer(serializers.ModelSerializer):
     """
-    Serializa un profesional, para ser incluida como objeto nested en otro objeto
+    Serializa un paciente, para ser incluida como objeto nested en otro objeto
     """
 
     id = serializers.IntegerField()

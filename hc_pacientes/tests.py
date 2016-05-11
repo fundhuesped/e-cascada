@@ -192,7 +192,7 @@ class PacienteTest(APITestCase):
         self.assertEqual(response.json()["email"], "prueba@me.com.ar")
         self.assertEqual(response.json()["street"], "Calle 2")
         self.assertEqual(response.json()["postal"], "12342")
-        self.assertEqual(response.json()["status"][0], "Inactive")
+        self.assertEqual(response.json()["status"], "Inactive")
         self.assertEqual(response.json()["documentType"]["id"],2)
         self.assertEqual(response.json()["documentNumber"], "254561112")
         self.assertEqual(response.json()["genderAtBirth"]["id"],2)

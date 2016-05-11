@@ -201,7 +201,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.street = validated_data.get('street', instance.street)
         instance.postal = validated_data.get('postal', instance.postal)
-        instance.status=validated_data.get('status', instance.status),
+        instance.status=validated_data.get('status', instance.status)
         instance.occupation = validated_data.get('occupation', instance.occupation)
         instance.socialServiceNumber = validated_data.get('socialServiceNumber', instance.socialServiceNumber)
         instance.terms = validated_data.get('terms', instance.terms)

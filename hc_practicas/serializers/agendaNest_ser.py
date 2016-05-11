@@ -102,7 +102,6 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         for period in instance.periods.all():
             for dayOfWeek in period.daysOfWeek.all():
                 dayOfWeek.delete()
-            #TODO:Cancelar todos los turnos de un profesional, prestación y fecha
             period.delete()
 
         instance.periods.clear()
@@ -120,14 +119,6 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
             days_of_week = period.pop('daysOfWeek')
             for dayOfWeek in days_of_week:
-                """
-                day_instance = DayOfWeek.objects.create(
-                    index=dayOfWeek.get('index'),
-                    name=dayOfWeek.get('name'),
-                    selected=dayOfWeek.get('selected')
-                )
-                day_instance.save()
-                """
                 period_instance.daysOfWeek.add(dayOfWeek)
                 self.insert_period_days(agenda_instance, period_instance, dayOfWeek, profesional, prestacion)
 
