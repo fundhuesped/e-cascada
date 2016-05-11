@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
+from hc_practicas.serializers import EspecialidadNestedSerializer
 from hc_practicas.models import Especialidad, Prestacion
 
 class PrestacionNestedSerializer(serializers.ModelSerializer):
@@ -21,6 +22,11 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
         lookup_field='pk'
     )
 
+    especialidad = EspecialidadNestedSerializer(
+        many=False,
+        read_only=True
+    )
+
     def to_internal_value(self, data):
         prestaciones= Prestacion.objects.filter(pk=data['id'])
         if prestaciones.count() >0:
@@ -31,4 +37,4 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prestacion
-        fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'url')
+        fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'especialidad', 'url' )
