@@ -4,22 +4,22 @@
 from rest_framework import serializers
 from hc_practicas.models import Profesional, Prestacion, Turno
 from hc_pacientes.models import Paciente
-from hc_pacientes.serializers import PacienteNestSerializer
-from hc_practicas.serializers import ProfesionalNestSerializer, PrestacionNestSerializer
+from hc_pacientes.serializers import PacienteNestedSerializer
+from hc_practicas.serializers import ProfesionalNestedSerializer, PrestacionNestedSerializer
 
 
 class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
 
-    paciente = PacienteNestSerializer(
+    paciente = PacienteNestedSerializer(
         many=False
     )
 
-    profesional = ProfesionalNestSerializer(
+    profesional = ProfesionalNestedSerializer(
         many=False
     )
 
-    prestacion = PrestacionNestSerializer(
+    prestacion = PrestacionNestedSerializer(
         many=False
     )
 

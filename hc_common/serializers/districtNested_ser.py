@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from hc_common.serializers import TypeNestedSerializer
+from hc_common.serializers import TypeNestedSerializer, ProvinceNestedSerializer
 from hc_common.models import District
 
 
@@ -11,7 +11,11 @@ class DistrictNestedSerializer(TypeNestedSerializer):
         view_name='hc_common:District-detail',
         lookup_field='pk'
     )
+    province = ProvinceNestedSerializer(
+        many=False,
+        read_only=True
+    )
 
     class Meta(TypeNestedSerializer.Meta):
         model = District
-        fields = ('id', 'name', 'description', 'status', 'url')
+        fields = ('id', 'name', 'description', 'status', 'province', 'url')
