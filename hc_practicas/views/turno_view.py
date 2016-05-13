@@ -31,7 +31,9 @@ class TurnoList(generics.ListCreateAPIView):
         day = self.request.query_params.get('day')
         if day is not None:
             queryset = queryset.filter(day=day)
-
+        day__gte = self.request.query_params.get('day__gte')
+        if day__gte is not None:
+            queryset = queryset.filter(day__gte=day__gte)
         prestacion = self.request.query_params.get('prestacion')
         if prestacion is not None:
             queryset = queryset.filter(prestacion=prestacion)
