@@ -24,10 +24,10 @@ SECRET_KEY = os.getenv('SECRET_KEY','SECRET_KEY_HARDCODED')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd8g8l9ial8njr9',
-        'USER': 'zdrbseqquojvqi',
-        'PASSWORD': '0RbvCFbj7icCZ16SNllAa7m7jL',
-        'HOST': 'ec2-54-83-0-187.compute-1.amazonaws.com',
+        'NAME': 'hues_turnos',
+        'USER': 'postgres',
+        'PASSWORD': 'HuesApi2016!',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
