@@ -12,10 +12,10 @@ class TypeNestedSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         types = self.Meta.model.objects.filter(pk=data['id'])
-        if types:
+        if types.count()>0:
             return types[0]
         else:
-            raise ValueError('Type not found')
+            raise ValueError('Type ' + self.Meta.model.__name__ + ' not found')
 
     class Meta:
         fields = ('id', 'name', 'description', 'status')

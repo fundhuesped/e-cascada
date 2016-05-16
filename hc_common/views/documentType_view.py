@@ -3,7 +3,7 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from hc_common.serializers import DocumentTypeSerializer
+from hc_common.serializers import DocumentTypeNestSerializer
 from hc_common.models import DocumentType
 
 
@@ -11,7 +11,7 @@ class DocumentTypeList(generics.ListCreateAPIView):
     """
     Vista para listar Documentos existentes, o crear un nuevo Documento
     """
-    serializer_class = DocumentTypeSerializer
+    serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
     permission_classes = (AllowAny,)
     paginate_by = 20
@@ -31,6 +31,6 @@ class DocumentTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     Vista para ver del detalle, modificar, o eliminar un Documento
     """
-    serializer_class = DocumentTypeSerializer
+    serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
     permission_classes = (AllowAny,)

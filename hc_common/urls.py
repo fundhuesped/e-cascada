@@ -28,5 +28,5 @@ urlpatterns = [
     url(r'^civilStatusType/(?P<pk>[0-9]+)/$', views.CivilStatusTypeDetails.as_view(), name='CivilStatusType-detail'),
 
     url(r'^socialService/$', views.SocialServiceList.as_view(), name='SocialService-list'),
-    url(r'^socialService/(?P<pk>[0-9]+)/$', views.SocialServiceList.as_view(), name='SocialService-detail'),
+    url(r'^socialService/(?P<pk>[0-9]+)/$', views.SocialServiceDetails.as_view(), name='SocialService-detail'),
 ]

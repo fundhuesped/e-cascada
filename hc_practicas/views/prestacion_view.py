@@ -4,7 +4,7 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import PrestacionNestSerializer
-from hc_practicas.models import Prestacion
+from hc_practicas.models import Prestacion, Profesional
 
 class PrestacionList(generics.ListCreateAPIView):
     """
@@ -23,12 +23,19 @@ class PrestacionList(generics.ListCreateAPIView):
         name = self.request.query_params.get('name')
         status = self.request.query_params.get('status')
         especialidad = self.request.query_params.get('especialidad')
+        profesional = self.request.query_params.get('profesional')
         if name is not None:
             queryset = queryset.filter(name__startswith=name)
         if status is not None:
             queryset = queryset.filter(status=status)
         if especialidad is not None:
             queryset = queryset.filter(especialidad__id=especialidad)
+        if profesional is not None:
+            prof = Profesional.objects.get(pk=profesional)
+            if prof is not None:
+                prestaciones = prof.prestaciones.values_list('pk')
+                queryset = queryset.filter(pk__in=prestaciones)
+
         return queryset
 
 class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):

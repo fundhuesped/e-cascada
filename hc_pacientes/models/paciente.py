@@ -9,3 +9,4 @@ class Paciente(Persona):
     Clase que representa la información mínima necesaria para gestionar un Paciente
     """
     idpaciente = models.CharField(max_length=20, null=True)
+    prospect = models.BooleanField(default=False)

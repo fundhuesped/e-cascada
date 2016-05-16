@@ -3,51 +3,122 @@
 
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
-from hc_common.models import Location
-from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestSerializer, \
+from hc_common.models import Persona
+from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestedSerializer, \
     CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer
-
+from django.utils.translation import gettext as _
 
 class PacienteNestSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     documentType = DocumentTypeNestedSerializer(
-        many=False
+        many=False,
+        allow_null=True,
+        required=False
     )
 
     genderAtBirth = SexTypeNestedSerializer(
-        many=False
+        many=False,
+        allow_null=True,
+        required=False
     )
 
     genderOfChoice = SexTypeNestedSerializer(
-        many=False
+        many=False,
+        allow_null=True,
+        required=False
     )
 
-    location = LocationNestSerializer(
-        many=False
+    location = LocationNestedSerializer(
+        many=False,
+        allow_null=True,
+        required=False
     )
 
     civilStatus = CivilStatusTypeNestedSerializer(
-        many=False, allow_null=True
+        many=False,
+        allow_null=True,
+        required=False
     )
 
     education = EducationTypeNestedSerializer(
-        many=False, allow_null=True
+        many=False,
+        allow_null=True,
+        required = False
     )
 
     socialService = SocialServiceNestedSerializer(
-        many=False, allow_null=True
+        many=False,
+        allow_null=True,
+        required=False
     )
 
+    def validate(self, attrs):
+        if (not 'primaryPhoneNumber' in attrs) or attrs['primaryPhoneNumber'] is None:
+            raise serializers.ValidationError({'primaryPhoneNumber': _('El teléfono primario es obligatorio para un paciente')})
+
+        if ('prospect' in attrs) and not attrs['prospect']:
+            if (not 'primaryPhoneContact' in attrs) or attrs['primaryPhoneContact'] is None:
+                raise serializers.ValidationError({'primaryPhoneContact': _('El teléfono primario es obligatorio para un paciente')})
+            if (not 'primaryPhoneMessage' in attrs) or attrs['primaryPhoneMessage'] is None:
+                raise serializers.ValidationError({'primaryPhoneMessage': _('El teléfono primario es obligatorio para un paciente')})
+
+            if (not 'birthDate' in attrs) or attrs['birthDate'] is None:
+               raise serializers.ValidationError({'birthDate': _('La fecha de nacimiento es obligatoria para un paciente')})
+            if ((not 'documentNumber' in attrs) or attrs['documentNumber'] is None) or ((not 'documentType' in attrs) or attrs['documentType']) is None:
+                raise serializers.ValidationError({'documentNumber': _('El tipo y número de documento son obligatorios')})
+            if (not 'genderAtBirth' in attrs) or attrs['genderAtBirth'] is None:
+                raise serializers.ValidationError({'genderAtBirth': _('El sexo al nacer es obligatorio')})
+            if  (not 'genderOfChoice' in attrs) or attrs['genderOfChoice'] is None:
+                raise serializers.ValidationError({'genderOfChoice': _('El sexo por elección es obligatorio')})
+            if (not 'street' in attrs) or attrs['street'] is None:
+                raise serializers.ValidationError({'street': _('El domicilio es obligatorio')})
+            if (not 'postal' in attrs) or attrs['postal'] is None:
+                raise serializers.ValidationError({'postal': _('El código postal es obligatorio')})
+            if (not 'location' in attrs) or attrs['location'] is None:
+                raise serializers.ValidationError({'location': _('La provincia, partido y localidad son obligatorios')})
+
+
+        return attrs
+
     def create(self, validated_data):
-        documentType = validated_data.pop('documentType')
-        genderAtBirth = validated_data.pop('genderAtBirth')
-        genderOfChoice = validated_data.pop('genderOfChoice')
-        location = validated_data.pop('location')
-        location = Location.objects.filter(pk=location['id'])
-        civilStatus = validated_data.pop('civilStatus')
-        education = validated_data.pop('education')
-        socialService = validated_data.pop('socialService')
+        try:
+            documentType = validated_data.pop('documentType')
+        except KeyError:
+            documentType = None
+
+        try:
+            genderAtBirth = validated_data.pop('genderAtBirth')
+        except KeyError:
+            genderAtBirth = None
+
+        try:
+            genderOfChoice = validated_data.pop('genderOfChoice')
+        except KeyError:
+            genderOfChoice = None
+
+        try:
+            location = validated_data.pop('location')
+        except KeyError:
+            location = None
+
+        try:
+            civilStatus = validated_data.pop('civilStatus')
+        except KeyError:
+            civilStatus = None
+
+        try:
+            education = validated_data.pop('education')
+        except KeyError:
+            education = None
+
+        try:
+            socialService = validated_data.pop('socialService')
+        except KeyError:
+            socialService = None
+
         paciente = Paciente.objects.create(
             idpaciente=validated_data.get('idpaciente'),
+            prospect = validated_data.get('prospect'),
             firstName=validated_data.get('firstName'),
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
@@ -57,7 +128,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             email=validated_data.get('email'),
             street=validated_data.get('street'),
             postal=validated_data.get('postal'),
-            status=validated_data.get('status'),
+            status=validated_data.get('status') if validated_data.get('status') is not None else Persona.STATUS_ACTIVE,
             occupation=validated_data.get('occupation'),
             socialServiceNumber=validated_data.get('socialServiceNumber'),
             terms=validated_data.get('terms'),
@@ -76,7 +147,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             documentType=documentType,
             genderAtBirth=genderAtBirth,
             genderOfChoice=genderOfChoice,
-            location=location[0],
+            location=location,
             civilStatus=civilStatus,
             education=education,
             socialService=socialService
@@ -84,14 +155,42 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         return paciente
 
     def update(self, instance, validated_data):
-        documentType = validated_data.pop('documentType')
-        genderAtBirth = validated_data.pop('genderAtBirth')
-        genderOfChoice = validated_data.pop('genderOfChoice')
-        location = validated_data.pop('location')
-        location = Location.objects.filter(pk=location['id'])
-        civilStatus = validated_data.pop('civilStatus')
-        education = validated_data.pop('education')
-        socialService = validated_data.pop('socialService')
+        try:
+            documentType = validated_data.pop('documentType')
+        except KeyError:
+            documentType = None
+
+        try:
+            genderAtBirth = validated_data.pop('genderAtBirth')
+        except KeyError:
+            genderAtBirth = None
+
+        try:
+            genderOfChoice = validated_data.pop('genderOfChoice')
+        except KeyError:
+            genderOfChoice = None
+
+        try:
+            location = validated_data.pop('location')
+        except KeyError:
+            location = None
+
+        try:
+            civilStatus = validated_data.pop('civilStatus')
+        except KeyError:
+            civilStatus = None
+
+        try:
+            education = validated_data.pop('education')
+        except KeyError:
+            education = None
+
+        try:
+            socialService = validated_data.pop('socialService')
+        except KeyError:
+            socialService = None
+
+        instance.prospect = validated_data.get('prospect')
         instance.idpaciente = validated_data.get('idpaciente', instance.idpaciente)
         instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
@@ -102,7 +201,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.street = validated_data.get('street', instance.street)
         instance.postal = validated_data.get('postal', instance.postal)
-        instance.status = validated_data.get('status', instance.status)
+        instance.status=validated_data.get('status', instance.status)
         instance.occupation = validated_data.get('occupation', instance.occupation)
         instance.socialServiceNumber = validated_data.get('socialServiceNumber', instance.socialServiceNumber)
         instance.terms = validated_data.get('terms', instance.terms)
@@ -117,11 +216,11 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.secondPhoneMessage = validated_data.get('secondPhoneMessage', instance.secondPhoneMessage)
         instance.thirdPhoneNumber = validated_data.get('thirdPhoneNumber', instance.thirdPhoneNumber)
         instance.thirdPhoneContact = validated_data.get('thirdPhoneContact', instance.thirdPhoneContact)
-        instance.thirdPhoneMessage = validated_data.get('primaryPhoneMessage', instance.thirdPhoneMessage)
+        instance.thirdPhoneMessage = validated_data.get('thirdPhoneMessage', instance.thirdPhoneMessage)
         instance.documentType = documentType
         instance.genderAtBirth = genderAtBirth
         instance.genderOfChoice = genderOfChoice
-        instance.location = location[0]
+        instance.location = location
         instance.civilStatus = civilStatus
         instance.education = education
         instance.socialService = socialService
@@ -131,13 +230,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        extra_kwargs = {
-            "id": {
-                "read_only": False,
-                "required": False,
-            },
-        }
-        fields = ('id', 'idpaciente', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
+        fields = ('id', 'idpaciente', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
                   'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',

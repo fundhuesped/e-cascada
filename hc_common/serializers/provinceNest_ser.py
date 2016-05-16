@@ -6,7 +6,7 @@ from hc_common.models import Province
 
 
 class ProvinceNestSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    id = serializers.ReadOnlyField()
 
     def create(self, validated_data):
         province = Province.objects.create(

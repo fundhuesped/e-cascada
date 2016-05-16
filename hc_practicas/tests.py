@@ -2,9 +2,300 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework.test import APITestCase
-from hc_practicas.models import Especialidad, Prestacion, Profesional, ProfesionalMeta
-import datetime
+from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno
+from hc_common.tests import CommonTestHelper
+from hc_pacientes.tests import PacienteTestHelper
+from hc_pacientes.models import Paciente
+import datetime, calendar
 from rest_framework import status
+
+class ProfesionalTest(APITestCase):
+    def test_createProfesional(self):
+        """
+        Asegura crear un Profesional
+        :return:
+        """
+        cth = CommonTestHelper()
+        cth.createDocumentType()
+        cth.createSexType()
+        cth.createLocation()
+        cth.createCivilStatus()
+        cth.createEducationType()
+        cth.createSocialService()
+        helper = GatewayTestHelper()
+        helper.createPrestacion()
+
+        data= {
+            "firstName": "Paciente",
+            "otherNames": "Pacientito",
+            "fatherSurname": "Prueba",
+            "motherSurname": "Del test",
+            "birthDate": datetime.date(year=1986,month=1,day=2),
+            "email": "prueba@me.com",
+            "street": "Calle",
+            "postal": "1234",
+            "status": "Active",
+            "documentType": {
+                "id": 1
+            },
+            "documentNumber": "25456111",
+            "genderAtBirth": {
+                "id": 1
+            },
+            "genderOfChoice": {
+                "id": 1
+            },
+            "location": {
+                "id": 1
+            },
+            "occupation": "Ocupacion",
+            "civilStatus": {
+                "id": 1
+            },
+            "education": {
+                "id": 1
+            },
+            "socialService": {
+                "id": 1
+            },
+            "socialServiceNumber": "AAADDD",
+            "terms": True,
+            "bornPlace": "Capital",
+            "firstVisit": datetime.date(year=2015, month=3, day=5),
+            "notes": "Notitas",
+            "primaryPhoneNumber": "111444555",
+            "primaryPhoneContact": "Yo",
+            "primaryPhoneMessage": True,
+            "secondPhoneNumber": "21454545",
+            "secondPhoneContact": "El",
+            "secondPhoneMessage": False,
+            "thirdPhoneNumber": "45654654",
+            "thirdPhoneContact": "Ella",
+            "thirdPhoneMessage": False,
+            "prestaciones":[
+                {
+                    "id":1
+                }
+            ]
+        }
+        response = self.client.post('/practicas/profesional/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Profesional.objects.count(),1)
+
+    def test_getProfesionales(self):
+        """
+        Obtiene todos los Profesionales
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.get('/practicas/profesional/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getProfesional(self):
+        """
+        Obtiene un Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.get('/practicas/profesional/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getFilteredProfesional(self):
+        """
+        Obtiene un Profesional filtrado por nombre y apellido
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.get('/practicas/profesional/?firstName=Cac&fatherSurename=Cas',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteProfesional(self):
+        """
+        Elinima un Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        response = self.client.delete('/practicas/profesional/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Profesional.objects.count(),0)
+
+    def test_updateProfesional(self):
+        """
+        Modifica un Profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createProfesional()
+        cth = CommonTestHelper()
+        cth.createDocumentType()
+        cth.createSexType()
+        cth.createLocation()
+        cth.createCivilStatus()
+        cth.createEducationType()
+        cth.createSocialService()
+        helper.createPrestacion()
+
+        data= {
+            "firstName": "Paciente 2",
+            "otherNames": "Pacientito 2",
+            "fatherSurname": "Prueba 2",
+            "motherSurname": "Del test 2",
+            "birthDate": datetime.date(year=1985,month=1,day=2),
+            "email": "prueba@me.com.ar",
+            "street": "Calle 2",
+            "postal": "12342",
+            "status": "Inactive",
+            "documentType": {
+                "id": 1
+            },
+            "documentNumber": "254561112",
+            "genderAtBirth": {
+                "id": 1
+            },
+            "genderOfChoice": {
+                "id": 1
+            },
+            "location": {
+                "id": 1
+            },
+            "occupation": "Ocupacion2",
+            "civilStatus": {
+                "id": 1
+            },
+            "education": {
+                "id": 1
+            },
+            "socialService": {
+                "id": 1
+            },
+            "socialServiceNumber": "AAADDDD",
+            "terms": False,
+            "bornPlace": "Capital2",
+            "firstVisit": datetime.date(year=2014, month=3, day=5),
+            "notes": "Notitas2",
+            "primaryPhoneNumber": "1114445552",
+            "primaryPhoneContact": "Yo2",
+            "primaryPhoneMessage": False,
+            "secondPhoneNumber": "214545452",
+            "secondPhoneContact": "El2",
+            "secondPhoneMessage": True,
+            "thirdPhoneNumber": "456546542",
+            "thirdPhoneContact": "Ella2",
+            "thirdPhoneMessage": True,
+            "prestaciones":[
+                {
+                    "id":1
+                }
+            ]
+        }
+        response = self.client.put('/practicas/profesional/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["firstName"], "Paciente 2")
+        self.assertEqual(response.json()["otherNames"], "Pacientito 2")
+        self.assertEqual(response.json()["fatherSurname"], "Prueba 2")
+        self.assertEqual(response.json()["motherSurname"], "Del test 2")
+        self.assertEqual(response.json()["birthDate"], "1985-01-02")
+        self.assertEqual(response.json()["email"], "prueba@me.com.ar")
+        self.assertEqual(response.json()["street"], "Calle 2")
+        self.assertEqual(response.json()["postal"], "12342")
+        self.assertEqual(response.json()["status"], "Inactive")
+        self.assertEqual(response.json()["documentType"]["id"],1)
+        self.assertEqual(response.json()["documentNumber"], "254561112")
+        self.assertEqual(response.json()["genderAtBirth"]["id"],1)
+        self.assertEqual(response.json()["genderOfChoice"]["id"],1)
+        self.assertEqual(response.json()["location"]["id"],1)
+        self.assertEqual(response.json()["occupation"],"Ocupacion2")
+        self.assertEqual(response.json()["civilStatus"]["id"],1)
+        self.assertEqual(response.json()["education"]["id"],1)
+        self.assertEqual(response.json()["socialService"]["id"],1)
+        self.assertEqual(response.json()["socialServiceNumber"],"AAADDDD")
+        self.assertEqual(response.json()["bornPlace"],"Capital2")
+        self.assertEqual(response.json()["notes"], "Notitas2")
+        self.assertEqual(response.json()["primaryPhoneNumber"], "1114445552")
+        self.assertEqual(response.json()["primaryPhoneContact"], "Yo2")
+        self.assertEqual(response.json()["primaryPhoneMessage"], False)
+
+
+class PeriodTest(APITestCase):
+    def test_createPeriod(self):
+        """
+        Asegura crear un Periodo
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createDayOfWeek(),
+        helper.createDayOfWeek()
+        data= {
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+            'selected': False,
+            'daysOfWeek': [
+                {"id":1},
+                {"id":2}
+            ]
+        }
+        response = self.client.post('/practicas/period/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Period.objects.count(),1)
+
+    def test_getPeriods(self):
+        """
+        Obtiene todos los Periodos
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createPeriod()
+        response = self.client.get('/practicas/period/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getPeriodo(self):
+        """
+        Obtiene un Periodo
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createPeriod()
+        response = self.client.get('/practicas/period/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deletePeriod(self):
+        """
+        Elinima un Periodo
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createPeriod()
+        response = self.client.delete('/practicas/period/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Period.objects.count(),0)
+
+    def test_updatePeriod(self):
+        """
+        Modifica un Period
+        :return:
+        """
+        helperp = GatewayTestHelper()
+        helperp.createPeriod()
+        helperp.createDayOfWeek()
+        data= {
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+            'selected': False,
+            'daysOfWeek': [
+                {"id":1}
+            ]
+        }
+        response = self.client.put('/practicas/period/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['start'], datetime.datetime.now().strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['selected'], False)
+        self.assertEqual(response.json()['daysOfWeek'][0]['id'], 1)
+
 
 class EspecialidadTest(APITestCase):
     def test_createEspecialidad(self):
@@ -72,6 +363,7 @@ class EspecialidadTest(APITestCase):
         self.assertEqual(response.json()['name'],'Pediatría pediatrica')
         self.assertEqual(response.json()['description'],'Especialidad dedicada a personas no mayores de 15 años')
 
+
 class PrestacionTest(APITestCase):
     def test_createPrestacion(self):
         """
@@ -126,6 +418,21 @@ class PrestacionTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.json())
 
+    def test_getPrestacinFilteredByProf(self):
+        """
+        Obtiene una prestacion filtrada por pk del profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        pres = helper.createPrestacion()
+        prof = helper.createProfesional()
+        prof.prestaciones.add(pres)
+        prof.save()
+        response = self.client.get('/practicas/prestacion/?profesional=1',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
+
+
     def test_deletePrestacion(self):
         """
         Elinima una Prestacion
@@ -164,191 +471,354 @@ class PrestacionTest(APITestCase):
         self.assertEqual(response.json()['default'],False)
         self.assertEqual(response.json()['especialidad']['id'],2)
 
-class PacienteTest(APITestCase):
-    def createPaciente(self):
-        paciente = Paciente.objects.create(
-            firstName = 'Cacho',
-            otherNames = 'Ruben Adolfo',
-            fatherSurname = 'Castaña',
-            motherSurname = 'De los Limones',
-            birthDate = datetime.date(1942,6,11),
-            idpaciente = 'AADDAEDD'
-        )
 
-        return paciente
+class AgendaTest(APITestCase):
 
-    def createPacienteMeta(self):
-        paciente = self.createPaciente()
-        meta = PacienteMeta.objects.create(
-            paciente = paciente,
-            metaType = 'PNS',
-            metaValue = 'Sucutrule'
-        )
-
-        return meta
-
-    def test_createPaciente(self):
+    def test_createAgendaSinFecha(self):
         """
-        Asegura crear un Paciente
+        Asegura crear una Agenda
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createPrestacion()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        prof.prestaciones.add(pres)
+        prof.save()
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
 
         data= {
-            'firstName': 'Cacho',
-            'otherNames': 'Humberto Vicente',
-            'fatherSurname': 'Castaña',
-            'motherSurname': 'De los Limones',
-            'birthDate': datetime.date(1942,6,11),
-            'prestaciones':[{'id':1}]
+            'status':'Active',
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[
+                {
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1},
+                        {"id":2}
+                    ]
+                }
+            ]
         }
-        response = self.client.post('/practicas/profesional/', data, format='json')
+        response = self.client.post('/practicas/agenda/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Profesional.objects.count(),1)
+        self.assertEqual(Agenda.objects.count(),1)
+        self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
+        self.assertEqual(response.json()['validTo'],datetime.date(year=datetime.date.today().year,
+                                                                 month=datetime.date.today().month,
+                                                                 day=calendar.monthrange(datetime.date.today().year, datetime.date.today().month)[1]).strftime('%Y-%m-%d'))
 
-    def test_getPacientes(self):
+    def test_createAgenda(self):
         """
-        Obtiene todos los Profesional
+        Asegura crear una Agenda
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createProfesional()
-        response = self.client.get('/practicas/profesional/',format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
 
-    def test_getProfesional(self):
-        """
-        Obtiene un Profesional
-        :return:
-        """
-        helper = GatewayTestHelper()
-        helper.createProfesional()
-        response = self.client.get('/practicas/profesional/1/',format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_getFilteredProfesional(self):
-        """
-        Obtiene un Profesional filtrado por nombre y apellido
-        :return:
-        """
-        helper = GatewayTestHelper()
-        helper.createProfesional()
-        response = self.client.get('/practicas/profesional/?firstName=Cac&fatherSurename=Cas',format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_deleteProfesional(self):
-        """
-        Elinima un Profesional
-        :return:
-        """
-        helper = GatewayTestHelper()
-        helper.createProfesional()
-        response = self.client.delete('/practicas/profesional/1/', format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Profesional.objects.count(),0)
-
-    def test_updateProfesional(self):
-        """
-        Modifica un Profesional
-        :return:
-        """
-        helperp = GatewayTestHelper()
-        helperp.createProfesional()
-        helperp.createPrestacion()
-        data= {
-            'firstName': 'Pepito',
-            'otherNames': 'Jiminy',
-            'fatherSurname': 'Grillo',
-            'motherSurname': 'Cricket',
-            'birthDate': datetime.date(1882,6,11),
-            'prestaciones':[{'id':1},{'id':2}]
-        }
-        response = self.client.put('/practicas/profesional/1/', data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['firstName'],'Pepito')
-        self.assertEqual(response.json()['otherNames'],'Jiminy')
-        self.assertEqual(response.json()['fatherSurname'],'Grillo')
-        self.assertEqual(response.json()['motherSurname'],'Cricket')
-
-class ProfesionalMetaTest(APITestCase):
-    def test_createProfesionalMeta(self):
-        """
-        Asegura crear un Meta Profesional
-        :return:
-        """
-        helper = GatewayTestHelper()
-        helper.createProfesional()
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
 
         data= {
-            'profesional': {'id':1},
-            'metaType': 'PNS',
-            'metaValue': 'Sucutrule'
+            'status':'Active',
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'validFrom':datetime.date.today().strftime('%Y-%m-%d'),
+            'validTo' : (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[
+                {
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1},
+                        {"id":2}
+                    ]
+                }
+            ]
         }
-        response = self.client.post('/practicas/meta-profesional/', data, format='json')
+        response = self.client.post('/practicas/agenda/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(ProfesionalMeta.objects.count(),1)
+        self.assertEqual(Agenda.objects.count(),1)
 
-    def test_getProfesionalMetas(self):
+    def test_getAgendas(self):
         """
-        Obtiene todos los Profesionales Metas
+        Obtiene todas las Especialidades
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createProfesionalMeta()
-        response = self.client.get('/practicas/meta-profesional/',format='json')
+        helper.createAgenda()
+        response = self.client.get('/practicas/agenda/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getProfesionalMeta(self):
+    def test_getAgenda(self):
         """
-        Obtiene un Meta Profesional
+        Obtiene una Agenda
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createProfesionalMeta()
-        response = self.client.get('/practicas/meta-profesional/1/',format='json')
+        helper.createAgenda()
+        response = self.client.get('/practicas/agenda/1/',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_getFilteredProfesionalMeta(self):
+    def test_getFilteredAgenda(self):
         """
-        Obtiene un Meta Paciente filtrado por metaType
+        Obtiene una Agenda filtrada
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createProfesionalMeta()
-        response = self.client.get('/practicas/meta-profesional/?metaType=PNS',format='json')
+        helper.createEspecialidad()
+        response = self.client.get('/practicas/agenda/?status=Active&profesional=1&prestacion=1',format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.json())
 
-    def test_deleteProfesionalMeta(self):
+    def test_deleteAgenda(self):
         """
-        Elinima un MEta Profesional
+        Elinima una Agenda
         :return:
         """
         helper = GatewayTestHelper()
-        helper.createProfesionalMeta()
-        response = self.client.delete('/practicas/meta-profesional/1/', format='json')
+        helper.createAgenda()
+        response = self.client.delete('/practicas/agenda/1/', format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(ProfesionalMeta.objects.count(),0)
+        self.assertEqual(Agenda.objects.count(),0)
 
-    def test_updateProfesionalMeta(self):
+    def test_updateAgenda(self):
         """
-        Modifica un Meta Profesional
+        Modifica una Especialidad
         :return:
         """
-        helperp = GatewayTestHelper()
-        helperp.createProfesionalMeta()
-        data= {
-            'profesional': {'id':1},
-            'metaType': 'PND',
-            'metaValue': 'SARANDUNGA'
-        }
-        response = self.client.put('/practicas/meta-profesional/1/', data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['metaType'],'PND')
-        self.assertEqual(response.json()['metaValue'],'SARANDUNGA')
+        helper = GatewayTestHelper()
+        helper.createAgenda()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        prof.prestaciones.add(pres)
+        prof.save()
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
 
+        data= {
+            'status':'Inactive',
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'validFrom': datetime.date.today().strftime('%Y-%m-%d'),
+            'validTo': (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[
+                {
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1},
+                        {"id":2}
+                    ]
+                }
+            ]
+        }
+        response = self.client.put('/practicas/agenda/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['status'],'Inactive')
+        self.assertEqual(response.json()['start'],datetime.datetime.now().strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
+        self.assertEqual(response.json()['validTo'],(datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'))
+        self.assertEqual(response.json()['profesional']['id'],1)
+        self.assertEqual(response.json()['prestacion']['id'],1)
+
+class TurnoTest(APITestCase):
+
+    def test_createTurno(self):
+        """
+        Asegura crear un Turno
+        :return:
+        """
+        helper = GatewayTestHelper()
+        phelper = PacienteTestHelper()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        pas = phelper.createPaciente()
+
+        data= {
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'taken':'False',
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'paciente': {"id": Paciente.objects.all()[0].pk}
+        }
+        response = self.client.post('/practicas/turno/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Turno.objects.count(),1)
+
+    def test_getTurnos(self):
+        """
+        Obtiene todos los Turnos
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createTurno()
+        response = self.client.get('/practicas/turno/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getTurno(self):
+        """
+        Obtiene un Turno
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createTurno()
+        response = self.client.get('/practicas/turno/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteTurno(self):
+        """
+        Elinima una Agenda
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createTurno()
+        response = self.client.delete('/practicas/turno/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Agenda.objects.count(),0)
+
+    def test_updateTurno(self):
+        """
+        Modifica un Turno
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createTurno()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        prof.prestaciones.add(pres)
+        prof.save()
+        phelper = PacienteTestHelper()
+        paciente = phelper.createPaciente()
+
+        data= {
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'taken':'True',
+            'profesional': {"id":prof.pk},
+            'prestacion': {"id": pres.pk},
+            'paciente': {"id": paciente.pk}
+        }
+        response = self.client.put('/practicas/turno/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['start'],datetime.datetime.now().strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['taken'],True)
+        self.assertEqual(response.json()['profesional']['id'],prof.pk)
+        self.assertEqual(response.json()['prestacion']['id'],pres.pk)
+        self.assertEqual(response.json()['paciente']['id'],paciente.pk)
 
 class GatewayTestHelper():
+    def createTurno(self):
+        profesional = self.createProfesional()
+        prestacion = self.createPrestacion()
+        pasHelper = PacienteTestHelper()
+        paciente = pasHelper.createPaciente()
+        instance = Turno.objects.create(
+            day=datetime.date.today(),
+            start = datetime.datetime.now(),
+            end = datetime.datetime.now()+datetime.timedelta(hours=4),
+            taken=False,
+            profesional=profesional,
+            prestacion=prestacion,
+            paciente=paciente
+        )
+        return instance
+
+    def createAgenda(self):
+        prof = self.createProfesional()
+        pres = self.createPrestacion()
+        agenda = Agenda.objects.create(
+            status='Active',
+            start = datetime.datetime.now(),
+            end = datetime.datetime.now()+datetime.timedelta(hours=4),
+            validFrom = datetime.date.today(),
+            validTo = datetime.date.today()+datetime.timedelta(days=3),
+            profesional = prof,
+            prestacion = pres
+        )
+        return agenda
+
+    def createProfesional(self):
+        cth = CommonTestHelper()
+        dt=cth.createDocumentType()
+        st=cth.createSexType()
+        loc= cth.createLocation()
+        cs=cth.createCivilStatus()
+        et=cth.createEducationType()
+        ss=cth.createSocialService()
+
+        profesional = Paciente.objects.create(
+            firstName= "Paciente",
+            otherNames= "Pacientito",
+            fatherSurname= "Prueba",
+            motherSurname= "Del test",
+            birthDate= datetime.date(year=1986,month=1,day=2),
+            email= "prueba@me.com",
+            street= "Calle",
+            postal= "1234",
+            status= "Active",
+            documentType = dt,
+            documentNumber= "25456111",
+            genderAtBirth=st,
+            genderOfChoice=st,
+            location=loc,
+            occupation= "Ocupacion",
+            civilStatus=cs,
+            education=et,
+            socialService=ss,
+            socialServiceNumber= "AAADDD",
+            terms= True,
+            bornPlace= "Capital",
+            firstVisit= datetime.date(year=2015, month=3, day=5),
+            notes= "Notitas",
+            primaryPhoneNumber= "111444555",
+            primaryPhoneContact= "Yo",
+            primaryPhoneMessage= True,
+            secondPhoneNumber= "21454545",
+            secondPhoneContact= "El",
+            secondPhoneMessage= False,
+            thirdPhoneNumber="45654654",
+            thirdPhoneContact= "Ella",
+            thirdPhoneMessage= False
+        )
+
+        return profesional
+
+    def createPeriod(self):
+        dow=self.createDayOfWeek()
+        period = Period.objects.create(
+            start = datetime.datetime.now(),
+            end = datetime.datetime.now()+datetime.timedelta(minutes=30),
+            selected = False
+        )
+        period.daysOfWeek.add(dow)
+        return period
+
+    def createDayOfWeek(self):
+        dow = DayOfWeek.objects.create(
+            index=1,
+            name="Lunes",
+            selected=False
+        )
+        return dow
+
     def createEspecialidad(self):
         especialidad = Especialidad.objects.create(
             name = 'Pediatria',
@@ -383,13 +853,3 @@ class GatewayTestHelper():
         profesional.save()
 
         return profesional
-
-    def createProfesionalMeta(self):
-        profesional = self.createProfesional()
-        meta = ProfesionalMeta.objects.create(
-            profesional = profesional,
-            metaType = 'PNS',
-            metaValue = 'Sucutrule'
-        )
-
-        return meta
