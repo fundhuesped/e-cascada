@@ -128,7 +128,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             email=validated_data.get('email'),
             street=validated_data.get('street'),
             postal=validated_data.get('postal'),
-            status=validated_data.get('status') if validated_data.get('status') is not None else Persona.STATUS_ACTIVE,
+            status=validated_data.get('status'),
             occupation=validated_data.get('occupation'),
             socialServiceNumber=validated_data.get('socialServiceNumber'),
             terms=validated_data.get('terms'),
