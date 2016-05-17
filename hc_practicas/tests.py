@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 
 from rest_framework.test import APITestCase
 from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno
@@ -303,7 +303,7 @@ class EspecialidadTest(APITestCase):
         Asegura crear una Especialidad
         :return:
         """
-        data= {'name': 'Pediatría', 'description':'Especialidad dedicada a menores de 15 años', 'status':'Active'}
+        data= {'name': 'Pediatria', 'description':'Especialidad dedicada a menores de 15 anos', 'status':'Active'}
         response = self.client.post('/practicas/especialidad/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Especialidad.objects.count(),1)
@@ -357,11 +357,11 @@ class EspecialidadTest(APITestCase):
         """
         helperp = GatewayTestHelper()
         helperp.createEspecialidad()
-        data= {'name': 'Pediatría pediatrica', 'description':'Especialidad dedicada a personas no mayores de 15 años', 'status':'Active'}
+        data= {'name': 'Pediatria pediatrica', 'description':'Especialidad dedicada a personas no mayores de 15 anos', 'status':'Active'}
         response = self.client.put('/practicas/especialidad/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['name'],'Pediatría pediatrica')
-        self.assertEqual(response.json()['description'],'Especialidad dedicada a personas no mayores de 15 años')
+        self.assertEqual(response.json()['name'],'Pediatria pediatrica')
+        self.assertEqual(response.json()['description'],'Especialidad dedicada a personas no mayores de 15 anos')
 
 
 class PrestacionTest(APITestCase):
@@ -374,11 +374,11 @@ class PrestacionTest(APITestCase):
         helper.createEspecialidad()
 
         data = {
-            'name': 'Consulta infectología 2',
-            'description': 'Consulta infectología 2',
+            'name': 'Consulta infectologia 2',
+            'description': 'Consulta infectologia 2',
             'duration': 40,
             'status': Prestacion.STATUS_INACTIVE,
-            'notes': 'Consulta infectología 2',
+            'notes': 'Consulta infectologia 2',
             'default': False,
             'especialidad': {'id':1}
         }
@@ -454,20 +454,20 @@ class PrestacionTest(APITestCase):
         helperp.createEspecialidad()
 
         data = {
-            'name': 'Consulta infectología 2',
-            'description': 'Consulta infectología 2',
+            'name': 'Consulta infectologia 2',
+            'description': 'Consulta infectologia 2',
             'duration': 40,
             'status': Prestacion.STATUS_INACTIVE,
-            'notes': 'Consulta infectología 2',
+            'notes': 'Consulta infectologia 2',
             'default': False,
             'especialidad': {'id':2}
         }
         response = self.client.put('/practicas/prestacion/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['name'],'Consulta infectología 2')
-        self.assertEqual(response.json()['description'],'Consulta infectología 2')
+        self.assertEqual(response.json()['name'],'Consulta infectologia 2')
+        self.assertEqual(response.json()['description'],'Consulta infectologia 2')
         self.assertEqual(response.json()['duration'],40)
-        self.assertEqual(response.json()['notes'],'Consulta infectología 2')
+        self.assertEqual(response.json()['notes'],'Consulta infectologia 2')
         self.assertEqual(response.json()['default'],False)
         self.assertEqual(response.json()['especialidad']['id'],2)
 
@@ -717,7 +717,7 @@ class TurnoTest(APITestCase):
         }
         response = self.client.put('/practicas/turno/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['start'],datetime.datetime.now().strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['start'], datetime.datetime.now().strftime('%H:%M:%S'))
         self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'))
         self.assertEqual(response.json()['taken'],True)
         self.assertEqual(response.json()['profesional']['id'],prof.pk)
@@ -822,7 +822,7 @@ class GatewayTestHelper():
     def createEspecialidad(self):
         especialidad = Especialidad.objects.create(
             name = 'Pediatria',
-            description = 'Especialidad dedicada a menores de 15 años',
+            description = 'Especialidad dedicada a menores de 15 anos',
             status = Especialidad.STATUS_ACTIVE,
         )
         return especialidad
@@ -830,12 +830,12 @@ class GatewayTestHelper():
     def createPrestacion(self):
         especialidad = self.createEspecialidad()
         prestacion = Prestacion.objects.create(
-            name = 'Consulta infectología',
-            description = 'Consulta infectología',
+            name = 'Consulta infectologia',
+            description = 'Consulta infectologia',
             duration = 20,
             status = Prestacion.STATUS_ACTIVE,
             default=False,
-            notes = 'Consulta infectología',
+            notes = 'Consulta infectologia',
             especialidad = especialidad
         )
         return prestacion
@@ -845,7 +845,7 @@ class GatewayTestHelper():
         profesional = Profesional.objects.create(
             firstName = 'Cacho',
             otherNames = 'Ruben Adolfo',
-            fatherSurname = 'Castaña',
+            fatherSurname = 'Castana',
             motherSurname = 'De los Limones',
             birthDate = datetime.date(1942,6,11)
         )
