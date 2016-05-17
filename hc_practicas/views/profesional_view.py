@@ -34,7 +34,7 @@ class ProfesionalList(generics.ListCreateAPIView):
         if prestacion is not None:
             queryset = queryset.filter(prestaciones__pk__in=prestacion)
         if especialidad is not None:
-            queryset = queryset.filter(prestaciones__especialidad__id=especialidad)
+            queryset = queryset.filter(prestaciones__especialidad__id=especialidad).distinct()
 
         return queryset
 
