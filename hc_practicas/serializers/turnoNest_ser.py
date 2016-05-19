@@ -57,4 +57,4 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Turno
-        fields = ('id', 'day', 'start', 'end', 'taken', 'paciente', 'profesional', 'prestacion')
+        fields = ('id', 'day', 'start', 'end', 'taken', 'paciente', 'profesional', 'prestacion', 'status')

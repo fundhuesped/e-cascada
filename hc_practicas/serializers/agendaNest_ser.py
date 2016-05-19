@@ -101,7 +101,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         for period in instance.periods.all():
             for dayOfWeek in period.daysOfWeek.all():
-                dayOfWeek.delete()
+                turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start__gte=instance.start,end__lte=instance.end, day__gte=instance.validFrom, day__lte=instance.validTo)
+                for turno in turnos: #Inactivo los turnos que colisionan con los nuevos periodos
+                    if turno.taken:
+                        turno.status = Turno.STATUS_INACTIVE
+                        turno.save()
+                    else:
+                        turno.delete()
+            period.daysOfWeek.clear()
             period.delete()
 
         instance.periods.clear()
@@ -137,14 +144,20 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             current_date = (start_date + dt.timedelta(days=day_number))
             if current_date.weekday() == day_of_week.index:
                 if day_of_week.selected is True:
-                    turno_instance = Turno.objects.create(
-                        day=current_date,
-                        start=period.start,
-                        end=period.end,
-                        profesional=profesional,
-                        prestacion=prestacion
-                    )
-                    turno_instance.save()
+                    turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start=period.start,end=period.end, day=current_date)
+                    if turnos.count()>0: #Existe un turno previamente
+                        for turno in turnos:
+                            turno.status=Turno.STATUS_ACTIVE
+                            turno.save()
+                    else: #Si no existe, crea el slot para el turno
+                        turno_instance = Turno.objects.create(
+                            day=current_date,
+                            start=period.start,
+                            end=period.end,
+                            profesional=profesional,
+                            prestacion=prestacion
+                        )
+                        turno_instance.save()
 
     class Meta:
         model = Agenda

@@ -15,6 +15,10 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    prospect = serializers.BooleanField(
+        default=False,
+        initial=False
+    )
 
     genderAtBirth = SexTypeNestedSerializer(
         many=False,

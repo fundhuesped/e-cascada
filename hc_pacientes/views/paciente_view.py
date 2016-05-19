@@ -3,6 +3,7 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from rest_framework.pagination import PageNumberPagination
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 
@@ -14,8 +15,8 @@ class PacienteList(generics.ListCreateAPIView):
     serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
     permission_classes = (AllowAny,)
-    paginate_by = 20
-
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 20
 
     def get_queryset(self):
         queryset = Paciente.objects.all()

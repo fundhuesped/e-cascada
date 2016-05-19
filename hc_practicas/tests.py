@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from rest_framework.test import APITestCase
 from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno
@@ -635,6 +635,39 @@ class AgendaTest(APITestCase):
         self.assertEqual(response.json()['profesional']['id'],1)
         self.assertEqual(response.json()['prestacion']['id'],1)
 
+    def test_updateAgendaConTurno(self):
+        """
+        Modifica una Especialidad
+        :return:
+        """
+        helper = GatewayTestHelper()
+        prof = helper.createProfesional()
+        pres = helper.createPrestacion()
+        prof.prestaciones.add(pres)
+        prof.save()
+        helper.createAgendaConTurno(prestacion=pres, profesional=prof)
+        helper.createDayOfWeek()
+        helper.createDayOfWeek()
+
+        start = datetime.datetime.now()
+        end=(datetime.datetime.now()+datetime.timedelta(hours=4))
+        data= {
+            'status':'Inactive',
+            'start': start.strftime('%H:%M:%S'),
+            'end': end.strftime('%H:%M:%S'),
+            'validFrom': datetime.date.today().strftime('%Y-%m-%d'),
+            'validTo': (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
+            'profesional': {"id":1},
+            'prestacion': {"id": 1},
+            'periods':[]
+        }
+        response = self.client.put('/practicas/agenda/1/', data, format='json')
+        print end.time()
+        print start.time()
+        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start=start.time(),end=end.time(), day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))
+        self.assertGreaterEqual(turnos.count(),1)
+        self.assertEqual(turnos[0].status,Turno.STATUS_INACTIVE)
+
 class TurnoTest(APITestCase):
 
     def test_createTurno(self):
@@ -717,7 +750,7 @@ class TurnoTest(APITestCase):
         }
         response = self.client.put('/practicas/turno/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['start'], datetime.datetime.now().strftime('%H:%M:%S'))
+        self.assertEqual(response.json()['start'],datetime.datetime.now().strftime('%H:%M:%S'))
         self.assertEqual(response.json()['end'],(datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'))
         self.assertEqual(response.json()['taken'],True)
         self.assertEqual(response.json()['profesional']['id'],prof.pk)
@@ -725,19 +758,19 @@ class TurnoTest(APITestCase):
         self.assertEqual(response.json()['paciente']['id'],paciente.pk)
 
 class GatewayTestHelper():
-    def createTurno(self):
-        profesional = self.createProfesional()
-        prestacion = self.createPrestacion()
+    def createTurno(self, start=datetime.datetime.now(), end=datetime.datetime.now()+datetime.timedelta(hours=4), profesional=None, prestacion=None, paciente=None):
+        prof = profesional if profesional is not None else self.createProfesional()
+        pres = prestacion if prestacion is not None else self.createPrestacion()
         pasHelper = PacienteTestHelper()
-        paciente = pasHelper.createPaciente()
+        pac = paciente if paciente is not None else pasHelper.createPaciente()
         instance = Turno.objects.create(
             day=datetime.date.today(),
-            start = datetime.datetime.now(),
-            end = datetime.datetime.now()+datetime.timedelta(hours=4),
+            start = start,
+            end = end,
             taken=False,
-            profesional=profesional,
-            prestacion=prestacion,
-            paciente=paciente
+            profesional=prof,
+            prestacion=pres,
+            paciente=pac
         )
         return instance
 
@@ -753,6 +786,32 @@ class GatewayTestHelper():
             profesional = prof,
             prestacion = pres
         )
+        return agenda
+
+    def createAgendaConTurno(self, profesional=None, prestacion=None):
+        prof = profesional if profesional is not None else self.createProfesional()
+        pres = prestacion if prestacion is not None else self.createPrestacion()
+        start = datetime.datetime.now()
+        end = datetime.datetime.now()+datetime.timedelta(hours=4)
+        agenda = Agenda.objects.create(
+            status='Active',
+            start = start,
+            end = end,
+            validFrom = datetime.date.today(),
+            validTo = datetime.date.today()+datetime.timedelta(days=3),
+            profesional = prof,
+            prestacion = pres
+        )
+        dow=self.createDayOfWeek()
+        period = Period.objects.create(
+            start = start,
+            end = end,
+            selected = False
+        )
+        period.daysOfWeek.add(dow)
+        agenda.periods.add(period)
+        agenda.save()
+        self.createTurno(start,end, prof, pres)
         return agenda
 
     def createProfesional(self):
