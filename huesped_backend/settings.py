@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'hc_practicas',
     'hc_common',
-    'hc_pacientes'
+    'hc_pacientes',
+    'hc_core'
 ]
 
 MIDDLEWARE_CLASSES = [

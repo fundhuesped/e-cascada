@@ -43,18 +43,32 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         profesional = validated_data.pop('profesional')
         prestacion = validated_data.pop('prestacion')
         paciente = validated_data.pop('paciente')
+        taken = validated_data.get('taken', instance.taken)
+
+        #Nuevo estado de turnos para el mismo período de tiempo, para el profesional en cuestión.
+        #Si taken = true (se confirma un nuevo turno para el profesional) y instance.taken = false (no estaba tomado el turno), se deben inhabilitar los turnos (status_turnos_asociados = 'Inactive')
+        #Si taken = false (se libera un turno para el profesional) y instance.taken = true (estaba tomado el turno), se deben habilitar los turnos asociados (status_turnos_asociados='Active')
+        #En otro caso, no hacer nada.
+        status_turnos_asociados = Turno.STATUS_INACTIVE if taken and not instance.taken else Turno.STATUS_ACTIVE if not taken and instance.taken else None
         instance.day = validated_data.get('day', instance.day)
         instance.start = validated_data.get('start', instance.start)
         instance.end = validated_data.get('end', instance.end)
-        instance.taken = validated_data.get('taken', instance.taken)
+        instance.taken = taken
         instance.profesional = profesional
         instance.prestacion = prestacion
         instance.paciente = paciente
-
         instance.save()
+
+        self.cambiar_status_turnos_asociados(instance.day, instance.start, instance.end, instance.profesional, status_turnos_asociados)
 
         return instance
 
+    def cambiar_status_turnos_asociados(self, day, start, end, profesional, status):
+        turnos = Turno.objects.filter(day=day,profesional=profesional)
+        for turno in turnos:
+            if (turno.start >= start and turno.start <= end) or (turno.end <= end and turno.end >=start):
+                turno.status = status
+                turno.save()
     class Meta:
         model = Turno
-        fields = ('id', 'day', 'start', 'end', 'taken', 'paciente', 'profesional', 'prestacion')
+        fields = ('id', 'day', 'start', 'end', 'taken', 'paciente', 'profesional', 'prestacion', 'status')
