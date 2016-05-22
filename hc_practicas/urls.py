@@ -6,6 +6,9 @@ from hc_practicas import views
 
 app_name = "hc_practicas"
 urlpatterns = [
+    url(r'^ausencia/$', views.AusenciaList.as_view(), name='Ausencia-list'),
+    url(r'^ausencia/(?P<pk>[0-9]+)/$', views.AusenciaDetails.as_view(), name='Ausencia-detail'),
+
     url(r'^especialidad/$', views.EspecialidadList.as_view(), name='Especialidad-list'),
     url(r'^especialidad/(?P<pk>[0-9]+)/$', views.EspecialidadDetails.as_view(), name='Especialidad-detail'),
 

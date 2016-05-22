@@ -10,3 +10,4 @@ from .profesionalNest_ser import *
 from .profesionalNested_ser import *
 from .agendaNest_ser import *
 from .turnoNest_ser import *
+from .ausenciaNest_ser import *
