@@ -67,7 +67,7 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         turnos = Turno.objects.filter(day=day,profesional=profesional)
         for turno in turnos:
             if (turno.start >= start and turno.start <= end) or (turno.end <= end and turno.end >=start):
-                turno.status = status
+                turno.status = status if status is not None else turno.status
                 turno.save()
     class Meta:
         model = Turno

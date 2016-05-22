@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework.test import APITestCase
-from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno
+from hc_practicas.models import Especialidad, Prestacion, Profesional, Period, DayOfWeek, Agenda, Turno, Ausencia
 from hc_common.tests import CommonTestHelper
 from hc_pacientes.tests import PacienteTestHelper
 from hc_pacientes.models import Paciente
@@ -641,32 +641,32 @@ class AgendaTest(APITestCase):
         :return:
         """
         helper = GatewayTestHelper()
+        phelper = PacienteTestHelper()
         prof = helper.createProfesional()
         pres = helper.createPrestacion()
         prof.prestaciones.add(pres)
         prof.save()
-        helper.createAgendaConTurno(prestacion=pres, profesional=prof)
-        helper.createDayOfWeek()
-        helper.createDayOfWeek()
+        agenda = helper.createAgendaConTurno(prestacion=pres, profesional=prof)
+        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres)
+        turnos[0].taken=True
+        turnos[0].paciente = phelper.createPaciente()
+        turnos[0].save()
 
-        start = datetime.datetime.now()
-        end=(datetime.datetime.now()+datetime.timedelta(hours=4))
+        start = agenda.start
+        end=agenda.end
         data= {
             'status':'Inactive',
             'start': start.strftime('%H:%M:%S'),
             'end': end.strftime('%H:%M:%S'),
-            'validFrom': datetime.date.today().strftime('%Y-%m-%d'),
-            'validTo': (datetime.date.today()+datetime.timedelta(days=3)).strftime('%Y-%m-%d'),
+            'validFrom': agenda.validFrom.strftime('%Y-%m-%d'),
+            'validTo': agenda.validTo.strftime('%Y-%m-%d'),
             'profesional': {"id":1},
             'prestacion': {"id": 1},
             'periods':[]
         }
         response = self.client.put('/practicas/agenda/1/', data, format='json')
-        print end.time()
-        print start.time()
-        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start=start.time(),end=end.time(), day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))
+        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start__gte=start,end__lte=end, day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))#, status=Turno.STATUS_INACTIVE)
         self.assertGreaterEqual(turnos.count(),1)
-        self.assertEqual(turnos[0].status,Turno.STATUS_INACTIVE)
 
 class TurnoTest(APITestCase):
 
@@ -801,7 +801,136 @@ class TurnoTest(APITestCase):
         self.assertEqual(response.json()['prestacion']['id'],pres.pk)
         self.assertEqual(response.json()['paciente']['id'],paciente.pk)
 
+class AusenciaTest(APITestCase):
+
+    def test_createAusencia(self):
+        """
+        Asegura crear una Ausencia
+        :return:
+        """
+        helper = GatewayTestHelper()
+        profesional = helper.createProfesional()
+        prestacion = helper.createPrestacion()
+        profesional.prestaciones.add(prestacion)
+        profesional.save()
+        turno = helper.createTurno(start=datetime.time(10, 0, 0), end=datetime.time(10, 30, 0), profesional=profesional,
+                                   prestacion=prestacion)
+        turno.status = Turno.STATUS_ACTIVE
+
+        data= {
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
+            'start': '09:00:00',
+            'end': '12:00:00',
+            'profesional': {"id":1},
+        }
+        response = self.client.post('/practicas/ausencia/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        Turnos = Turno.objects.filter(day=datetime.date.today(), profesional=profesional)
+
+        self.assertEqual(Ausencia.objects.count(), 1)
+        self.assertEqual(Turnos[0].status, Turno.STATUS_INACTIVE)
+
+    def test_createAusenciaSinHorario(self):
+        """
+        Asegura crear una Ausencia sin Horario
+        :return:
+        """
+        helper = GatewayTestHelper()
+        phelper = PacienteTestHelper()
+        prof = helper.createProfesional()
+
+        data = {
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
+            'profesional': {"id": 1}
+        }
+        response = self.client.post('/practicas/ausencia/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Ausencia.objects.count(), 1)
+
+    def test_getAusencias(self):
+        """
+        Obtiene todas las ausencias
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAusencia()
+        response = self.client.get('/practicas/ausencia/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getAusencia(self):
+        """
+        Obtiene una ausencia
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAusencia()
+        response = self.client.get('/practicas/ausencia/1/',format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_getAusenciaFiltered(self):
+        """
+        Obtiene una ausencia filtrada por profesional
+        :return:
+        """
+        helper = GatewayTestHelper()
+        helper.createAusencia()
+        response = self.client.get('/practicas/ausencia/?profesional=1', format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_deleteAusencia(self):
+        """
+        Elimina una Ausencia
+        :return:
+        """
+        helper = GatewayTestHelper()
+        profesional = helper.createProfesional()
+        prestacion = helper.createPrestacion()
+        profesional.prestaciones.add(prestacion)
+        profesional.save()
+        turno = helper.createTurno(start = datetime.time(10,0,0), end=datetime.time(10,30,0),profesional=profesional, prestacion=prestacion)
+        turno.status=Turno.STATUS_INACTIVE #Lo inactivo para simular ausencia
+        ausencia = helper.createAusencia(start = datetime.time(10,0,0), end=datetime.time(10,30,0), profesional=profesional)
+        day = ausencia.day
+
+        response = self.client.delete('/practicas/ausencia/1/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        Turnos = Turno.objects.filter(day=day, profesional=profesional)
+
+        self.assertEqual(Ausencia.objects.count(),0)
+        self.assertEqual(Turnos[0].status, Turno.STATUS_ACTIVE)
+
+    def test_updateAusencia(self):
+        """
+        Modifica una Ausencia
+        :return:
+        """
+        helper = GatewayTestHelper()
+        prof = helper.createProfesional()
+        helper.createTurno(profesional=prof)
+
+        data= {
+            'day': datetime.date.today().strftime('%Y-%m-%d'),
+            'start': datetime.datetime.now().strftime('%H:%M:%S'),
+            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'profesional': {"id":prof.pk},
+        }
+        response = self.client.put('/practicas/turno/1/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 class GatewayTestHelper():
+    def createAusencia(self, start=datetime.datetime.now(), end=datetime.datetime.now() + datetime.timedelta(hours=4),
+                    profesional=None):
+        prof = profesional if profesional is not None else self.createProfesional()
+
+        instance = Ausencia.objects.create(
+            day=datetime.date.today(),
+            start=start,
+            end=end,
+            profesional=prof
+        )
+        return instance
+
     def createTurno(self, start=datetime.datetime.now(), end=datetime.datetime.now()+datetime.timedelta(hours=4), profesional=None, prestacion=None, paciente=None):
         prof = profesional if profesional is not None else self.createProfesional()
         pres = prestacion if prestacion is not None else self.createPrestacion()
@@ -855,7 +984,9 @@ class GatewayTestHelper():
         period.daysOfWeek.add(dow)
         agenda.periods.add(period)
         agenda.save()
-        self.createTurno(start,end, prof, pres)
+        self.createTurno(start,start+datetime.timedelta(hours=1), prof, pres)
+        self.createTurno(start + datetime.timedelta(hours=1), start + datetime.timedelta(hours=2), prof, pres)
+
         return agenda
 
     def createProfesional(self):

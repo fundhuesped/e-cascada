@@ -84,6 +84,18 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             profesional=profesional,                 #Profesional para el cual se desea crear una agenda
             prestacion=prestacion                    #Prestación para la cual se desea crear una agenda
         )
+
+        turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start__gte=instance.start,
+                                            end__lte=instance.end, day__gte=instance.validFrom,
+                                            day__lte=instance.validTo)
+
+        for turno in turnos:  # Inactivo los turnos que colisionan con los nuevos periodos
+            if turno.taken:
+                turno.status = Turno.STATUS_INACTIVE
+                turno.save()
+            else:
+                turno.delete()
+
         periods = validated_data.pop('periods')
         return self.load_agenda(periods, instance, profesional, prestacion)
 
@@ -99,15 +111,17 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         instance.profesional = profesional
         instance.prestacion = prestacion
 
+        turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start__gte=instance.start,
+                                            end__lte=instance.end, day__gte=instance.validFrom,
+                                            day__lte=instance.validTo)
+        for turno in turnos:  # Inactivo los turnos que colisionan con los nuevos periodos
+            if turno.taken:
+                turno.status = Turno.STATUS_INACTIVE
+                turno.save()
+            else:
+                turno.delete()
+
         for period in instance.periods.all():
-            for dayOfWeek in period.daysOfWeek.all():
-                turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start__gte=instance.start,end__lte=instance.end, day__gte=instance.validFrom, day__lte=instance.validTo)
-                for turno in turnos: #Inactivo los turnos que colisionan con los nuevos periodos
-                    if turno.taken:
-                        turno.status = Turno.STATUS_INACTIVE
-                        turno.save()
-                    else:
-                        turno.delete()
             period.daysOfWeek.clear()
             period.delete()
 
