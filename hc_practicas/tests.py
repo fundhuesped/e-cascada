@@ -725,6 +725,50 @@ class TurnoTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Agenda.objects.count(),0)
 
+    def test_updateTakenTurno(self):
+        """
+        Modifica el estado de taken de un turno
+        :return:
+        """
+        helper = GatewayTestHelper()
+        phelper = PacienteTestHelper()
+        profesional = helper.createProfesional()
+        prestacion1 = helper.createPrestacion()
+        prestacion2 = helper.createPrestacion()
+        profesional.prestaciones.add(prestacion1)
+        profesional.prestaciones.add(prestacion2)
+        profesional.save()
+
+        helper.createTurno(datetime.time(10, 0, 0),datetime.time(10, 30, 0),profesional=profesional,
+                           prestacion=prestacion1)
+        turno_a_tomar = helper.createTurno(datetime.time(10, 30, 0), datetime.time(11, 00, 0), profesional=profesional,
+                           prestacion=prestacion1)
+        helper.createTurno(datetime.time(11, 0, 0), datetime.time(11, 30, 0), profesional=profesional,
+                           prestacion=prestacion1)
+        helper.createTurno(datetime.time(10, 30, 0), datetime.time(11, 30, 0), profesional=profesional,
+                           prestacion=prestacion2)
+        turno_no_modificar = helper.createTurno(datetime.time(12, 0, 0), datetime.time(12, 30, 0), profesional=profesional,
+                           prestacion=prestacion2)
+        turno_no_modificar.status = Turno.STATUS_ACTIVE
+        turno_no_modificar.save()
+
+        paciente = phelper.createPaciente()
+
+        data = {
+            'day': turno_a_tomar.day.strftime('%Y-%m-%d'),
+            'start': turno_a_tomar.start.strftime('%H:%M:%S'),
+            'end': turno_a_tomar.end.strftime('%H:%M:%S'),
+            'taken': 'True',
+            'profesional': {"id": profesional.pk},
+            'prestacion': {"id": prestacion1.pk},
+            'paciente': {"id": paciente.pk}
+        }
+        response = self.client.put('/practicas/turno/' + str(turno_a_tomar.pk) + '/', data, format='json')
+        turnos_modificados = Turno.objects.filter(start=datetime.time(10,30,0), end=datetime.time(11,30,0), profesional=profesional, prestacion=prestacion2)
+        turnos_no_modificados = Turno.objects.filter(start=datetime.time(12,0,0), end = datetime.time(12,30,0), profesional = profesional, prestacion=prestacion2)
+        self.assertEqual(turnos_modificados[0].status,Turno.STATUS_INACTIVE)
+        self.assertEqual(turnos_no_modificados[0].status,Turno.STATUS_ACTIVE)
+
     def test_updateTurno(self):
         """
         Modifica un Turno
