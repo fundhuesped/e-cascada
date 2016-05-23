@@ -11,6 +11,7 @@ from django.utils.translation import gettext as _
 
 
 class ProfesionalNestSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     prestaciones = PrestacionNestedSerializer(
         many=True,
         read_only=False,

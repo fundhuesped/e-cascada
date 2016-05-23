@@ -26,7 +26,7 @@ class DayOfWeekNestedSerializer(serializers.ModelSerializer):
         if days.count()>0:
             return days[0]
         else:
-            raise ValueError('DaysOfWeek not found')
+            return DayOfWeek(selected=data['selected'], name=data['name'], index=data['index']) #ValueError('DaysOfWeek not found')
 
 
     class Meta:

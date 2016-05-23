@@ -484,8 +484,6 @@ class AgendaTest(APITestCase):
         pres = helper.createPrestacion()
         prof.prestaciones.add(pres)
         prof.save()
-        helper.createDayOfWeek()
-        helper.createDayOfWeek()
 
         data= {
             'status':'Active',
@@ -495,6 +493,7 @@ class AgendaTest(APITestCase):
             'prestacion': {"id": 1},
             'periods':[
                 {
+                    "id":1,
                     'start': datetime.datetime.now().strftime('%H:%M:%S'),
                     'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
                     'selected': False,
@@ -508,6 +507,7 @@ class AgendaTest(APITestCase):
         response = self.client.post('/practicas/agenda/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Agenda.objects.count(),1)
+        self.assertEqual(DayOfWeek.objects.count(),2)
         self.assertEqual(response.json()['validFrom'],datetime.date.today().strftime('%Y-%m-%d'))
         self.assertEqual(response.json()['validTo'],datetime.date(year=datetime.date.today().year,
                                                                  month=datetime.date.today().month,
@@ -602,8 +602,6 @@ class AgendaTest(APITestCase):
         pres = helper.createPrestacion()
         prof.prestaciones.add(pres)
         prof.save()
-        helper.createDayOfWeek()
-        helper.createDayOfWeek()
 
         data= {
             'status':'Inactive',
@@ -615,12 +613,13 @@ class AgendaTest(APITestCase):
             'prestacion': {"id": 1},
             'periods':[
                 {
+                    "id":1,
                     'start': datetime.datetime.now().strftime('%H:%M:%S'),
                     'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
                     'selected': False,
                     'daysOfWeek': [
-                        {"id":1},
-                        {"id":2}
+                        {"id":1,"index":0, "name":"Lunes", "selected":True},
+                        {"id":2, "index":1, "name":"Martes", "selected":False}
                     ]
                 }
             ]
@@ -662,10 +661,20 @@ class AgendaTest(APITestCase):
             'validTo': agenda.validTo.strftime('%Y-%m-%d'),
             'profesional': {"id":1},
             'prestacion': {"id": 1},
-            'periods':[]
+            'periods':[
+                {   'id':1,
+                    'start': datetime.datetime.now().strftime('%H:%M:%S'),
+                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
+                    'selected': False,
+                    'daysOfWeek': [
+                        {"id":1,"index":0, "name":"Lunes", "selected":True},
+                        {"id":2, "index":1, "name":"Martes", "selected":False}
+                    ]
+                 }
+            ]
         }
         response = self.client.put('/practicas/agenda/1/', data, format='json')
-        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start__gte=start,end__lte=end, day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))#, status=Turno.STATUS_INACTIVE)
+        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start__gte=start)#,end__lte=end, day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))#, status=Turno.STATUS_INACTIVE)
         self.assertGreaterEqual(turnos.count(),1)
 
 class TurnoTest(APITestCase):
