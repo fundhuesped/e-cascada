@@ -155,7 +155,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
             period_instance.save()
             agenda_instance.periods.add(period_instance)
-
+            agenda_instance.save()
         return agenda_instance
 
     def insert_period_days(self, agenda, period, day_of_week, profesional, prestacion):
