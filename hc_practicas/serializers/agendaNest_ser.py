@@ -58,6 +58,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         maxday = calendar.monthrange(year, month)[1]
         return dt.date(year=year, month=month, day=maxday)
 
+
     def validate(self, attrs):
         profesional = attrs['profesional']
         prestacion = attrs['prestacion']
@@ -65,6 +66,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         if not prestacion in profesional.prestaciones.all():
             raise serializers.ValidationError({'Prestacion': _('La prestacion no coincide con el profesional')})
         return attrs
+
 
     @transaction.atomic
     def create(self, validated_data):
@@ -122,6 +124,8 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                 turno.delete()
 
         for period in instance.periods.all():
+            for dayOfWeek in period.daysOfWeek.all():
+                dayOfWeek.delete()
             period.daysOfWeek.clear()
             period.delete()
 
@@ -140,8 +144,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
             days_of_week = period.pop('daysOfWeek')
             for dayOfWeek in days_of_week:
-                period_instance.daysOfWeek.add(dayOfWeek)
-                self.insert_period_days(agenda_instance, period_instance, dayOfWeek, profesional, prestacion)
+                dayOfWeek_instance = DayOfWeek.objects.create(
+                    index = dayOfWeek.index,
+                    name = dayOfWeek.name,
+                    selected = dayOfWeek.selected
+                )
+                dayOfWeek_instance.save()
+                period_instance.daysOfWeek.add(dayOfWeek_instance)
+                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion)
 
             period_instance.save()
             agenda_instance.periods.add(period_instance)
