@@ -674,7 +674,7 @@ class AgendaTest(APITestCase):
             ]
         }
         response = self.client.put('/practicas/agenda/1/', data, format='json')
-        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start__gte=start)#,end__lte=end, day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))#, status=Turno.STATUS_INACTIVE)
+        turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start__gte=start, day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))#, status=Turno.STATUS_INACTIVE)
         self.assertGreaterEqual(turnos.count(),1)
 
 class TurnoTest(APITestCase):
