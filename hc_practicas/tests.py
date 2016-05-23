@@ -499,8 +499,8 @@ class AgendaTest(APITestCase):
                     'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
                     'selected': False,
                     'daysOfWeek': [
-                        {"id":1},
-                        {"id":2}
+                        {"id":1, "index": 0, "name":"Lunes", "selected":True},
+                        {"id": 2, "index": 1, "name": "Martes", "selected": True},
                     ]
                 }
             ]
@@ -959,6 +959,14 @@ class GatewayTestHelper():
             profesional = prof,
             prestacion = pres
         )
+        dow = self.createDayOfWeek()
+        period = Period.objects.create(
+            start=agenda.start,
+            end=agenda.end,
+            selected=True
+        )
+        period.daysOfWeek.add(dow)
+        agenda.periods.add(period)
         return agenda
 
     def createAgendaConTurno(self, profesional=None, prestacion=None):
@@ -1047,7 +1055,7 @@ class GatewayTestHelper():
 
     def createDayOfWeek(self):
         dow = DayOfWeek.objects.create(
-            index=1,
+            index=0,
             name="Lunes",
             selected=False
         )
