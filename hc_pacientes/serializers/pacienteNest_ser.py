@@ -19,6 +19,11 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         default=False,
         initial=False
     )
+    status = serializers.CharField(
+        max_length=8,
+        initial=Persona.STATUS_ACTIVE,
+        default=Persona.STATUS_ACTIVE
+    )
 
     genderAtBirth = SexTypeNestedSerializer(
         many=False,
