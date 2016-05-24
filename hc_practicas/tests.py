@@ -450,8 +450,10 @@ class PrestacionTest(APITestCase):
         :return:
         """
         helperp = GatewayTestHelper()
-        helperp.createPrestacion()
-        helperp.createEspecialidad()
+        prestacion = helperp.createPrestacion()
+        especialidad = helperp.createEspecialidad()
+        prestacion.especialidad.status=Especialidad.STATUS_INACTIVE
+        prestacion.especialidad.save()
 
         data = {
             'name': 'Consulta infectologia 2',
@@ -824,38 +826,26 @@ class AusenciaTest(APITestCase):
         profesional.save()
         turno = helper.createTurno(start=datetime.time(10, 0, 0), end=datetime.time(10, 30, 0), profesional=profesional,
                                    prestacion=prestacion)
+        turno.day=datetime.date(2016,12,02)
         turno.status = Turno.STATUS_ACTIVE
+        turno.save()
 
+        start_date = datetime.date(2016,12,01)
+        end_date = datetime.date(2016,12,05)
         data= {
-            'day': datetime.date.today().strftime('%Y-%m-%d'),
-            'start': '09:00:00',
-            'end': '12:00:00',
+            'start_day': start_date.strftime('%Y-%m-%d'),
+            'end_day': end_date.strftime('%Y-%m-%d'),
             'profesional': {"id":1},
+            'reason': 'Se enfermo',
+            'notes': 'De gripe'
         }
         response = self.client.post('/practicas/ausencia/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        Turnos = Turno.objects.filter(day=datetime.date.today(), profesional=profesional)
+        Turnos = Turno.objects.filter(day=turno.day, profesional=profesional)
 
         self.assertEqual(Ausencia.objects.count(), 1)
         self.assertEqual(Turnos[0].status, Turno.STATUS_INACTIVE)
-
-    def test_createAusenciaSinHorario(self):
-        """
-        Asegura crear una Ausencia sin Horario
-        :return:
-        """
-        helper = GatewayTestHelper()
-        phelper = PacienteTestHelper()
-        prof = helper.createProfesional()
-
-        data = {
-            'day': datetime.date.today().strftime('%Y-%m-%d'),
-            'profesional': {"id": 1}
-        }
-        response = self.client.post('/practicas/ausencia/', data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Ausencia.objects.count(), 1)
 
     def test_getAusencias(self):
         """
@@ -899,8 +889,12 @@ class AusenciaTest(APITestCase):
         profesional.save()
         turno = helper.createTurno(start = datetime.time(10,0,0), end=datetime.time(10,30,0),profesional=profesional, prestacion=prestacion)
         turno.status=Turno.STATUS_INACTIVE #Lo inactivo para simular ausencia
-        ausencia = helper.createAusencia(start = datetime.time(10,0,0), end=datetime.time(10,30,0), profesional=profesional)
-        day = ausencia.day
+        ausencia = helper.createAusencia()
+        ausencia.profesional = profesional
+        ausencia.start_day = turno.day
+        ausencia.end_day = turno.day
+        ausencia.save()
+        day = turno.day
 
         response = self.client.delete('/practicas/ausencia/1/', format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -916,13 +910,14 @@ class AusenciaTest(APITestCase):
         """
         helper = GatewayTestHelper()
         prof = helper.createProfesional()
-        helper.createTurno(profesional=prof)
+        turno=helper.createTurno(profesional=prof)
 
         data= {
-            'day': datetime.date.today().strftime('%Y-%m-%d'),
-            'start': datetime.datetime.now().strftime('%H:%M:%S'),
-            'end': (datetime.datetime.now()+datetime.timedelta(hours=4)).strftime('%H:%M:%S'),
+            'start_day': turno.day.strftime('%Y-%m-%d'),
+            'end_day': (turno.day+datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
             'profesional': {"id":prof.pk},
+            'notes':'Notitas',
+            'reason':'Razon'
         }
         response = self.client.put('/practicas/turno/1/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -933,10 +928,12 @@ class GatewayTestHelper():
         prof = profesional if profesional is not None else self.createProfesional()
 
         instance = Ausencia.objects.create(
-            day=datetime.date.today(),
-            start=start,
-            end=end,
-            profesional=prof
+            start_day=datetime.date.today(),
+            end_day=datetime.date.today()+datetime.timedelta(days=1),
+            profesional=prof,
+            reason='se enfermo',
+            notes='notitas',
+            status=Ausencia.STATUS_ACTIVE
         )
         return instance
 
