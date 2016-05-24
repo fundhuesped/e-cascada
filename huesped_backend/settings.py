@@ -156,3 +156,7 @@ CORS_ALLOW_HEADERS = (
     'authorization',
     'x-csrftoken'
 )
+
+CORS_EXPOSE_HEADERS = {
+    'auth-token'
+}
