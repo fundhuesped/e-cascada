@@ -35,6 +35,17 @@ class EspecialidadList(generics.ListCreateAPIView):
             if prof is not None:
                 especialidades_id = prof.prestaciones.values_list('especialidad_id')
                 queryset = queryset.filter(pk__in=especialidades_id)
+        #Order  
+        order_field = self.request.query_params.get('order_field')
+        order_by = self.request.query_params.get('order_by')
+        if (order_field is not None) and (order_by is not None):
+            if order_by == 'asc':
+                queryset = queryset.order_by(order_field)
+            else:
+                if order_by == 'desc':
+                    queryset = queryset.order_by('-'+order_field)
+
+
         return queryset
 
 class EspecialidadDetails(generics.RetrieveUpdateDestroyAPIView):
