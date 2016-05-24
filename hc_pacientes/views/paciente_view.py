@@ -28,7 +28,7 @@ class PacienteList(generics.ListCreateAPIView):
         if firstName is not None and len(firstName) >= 3:
             queryset = queryset.filter(firstName__startswith=firstName)
         if fatherSurname is not None and len(fatherSurname) >= 3:
-            queryset = queryset.filter(fatherSurname__startswith=fatherSurename)
+            queryset = queryset.filter(fatherSurname__startswith=fatherSurname)
         if status is not None:
             queryset = queryset.filter(status=status)
         if documentType is not None:
