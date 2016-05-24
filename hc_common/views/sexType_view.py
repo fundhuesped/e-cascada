@@ -13,7 +13,7 @@ class SexTypeList(generics.ListCreateAPIView):
     """
     serializer_class = SexTypeNestSerializer
     queryset = SexType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -33,4 +33,4 @@ class SexTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = SexTypeNestSerializer
     queryset = SexType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

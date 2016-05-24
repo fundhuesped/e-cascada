@@ -10,8 +10,7 @@ from hc_common.models import Province
 class ProvinceList(generics.ListCreateAPIView):
     serializer_class = ProvinceNestSerializer
     queryset = Province.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
 
     def get_queryset(self):
         queryset = Province.objects.all()
@@ -27,4 +26,4 @@ class ProvinceList(generics.ListCreateAPIView):
 class ProvinceDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProvinceNestSerializer
     queryset = Province.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

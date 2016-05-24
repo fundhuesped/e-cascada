@@ -13,7 +13,7 @@ class DocumentTypeList(generics.ListCreateAPIView):
     """
     serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -33,4 +33,4 @@ class DocumentTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

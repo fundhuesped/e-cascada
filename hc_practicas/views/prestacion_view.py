@@ -12,7 +12,7 @@ class PrestacionList(generics.ListCreateAPIView):
     """
     serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -53,4 +53,4 @@ class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
