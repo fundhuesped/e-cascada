@@ -14,28 +14,21 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
         many=False
     )
 
-    start = serializers.TimeField(
-        default = datetime.time(0,0,0)
-    )
-    end = serializers.TimeField(
-        default = datetime.time(23,59,59)
-    )
-
     def create(self, validated_data):
         profesional = validated_data.pop('profesional')
         instance = Ausencia.objects.create(
-            day=validated_data.get('day'),
-            start=validated_data.get('start'),
-            end=validated_data.get('end'),
-            profesional=profesional
+            start_day=validated_data.get('start_day'),
+            end_day=validated_data.get('end_day'),
+            profesional=profesional,
+            notes = validated_data.get('notes'),
+            reason = validated_data.get('reason')
         )
+
         #Cuando se crea una ausencia, inhabilita todos los turnos del profesional asociado
-        turnos = Turno.objects.filter(day=instance.day, profesional=instance.profesional)
+        turnos = Turno.objects.filter(day__range=[instance.start_day, instance.end_day], profesional=instance.profesional)
         for turno in turnos:
-            if (turno.start >= instance.start and turno.start <= instance.end) or (
-                    turno.end <= instance.end and turno.end >= instance.start):
-                turno.status = Turno.STATUS_INACTIVE
-                turno.save()
+            turno.status = Turno.STATUS_INACTIVE
+            turno.save()
 
         return instance
 
@@ -54,4 +47,4 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ausencia
-        fields = ('id', 'day', 'start', 'end', 'profesional', 'status')
+        fields = ('id', 'start_day', 'end_day', 'profesional', 'status', 'reason','notes')
