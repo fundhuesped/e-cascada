@@ -30,7 +30,10 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
         especialidad = validated_data.pop('especialidad')
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
-        instance.status = validated_data.get('status', instance.status)
+        if(validated_data.get('status')==instance.especialidad.status and validated_data.get('status')==Prestacion.STATUS_INACTIVE):
+            instance.status = validated_data.get('status', instance.status)
+        else:
+            raise serializers.ValidationError('La especialidad asociada a esta prestación se encuentra en un estado incorrecto')
         instance.duration = validated_data.get('duration', instance.duration)
         instance.default = validated_data.get('default', instance.duration)
         instance.notes = validated_data.get('notes', instance.notes)

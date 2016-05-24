@@ -30,6 +30,12 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.status = validated_data.get('status', instance.status)
         instance.save()
+        
+        #Cascadeo de cambio de estado
+        prestaciones = Prestacion.objects.filter(especialidad=instance)
+        for prestacion in prestaciones:
+            prestacion.status=instance.status
+            prestacion.save()
 
         return instance
 
