@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from django.db import transaction
 from rest_framework import serializers
 from hc_practicas.models import Profesional, Prestacion, Turno
 from hc_pacientes.models import Paciente
@@ -39,6 +40,7 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
         return instance
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         profesional = validated_data.pop('profesional')
         prestacion = validated_data.pop('prestacion')
