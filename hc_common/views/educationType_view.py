@@ -10,7 +10,7 @@ from hc_common.models import EducationType
 class EducationTypeList(generics.ListCreateAPIView):
     serializer_class = EducationTypeNestSerializer
     queryset = EducationType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -27,4 +27,4 @@ class EducationTypeList(generics.ListCreateAPIView):
 class EducationTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EducationTypeNestSerializer
     queryset = EducationType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

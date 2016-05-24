@@ -3,7 +3,6 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from rest_framework.pagination import PageNumberPagination
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 
@@ -15,8 +14,7 @@ class PacienteList(generics.ListCreateAPIView):
     serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
     permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = 20
+    paginate_by = 20
 
     def get_queryset(self):
         queryset = Paciente.objects.all()
@@ -28,13 +26,22 @@ class PacienteList(generics.ListCreateAPIView):
         if firstName is not None and len(firstName) >= 3:
             queryset = queryset.filter(firstName__startswith=firstName)
         if fatherSurname is not None and len(fatherSurname) >= 3:
-            queryset = queryset.filter(fatherSurname__startswith=fatherSurename)
+            queryset = queryset.filter(fatherSurname__startswith=fatherSurname)
         if status is not None:
             queryset = queryset.filter(status=status)
         if documentType is not None:
             queryset = queryset.filter(documentType=documentType)
         if document is not None:
             queryset = queryset.filter(documentNumber=document)
+        #Order  
+        order_field = self.request.query_params.get('order_field')
+        order_by = self.request.query_params.get('order_by')
+        if (order_field is not None) and (order_by is not None):
+            if order_by == 'asc':
+                queryset = queryset.order_by(order_field)
+            else:
+                if order_by == 'desc':
+                    queryset = queryset.order_by('-'+order_field)
         return queryset
 
 

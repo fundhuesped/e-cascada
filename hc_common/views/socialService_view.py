@@ -10,8 +10,8 @@ from hc_common.models import SocialService
 class SocialServiceList(generics.ListCreateAPIView):
     serializer_class = SocialServiceNestSerializer
     queryset = SocialService.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
+
 
     def get_queryset(self):
         queryset = SocialService.objects.all()
@@ -27,4 +27,4 @@ class SocialServiceList(generics.ListCreateAPIView):
 class SocialServiceDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SocialServiceNestSerializer
     queryset = SocialService.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

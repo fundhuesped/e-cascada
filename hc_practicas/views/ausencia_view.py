@@ -3,7 +3,6 @@
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from rest_framework.pagination import PageNumberPagination
 from hc_practicas.serializers import AusenciaNestSerializer
 from hc_practicas.models import Ausencia
 from datetime import datetime
@@ -13,8 +12,7 @@ class AusenciaList(generics.ListCreateAPIView):
     serializer_class = AusenciaNestSerializer
     queryset = Ausencia.objects.all()
     permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
-    pagination_class.page_size=20
+    paginate_by = 20
 
     def get_queryset(self):
         queryset = Ausencia.objects.all()

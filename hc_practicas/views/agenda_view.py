@@ -10,8 +10,8 @@ from hc_practicas.models import Agenda
 class AgendaList(generics.ListCreateAPIView):
     serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
+
 
     def get_queryset(self):
         queryset = Agenda.objects.all()
@@ -32,4 +32,4 @@ class AgendaList(generics.ListCreateAPIView):
 class AgendaDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
