@@ -127,8 +127,7 @@ REST_FRAMEWORK = {
 
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
+    'DEFAULT_PAGINATION_CLASS': 'hc_core.paginators.ParameterPageNumberPaginator'
 }
 
 #CORS headers applied to all hosts
