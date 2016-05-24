@@ -13,8 +13,8 @@ class EspecialidadList(generics.ListCreateAPIView):
     """
     serializer_class = EspecialidadNestSerializer
     queryset = Especialidad.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
+
 
     def get_queryset(self):
         """
@@ -43,4 +43,4 @@ class EspecialidadDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = EspecialidadNestSerializer
     queryset = Especialidad.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

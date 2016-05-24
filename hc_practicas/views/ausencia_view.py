@@ -12,9 +12,7 @@ from datetime import datetime
 class AusenciaList(generics.ListCreateAPIView):
     serializer_class = AusenciaNestSerializer
     queryset = Ausencia.objects.all()
-    permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
-    pagination_class.page_size=20
+    #permission_classes = (AllowAny,)
 
     def get_queryset(self):
         queryset = Ausencia.objects.all()
@@ -45,4 +43,4 @@ class AusenciaList(generics.ListCreateAPIView):
 class AusenciaDetails(generics.RetrieveDestroyAPIView): #No se permite modificar una ausencia
     serializer_class = AusenciaNestSerializer
     queryset = Ausencia.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

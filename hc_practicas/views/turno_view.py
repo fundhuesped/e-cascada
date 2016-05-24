@@ -12,9 +12,9 @@ from datetime import datetime
 class TurnoList(generics.ListCreateAPIView):
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
-    permission_classes = (AllowAny,)
-    pagination_class = PageNumberPagination
-    pagination_class.page_size=20
+    #permission_classes = (AllowAny,)
+
+
 
     def get_queryset(self):
         queryset = Turno.objects.all()
@@ -60,4 +60,4 @@ class TurnoList(generics.ListCreateAPIView):
 class TurnoDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

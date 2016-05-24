@@ -10,11 +10,11 @@ from hc_practicas.models import DayOfWeek
 class DayOfWeekList(generics.ListCreateAPIView):
     serializer_class = DayOfWeekNestSerializer
     queryset = DayOfWeek.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
+
 
 
 class DayOfWeekDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DayOfWeekNestSerializer
     queryset = DayOfWeek.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

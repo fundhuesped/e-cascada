@@ -10,7 +10,7 @@ from hc_common.models import District
 class DistrictList(generics.ListCreateAPIView):
     serializer_class = DistrictNestSerializer
     queryset = District.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -30,4 +30,4 @@ class DistrictList(generics.ListCreateAPIView):
 class DistrictDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DistrictNestSerializer
     queryset = District.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

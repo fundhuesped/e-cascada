@@ -10,11 +10,10 @@ from hc_practicas.models import Period
 class PeriodList(generics.ListCreateAPIView):
     serializer_class = PeriodNestSerializer
     queryset = Period.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
 
 
 class PeriodDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PeriodNestSerializer
     queryset = Period.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

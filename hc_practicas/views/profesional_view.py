@@ -13,8 +13,8 @@ class ProfesionalList(generics.ListCreateAPIView):
     """
     serializer_class = ProfesionalNestSerializer
     queryset = Profesional.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
+
 
     def get_queryset(self):
         """
@@ -45,4 +45,4 @@ class ProfesionalDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = ProfesionalNestSerializer
     queryset = Profesional.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

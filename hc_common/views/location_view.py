@@ -10,8 +10,7 @@ from hc_common.models import Location
 class LocationList(generics.ListCreateAPIView):
     serializer_class = LocationNestSerializer
     queryset = Location.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
+    #permission_classes = (AllowAny,)
 
     def get_queryset(self):
         queryset = Location.objects.all()
@@ -30,4 +29,4 @@ class LocationList(generics.ListCreateAPIView):
 class LocationDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LocationNestSerializer
     queryset = Location.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)

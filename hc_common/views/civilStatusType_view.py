@@ -10,7 +10,7 @@ from hc_common.models import CivilStatusType
 class CivilStatusTypeList(generics.ListCreateAPIView):
     serializer_class = CivilStatusTypeNestSerializer
     queryset = CivilStatusType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -27,4 +27,4 @@ class CivilStatusTypeList(generics.ListCreateAPIView):
 class CivilStatusTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CivilStatusTypeNestSerializer
     queryset = CivilStatusType.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
