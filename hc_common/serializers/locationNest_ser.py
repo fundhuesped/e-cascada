@@ -36,3 +36,4 @@ class LocationNestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ('id', 'name', 'description', 'status', 'district')
+        
