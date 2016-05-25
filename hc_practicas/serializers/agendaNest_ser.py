@@ -171,13 +171,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                     turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start=period.start,end=period.end, day=current_date)
                     if turnos.count()>0: #Existe un turno previamente
                         for turno in turnos:
-                            turno.status=Turno.STATUS_ACTIVE
+                            turno.status=agenda.status #Lo dejo en el mismo estado que la agenda
                             turno.save()
                     else: #Si no existe, crea el slot para el turno
                         turno_instance = Turno.objects.create(
                             day=current_date,
                             start=period.start,
                             end=period.end,
+                            status=agenda.status, #Lo creo con el mismo estado que la agenda
                             profesional=profesional,
                             prestacion=prestacion
                         )
