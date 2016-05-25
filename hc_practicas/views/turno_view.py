@@ -21,18 +21,26 @@ class TurnoList(generics.ListCreateAPIView):
         if taken is not None:
             value = self.str2bool(taken)    
             queryset = queryset.filter(taken=value)
+
         day = self.request.query_params.get('day')
         if day is not None:
             queryset = queryset.filter(day=day)
+            
         day__gte = self.request.query_params.get('day__gte')
         if day__gte is not None:
             queryset = queryset.filter(day__gte=day__gte)
+
         prestacion = self.request.query_params.get('prestacion')
         if prestacion is not None:
             queryset = queryset.filter(prestacion=prestacion)
+
         profesional = self.request.query_params.get('profesional')
         if profesional is not None:
             queryset = queryset.filter(profesional=profesional)
+
+        status = self.request.query_params.get('status')
+        if status is not None:
+            queryset = queryset.filter(status=status)
 
         paciente = self.request.query_params.get('paciente')
         if paciente is not None:

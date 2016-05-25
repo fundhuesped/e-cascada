@@ -17,12 +17,16 @@ class AusenciaList(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Ausencia.objects.all()
         day = self.request.query_params.get('day')
+        status = self.request.query_params.get('status')
+
         if day is not None:
             queryset = queryset.filter(day=day)
         day__gte = self.request.query_params.get('day__gte')
         if day__gte is not None:
             queryset = queryset.filter(day__gte=day__gte)
         profesional = self.request.query_params.get('profesional')
+        if status is not None:
+            queryset = queryset.filter(status=status)
         if profesional is not None:
             queryset = queryset.filter(profesional=profesional)
 

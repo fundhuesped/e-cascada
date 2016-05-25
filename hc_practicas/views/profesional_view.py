@@ -24,6 +24,7 @@ class ProfesionalList(generics.ListCreateAPIView):
         queryset = Profesional.objects.all()
         firstName = self.request.query_params.get('firstName')
         fatherSurename = self.request.query_params.get('fatherSurename')
+        status = self.request.query_params.get('status')
         prestacion = self.request.query_params.get('prestacion')
         especialidad = self.request.query_params.get('especialidad')
 
@@ -31,6 +32,8 @@ class ProfesionalList(generics.ListCreateAPIView):
             queryset = queryset.filter(firstName__startswith=firstName)
         if fatherSurename is not None and len(fatherSurename) > 3:
             queryset = queryset.filter(fatherSurename__startswith=fatherSurename)
+        if status is not None:
+            queryset = queryset.filter(status=status)            
         if prestacion is not None:
             queryset = queryset.filter(prestaciones__pk__in=prestacion)
         if especialidad is not None:
