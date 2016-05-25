@@ -666,18 +666,28 @@ class AgendaTest(APITestCase):
             'periods':[
                 {   'id':1,
                     'start': datetime.datetime.now().strftime('%H:%M:%S'),
-                    'end': (datetime.datetime.now()+datetime.timedelta(minutes=30)).strftime('%H:%M:%S'),
-                    'selected': False,
+                    'end': (datetime.datetime.now()+datetime.timedelta(hours=1)).strftime('%H:%M:%S'),
+                    'selected': True,
                     'daysOfWeek': [
                         {"id":1,"index":0, "name":"Lunes", "selected":True},
-                        {"id":2, "index":1, "name":"Martes", "selected":False}
+                        {"id":2, "index":1, "name":"Martes", "selected":True}
                     ]
+                 },
+                {'id': 2,
+                 'start': (datetime.datetime.now() + datetime.timedelta(hours=1)).strftime('%H:%M:%S'),
+                 'end': (datetime.datetime.now() + datetime.timedelta(hours=2)).strftime('%H:%M:%S'),
+                 'selected': True,
+                 'daysOfWeek': [
+                     {"id": 1, "index": 0, "name": "Lunes", "selected": True},
+                     {"id": 2, "index": 1, "name": "Martes", "selected": True}
+                 ]
                  }
             ]
         }
         response = self.client.put('/practicas/agenda/1/', data, format='json')
         turnos = Turno.objects.all().filter(profesional=prof, prestacion=pres, start__gte=start, day__gte=datetime.date.today(), day__lte=datetime.date.today()+datetime.timedelta(days=3))#, status=Turno.STATUS_INACTIVE)
         self.assertGreaterEqual(turnos.count(),1)
+        #self.assertEqual(turnos[0].status,Turno.STATUS_INACTIVE)
 
 class TurnoTest(APITestCase):
 
@@ -975,11 +985,11 @@ class GatewayTestHelper():
         agenda.periods.add(period)
         return agenda
 
-    def createAgendaConTurno(self, profesional=None, prestacion=None):
+    def createAgendaConTurno(self, profesional=None, prestacion=None, start=datetime.datetime.now(), end=datetime.datetime.now()+datetime.timedelta(hours=2)):
         prof = profesional if profesional is not None else self.createProfesional()
         pres = prestacion if prestacion is not None else self.createPrestacion()
-        start = datetime.datetime.now()
-        end = datetime.datetime.now()+datetime.timedelta(hours=4)
+        start = start
+        end = end
         agenda = Agenda.objects.create(
             status='Active',
             start = start,
@@ -989,13 +999,25 @@ class GatewayTestHelper():
             profesional = prof,
             prestacion = pres
         )
-        dow=self.createDayOfWeek()
+        dow1=self.createDayOfWeek(index=0, name="Lunes", selected=True)
         period = Period.objects.create(
             start = start,
-            end = end,
-            selected = False
+            end = start+datetime.timedelta(hours=1),
+            selected = True
         )
-        period.daysOfWeek.add(dow)
+        period.daysOfWeek.add(dow1)
+        dow2 = self.createDayOfWeek(index=1, name="Martes", selected=True)
+        period.daysOfWeek.add(dow2)
+        agenda.periods.add(period)
+
+        period = Period.objects.create(
+            start=start + datetime.timedelta(hours=1),
+            end=start + datetime.timedelta(hours=2),
+            selected=True
+        )
+        period.daysOfWeek.add(dow1)
+        period.daysOfWeek.add(dow2)
+
         agenda.periods.add(period)
         agenda.save()
         self.createTurno(start,start+datetime.timedelta(hours=1), prof, pres)
@@ -1059,11 +1081,11 @@ class GatewayTestHelper():
         period.daysOfWeek.add(dow)
         return period
 
-    def createDayOfWeek(self):
+    def createDayOfWeek(self, index=0, name="Lunes", selected=True):
         dow = DayOfWeek.objects.create(
-            index=0,
-            name="Lunes",
-            selected=False
+            index=index,
+            name=name,
+            selected=selected
         )
         return dow
 

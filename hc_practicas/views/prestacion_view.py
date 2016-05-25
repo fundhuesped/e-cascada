@@ -12,7 +12,7 @@ class PrestacionList(generics.ListCreateAPIView):
     """
     serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
     paginate_by = 20
 
     def get_queryset(self):
@@ -35,7 +35,16 @@ class PrestacionList(generics.ListCreateAPIView):
             if prof is not None:
                 prestaciones = prof.prestaciones.values_list('pk')
                 queryset = queryset.filter(pk__in=prestaciones)
-
+        #Order  
+        order_field = self.request.query_params.get('order_field')
+        order_by = self.request.query_params.get('order_by')
+        if (order_field is not None) and (order_by is not None):
+            if order_by == 'asc':
+                queryset = queryset.order_by(order_field)
+            else:
+                if order_by == 'desc':
+                    queryset = queryset.order_by('-'+order_field)
+                    
         return queryset
 
 class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):
@@ -44,4 +53,4 @@ class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
-    permission_classes = (AllowAny,)
+    #permission_classes = (AllowAny,)
