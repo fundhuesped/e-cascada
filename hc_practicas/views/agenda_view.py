@@ -25,7 +25,17 @@ class AgendaList(generics.ListCreateAPIView):
             queryset = queryset.filter(profesional__id=profesional)
         if prestacion is not None:
             queryset = queryset.filter(prestacion__id=prestacion)
-
+        
+        #Order  
+        order_field = self.request.query_params.get('order_field')
+        order_by = self.request.query_params.get('order_by')
+        if (order_field is not None) and (order_by is not None):
+            if order_by == 'asc':
+                queryset = queryset.order_by(order_field)
+            else:
+                if order_by == 'desc':
+                    queryset = queryset.order_by('-'+order_field)
+                    
         return queryset
 
 
