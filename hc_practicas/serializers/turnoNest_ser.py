@@ -61,12 +61,12 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         instance.paciente = paciente
         instance.save()
 
-        self.cambiar_status_turnos_asociados(instance.day, instance.start, instance.end, instance.profesional, status_turnos_asociados)
+        self.cambiar_status_turnos_asociados(instance.day, instance.start, instance.end, instance.profesional, status_turnos_asociados, instance.id )
 
         return instance
 
-    def cambiar_status_turnos_asociados(self, day, start, end, profesional, status):
-        turnos = Turno.objects.filter(day=day,profesional=profesional)
+    def cambiar_status_turnos_asociados(self, day, start, end, profesional, status, original_turno_id):
+        turnos = Turno.objects.filter(day=day,profesional=profesional).exclude(pk=original_turno_id)
         for turno in turnos:
             if (turno.start >= start and turno.start <= end) or (turno.end <= end and turno.end >=start):
                 turno.status = status if status is not None else turno.status
