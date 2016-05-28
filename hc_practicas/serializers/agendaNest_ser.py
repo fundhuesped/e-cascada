@@ -25,7 +25,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
     prestacion = PrestacionNestedSerializer(
         many=False
     )
-    
+
     def getFromDate(self, profesional, prestacion):
         """
         Obtiene la fecha desde la cual se debe crear una agenda para un profesional y una prestación dada
