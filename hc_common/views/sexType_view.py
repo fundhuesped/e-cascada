@@ -5,16 +5,15 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import SexTypeNestSerializer
 from hc_common.models import SexType
+from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
 
 
-class SexTypeList(generics.ListCreateAPIView):
+class SexTypeList(PaginateListCreateAPIView):
     """
     Vista para listar Documentos existentes, o crear un nuevo Documento
     """
     serializer_class = SexTypeNestSerializer
     queryset = SexType.objects.all()
-    #permission_classes = (AllowAny,)
-    paginate_by = 20
 
     def get_queryset(self):
         queryset = SexType.objects.all()

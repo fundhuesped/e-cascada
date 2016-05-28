@@ -5,16 +5,14 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import DocumentTypeNestSerializer
 from hc_common.models import DocumentType
+from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
 
-
-class DocumentTypeList(generics.ListCreateAPIView):
+class DocumentTypeList(PaginateListCreateAPIView):
     """
     Vista para listar Documentos existentes, o crear un nuevo Documento
     """
     serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
-    #permission_classes = (AllowAny,)
-    paginate_by = 20
 
     def get_queryset(self):
         queryset = DocumentType.objects.all()

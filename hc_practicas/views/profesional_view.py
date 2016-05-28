@@ -5,15 +5,14 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import ProfesionalNestSerializer
 from hc_practicas.models import Profesional
+from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
 
-
-class ProfesionalList(generics.ListCreateAPIView):
+class ProfesionalList(PaginateListCreateAPIView):
     """
     Vista para listar Profesionales existentes, o crear un nuevo Paciente
     """
     serializer_class = ProfesionalNestSerializer
     queryset = Profesional.objects.all()
-    #permission_classes = (AllowAny,)
 
 
     def get_queryset(self):

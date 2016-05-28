@@ -5,13 +5,12 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import EducationTypeNestSerializer
 from hc_common.models import EducationType
+from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
 
 
-class EducationTypeList(generics.ListCreateAPIView):
+class EducationTypeList(PaginateListCreateAPIView):
     serializer_class = EducationTypeNestSerializer
     queryset = EducationType.objects.all()
-    #permission_classes = (AllowAny,)
-    paginate_by = 20
 
     def get_queryset(self):
         queryset = EducationType.objects.all()

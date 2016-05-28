@@ -5,15 +5,14 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import PrestacionNestSerializer
 from hc_practicas.models import Prestacion, Profesional
+from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
 
-class PrestacionList(generics.ListCreateAPIView):
+class PrestacionList(PaginateListCreateAPIView):
     """
     Vista para listar Prestaciones existentes, o crear una nueva Prestacion
     """
     serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
-    #permission_classes = (AllowAny,)
-    paginate_by = 20
 
     def get_queryset(self):
         """
