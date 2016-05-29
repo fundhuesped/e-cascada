@@ -82,6 +82,31 @@ class ProfesionalTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Profesional.objects.count(),1)
 
+    def test_createProfesionalBasico(self):
+        """
+        Asegura crear un Profesional con los datos basicos
+        :return:
+        """
+        cth = CommonTestHelper()
+        cth.createDocumentType()
+        helper = GatewayTestHelper()
+        helper.createPrestacion()
+
+        data = {
+            "firstName": "Paciente",
+            "otherNames": "Pacientito",
+            "fatherSurname": "Prueba",
+            "motherSurname": "Del test",
+            "prestaciones": [
+                {
+                    "id": 1
+                }
+            ]
+        }
+        response = self.client.post('/practicas/profesional/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Profesional.objects.count(), 1)
+
     def test_getProfesionales(self):
         """
         Obtiene todos los Profesionales
