@@ -10,8 +10,8 @@ from hc_practicas.models import Profesional, Turno
 Representa la ausencia de un profesional en un dia determinado
 """
 class Ausencia(ActiveModel):
-    start_day = models.DateField(null=False, default=timezone.now())
-    end_day = models.DateField(null=False, default=timezone.now())
+    start_day = models.DateField(null=False, default=timezone.now)
+    end_day = models.DateField(null=False, default=timezone.now)
     profesional = models.ForeignKey(Profesional, null=True)
     status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES, default=ActiveModel.STATUS_ACTIVE)
     reason = models.CharField(blank=True, max_length=150, null=False)
