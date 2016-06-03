@@ -5,7 +5,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import SocialServiceNestSerializer
 from hc_common.models import SocialService
-from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
+from hc_core.views import PaginateListCreateAPIView
 
 class SocialServiceList(PaginateListCreateAPIView):
     serializer_class = SocialServiceNestSerializer

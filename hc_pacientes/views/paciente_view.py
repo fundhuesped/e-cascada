@@ -5,7 +5,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
-from hc_core.views.paginateListCreateAPIView import PaginateListCreateAPIView
+from hc_core.views import PaginateListCreateAPIView
 
 
 class PacienteList(PaginateListCreateAPIView):
