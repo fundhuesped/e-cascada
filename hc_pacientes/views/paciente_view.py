@@ -5,16 +5,15 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
+from hc_core.views import PaginateListCreateAPIView
 
 
-class PacienteList(generics.ListCreateAPIView):
+class PacienteList(PaginateListCreateAPIView):
     """
     Vista para listar Pacientes existentes, o crear un nuevo Paciente
     """
     serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
-    permission_classes = (AllowAny,)
-    paginate_by = 20
 
     def get_queryset(self):
         queryset = Paciente.objects.all()

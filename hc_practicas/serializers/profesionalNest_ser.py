@@ -12,6 +12,10 @@ from django.utils.translation import gettext as _
 
 class ProfesionalNestSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
+    status = serializers.CharField(
+        default=Profesional.STATUS_ACTIVE
+    )
+
     prestaciones = PrestacionNestedSerializer(
         many=True,
         read_only=False,
@@ -20,7 +24,9 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
     )
 
     documentType = DocumentTypeNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     education = EducationTypeNestedSerializer(
@@ -36,15 +42,21 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
     )
 
     genderAtBirth = SexTypeNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     genderOfChoice = SexTypeNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     location = LocationNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     civilStatus = CivilStatusTypeNestedSerializer(
@@ -58,6 +70,9 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         Validaciones de datos básicos para el alta de un profesional
         :param attrs:
         :return:
+        """
+
+        #HUES-215: Solo son obligatorios nombre y apellido
         """
         if (not 'primaryPhoneNumber' in attrs) or attrs['primaryPhoneNumber'] is None:
             raise serializers.ValidationError({'primaryPhoneNumber': _('El teléfono primario es obligatorio para un profesional')})
@@ -79,7 +94,7 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'postal': _('El código postal es obligatorio')})
         if (not 'location' in attrs) or attrs['location'] is None:
             raise serializers.ValidationError({'location': _('La provincia, partido y localidad son obligatorios')})
-
+        """
 
         return attrs
 
@@ -125,6 +140,8 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
             motherSurname=validated_data.get('motherSurname'),
+            municipalNumber=validated_data.get('municipalNumber'),
+            licenseNumber=validated_data.get('licenseNumber'),
             birthDate=validated_data.get('birthDate'),
             documentNumber=validated_data.get('documentNumber'),
             email=validated_data.get('email'),
@@ -167,6 +184,8 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
         instance.fatherSurname = validated_data.get('fatherSurname', instance.fatherSurname)
         instance.motherSurname = validated_data.get('motherSurname', instance.motherSurname)
+        instance.municipalNumber = validated_data.get('municipalNumber', instance.municipalNumber)
+        instance.licenseNumber = validated_data.get('licenseNumber', instance.licenseNumber)
         instance.birthDate = validated_data.get('birthDate', instance.birthDate)
         instance.documentNumber = validated_data.get('documentNumber', instance.documentNumber)
         instance.bornPlace = validated_data.get('bornPlace', instance.bornPlace)
@@ -210,4 +229,4 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'bornPlace', 'occupation', 'education', 'civilStatus', 'notes', 'primaryPhoneNumber',
-                  'primaryPhoneContact', 'primaryPhoneMessage', 'prestaciones', 'socialService', 'socialServiceNumber')
+                  'primaryPhoneContact', 'primaryPhoneMessage', 'prestaciones', 'socialService', 'socialServiceNumber', 'municipalNumber', 'licenseNumber')

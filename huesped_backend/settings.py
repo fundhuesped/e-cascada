@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import pip
 from .critical_settings import * #Configuraciones propias de cada entorno, que deben mantenerse fuera del source code
+from subprocess import check_output
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -105,7 +107,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -115,12 +117,6 @@ STATIC_URL = '/static/'
 
 # REST Framework
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    #'DEFAULT_AUTHENTICATION_CLASSES': (
-    #    'rest_framework.authentication.BasicAuthentication',
-    #    'rest_framework.authentication.SessionAuthentication',
-    #),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication'
@@ -159,4 +155,20 @@ CORS_ALLOW_HEADERS = (
 
 CORS_EXPOSE_HEADERS = {
     'auth-token'
+}
+
+# TODO Replace this with jenkins build info file
+GIT_INFO = {
+    'branch': check_output(['git', 'rev-parse', '--abbrev-ref',
+                            'HEAD']).strip(),
+    'commit': {
+        'hash': check_output(['git', 'rev-parse', 'HEAD']).strip(),
+        'date': check_output(['git', 'show', '-s', '--format=%ci',
+                              'HEAD']).strip()
+    }
+}
+
+DEPENDENCIES_INFO = {
+    dist.key: dist.version
+    for dist in pip.get_installed_distributions()
 }

@@ -5,12 +5,12 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import LocationNestSerializer
 from hc_common.models import Location
+from hc_core.views import PaginateListCreateAPIView
 
 
-class LocationList(generics.ListCreateAPIView):
+class LocationList(PaginateListCreateAPIView):
     serializer_class = LocationNestSerializer
     queryset = Location.objects.all()
-    #permission_classes = (AllowAny,)
 
     def get_queryset(self):
         queryset = Location.objects.all()

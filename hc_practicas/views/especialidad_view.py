@@ -5,16 +5,15 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import EspecialidadNestSerializer
 from hc_practicas.models import Especialidad,Profesional
+from hc_core.views import PaginateListCreateAPIView
 
 
-class EspecialidadList(generics.ListCreateAPIView):
+class EspecialidadList(PaginateListCreateAPIView):
     """
     Vista para listar Especialidades existentes, o crear una nueva Especialidad
     """
     serializer_class = EspecialidadNestSerializer
     queryset = Especialidad.objects.all()
-    #permission_classes = (AllowAny,)
-
 
     def get_queryset(self):
         """
@@ -35,7 +34,7 @@ class EspecialidadList(generics.ListCreateAPIView):
             if prof is not None:
                 especialidades_id = prof.prestaciones.values_list('especialidad_id')
                 queryset = queryset.filter(pk__in=especialidades_id)
-        #Order  
+        #Order
         order_field = self.request.query_params.get('order_field')
         order_by = self.request.query_params.get('order_by')
         if (order_field is not None) and (order_by is not None):

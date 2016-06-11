@@ -7,6 +7,7 @@ from hc_practicas.models import Agenda, Period, DayOfWeek, Profesional, Prestaci
 from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestedSerializer, PrestacionNestedSerializer
 import datetime as dt
 import calendar
+import json
 from django.db.models import Max
 from django.utils.translation import gettext as _
 
@@ -130,9 +131,36 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             period.delete()
 
         instance.periods.clear()
-        periods = validated_data.pop('periods')
 
-        return self.load_agenda(periods, instance, profesional, prestacion)
+        periodos = self._context['request']._data['periods']
+
+        return self.load_updated_agenda(periodos, instance, profesional, prestacion)
+
+
+    def load_updated_agenda(self, periods, agenda_instance, profesional, prestacion):
+        for period in periods:
+            period_instance = Period.objects.create(
+                start=period['start'],
+                end=period['end'],
+                selected=period['selected']
+            )
+
+            days_of_week = period.pop('daysOfWeek')
+            for dayOfWeek in days_of_week:
+                dayOfWeek_instance = DayOfWeek.objects.create(
+                    index=dayOfWeek['index'],
+                    name=dayOfWeek['name'],
+                    selected=dayOfWeek['selected']
+                )
+                dayOfWeek_instance.save()
+                period_instance.daysOfWeek.add(dayOfWeek_instance)
+                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion)
+
+            period_instance.save()
+            agenda_instance.periods.add(period_instance)
+            agenda_instance.save()
+        return agenda_instance
+
 
     def load_agenda(self, periods, agenda_instance, profesional, prestacion):
         for period in periods:

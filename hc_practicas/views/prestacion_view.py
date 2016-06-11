@@ -5,15 +5,14 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import PrestacionNestSerializer
 from hc_practicas.models import Prestacion, Profesional
+from hc_core.views import PaginateListCreateAPIView
 
-class PrestacionList(generics.ListCreateAPIView):
+class PrestacionList(PaginateListCreateAPIView):
     """
     Vista para listar Prestaciones existentes, o crear una nueva Prestacion
     """
     serializer_class = PrestacionNestSerializer
     queryset = Prestacion.objects.all()
-    #permission_classes = (AllowAny,)
-    paginate_by = 20
 
     def get_queryset(self):
         """
@@ -35,7 +34,7 @@ class PrestacionList(generics.ListCreateAPIView):
             if prof is not None:
                 prestaciones = prof.prestaciones.values_list('pk')
                 queryset = queryset.filter(pk__in=prestaciones)
-        #Order  
+        #Order
         order_field = self.request.query_params.get('order_field')
         order_by = self.request.query_params.get('order_by')
         if (order_field is not None) and (order_by is not None):
@@ -44,7 +43,7 @@ class PrestacionList(generics.ListCreateAPIView):
             else:
                 if order_by == 'desc':
                     queryset = queryset.order_by('-'+order_field)
-                    
+
         return queryset
 
 class PrestacionDetails(generics.RetrieveUpdateDestroyAPIView):

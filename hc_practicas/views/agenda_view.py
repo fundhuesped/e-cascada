@@ -5,13 +5,12 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import AgendaNestSerializer
 from hc_practicas.models import Agenda
+from hc_core.views import PaginateListCreateAPIView
 
 
-class AgendaList(generics.ListCreateAPIView):
+class AgendaList(PaginateListCreateAPIView):
     serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
-    #permission_classes = (AllowAny,)
-
 
     def get_queryset(self):
         queryset = Agenda.objects.all()
