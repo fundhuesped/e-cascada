@@ -1,11 +1,12 @@
 #
 #### Requirements for huesped_backend ####
-django==1.9.6
-djangorestframework==3.3.3
-markdown==2.6.6
-django-filter==0.13.0
-django-rest-swagger==0.3.7
-django-extensions==1.6.7
-django-audit-log==0.7.0
-django-cors-headers==1.1.0
-psycopg2==2.6.1
+django==1.9.1
+djangorestframework
+markdown
+django-filter
+django-rest-swagger
+django-extensions
+django-audit-log
+django-cors-headers
+#psycopg2
+
