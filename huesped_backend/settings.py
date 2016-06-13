@@ -158,15 +158,18 @@ CORS_EXPOSE_HEADERS = {
 }
 
 # TODO Replace this with jenkins build info file
-GIT_INFO = {
-    'branch': check_output(['git', 'rev-parse', '--abbrev-ref',
-                            'HEAD']).strip(),
-    'commit': {
-        'hash': check_output(['git', 'rev-parse', 'HEAD']).strip(),
-        'date': check_output(['git', 'show', '-s', '--format=%ci',
-                              'HEAD']).strip()
+try:
+    GIT_INFO = {
+        'branch': check_output(['git', 'rev-parse', '--abbrev-ref',
+                                'HEAD']).strip(),
+        'commit': {
+            'hash': check_output(['git', 'rev-parse', 'HEAD']).strip(),
+            'date': check_output(['git', 'show', '-s', '--format=%ci',
+                                  'HEAD']).strip()
+        }
     }
-}
+except:
+    GIT_INFO = None
 
 DEPENDENCIES_INFO = {
     dist.key: dist.version
