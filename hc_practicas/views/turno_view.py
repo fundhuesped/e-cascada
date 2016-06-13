@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
@@ -11,19 +11,20 @@ from hc_core.views import PaginateListCreateAPIView
 class TurnoList(PaginateListCreateAPIView):
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
+    filter_backends = (filters.OrderingFilter,)
 
     def get_queryset(self):
         queryset = Turno.objects.all()
         taken = self.request.query_params.get('taken')
-        
+
         if taken is not None:
-            value = self.str2bool(taken)    
+            value = self.str2bool(taken)
             queryset = queryset.filter(taken=value)
 
         day = self.request.query_params.get('day')
         if day is not None:
             queryset = queryset.filter(day=day)
-            
+
         day__gte = self.request.query_params.get('day__gte')
         if day__gte is not None:
             queryset = queryset.filter(day__gte=day__gte)
@@ -42,18 +43,7 @@ class TurnoList(PaginateListCreateAPIView):
 
         paciente = self.request.query_params.get('paciente')
         if paciente is not None:
-            queryset = queryset.filter(paciente = paciente)
-
-        #Order  
-        order_field = self.request.query_params.get('order_field')
-        order_by = self.request.query_params.get('order_by')
-        if (order_field is not None) and (order_by is not None):
-            if order_by == 'asc':
-                queryset = queryset.order_by(order_field)
-            else:
-                if order_by == 'desc':
-                    queryset = queryset.order_by('-'+order_field)
-
+            queryset = queryset.filter(paciente=paciente)
 
         return queryset
 
