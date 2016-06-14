@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import LocationNestSerializer
 from hc_common.models import Location
@@ -11,6 +11,7 @@ from hc_core.views import PaginateListCreateAPIView
 class LocationList(PaginateListCreateAPIView):
     serializer_class = LocationNestSerializer
     queryset = Location.objects.all()
+    filter_backends = (filters.OrderingFilter,)
 
     def get_queryset(self):
         queryset = Location.objects.all()

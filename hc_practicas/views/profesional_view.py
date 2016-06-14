@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import ProfesionalNestSerializer
 from hc_practicas.models import Profesional
@@ -13,6 +13,7 @@ class ProfesionalList(PaginateListCreateAPIView):
     """
     serializer_class = ProfesionalNestSerializer
     queryset = Profesional.objects.all()
+    filter_backends = (filters.OrderingFilter,)
 
 
     def get_queryset(self):

@@ -13,7 +13,7 @@ def info(request):
 
     infoReponse = {
         'dependencies': settings.DEPENDENCIES_INFO,
-        'git': settings.GIT_INFO
+        'git': settings.GIT_INFO if settings.GIT_INFO is not None else 'Not available'
     }
 
     return Response(infoReponse)

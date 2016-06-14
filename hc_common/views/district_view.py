@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_common.serializers import DistrictNestSerializer
 from hc_common.models import District
@@ -10,6 +10,7 @@ from hc_core.views import PaginateListCreateAPIView
 class DistrictList(PaginateListCreateAPIView):
     serializer_class = DistrictNestSerializer
     queryset = District.objects.all()
+    filter_backends = (filters.OrderingFilter,)
 
     def get_queryset(self):
         queryset = District.objects.all()

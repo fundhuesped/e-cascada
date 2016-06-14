@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
@@ -14,6 +14,7 @@ class PacienteList(PaginateListCreateAPIView):
     """
     serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
+    filter_backends = (filters.OrderingFilter,)
 
     def get_queryset(self):
         queryset = Paciente.objects.all()
