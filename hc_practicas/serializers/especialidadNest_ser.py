@@ -34,6 +34,7 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
         #Cascadeo de cambio de estado
         prestaciones = Prestacion.objects.filter(especialidad=instance)
         for prestacion in prestaciones:
+            #TODO HUES-259:Check if the prestacion was disabled due to disabling the especialidad or its disabled anyway
             prestacion.status=instance.status
             prestacion.save()
 
