@@ -125,9 +125,14 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         except KeyError:
             socialService = None
 
+        try:
+            prospect = validated_data.pop('prospect')
+        except KeyError:
+            prospect = False
+
         paciente = Paciente.objects.create(
             idpaciente=validated_data.get('idpaciente'),
-            prospect = validated_data.get('prospect'),
+            prospect=prospect,
             firstName=validated_data.get('firstName'),
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
