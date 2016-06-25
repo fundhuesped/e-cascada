@@ -9,7 +9,7 @@ import pip
 @api_view(['GET'])
 def info(request):
     for app in apps.get_app_configs():
-        print vars(app)
+        print(vars(app))
 
     infoReponse = {
         'dependencies': settings.DEPENDENCIES_INFO,
