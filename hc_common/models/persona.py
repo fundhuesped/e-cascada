@@ -41,3 +41,6 @@ class Persona(ActiveModel):
     thirdPhoneNumber = models.CharField(max_length=20, blank=True, null=True)
     thirdPhoneContact = models.CharField(max_length=40, blank=True, null=True)
     thirdPhoneMessage = models.NullBooleanField(default=False, null=True, blank=True)
+
+    class Meta:
+        ordering = ['fatherSurname']
