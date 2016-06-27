@@ -28,4 +28,4 @@ class EspecialidadNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Especialidad
-        fields = ('id', 'name', 'description', 'status', 'url')
+        fields = ('id', 'name', 'description', 'default', 'status', 'url')

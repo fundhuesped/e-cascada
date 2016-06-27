@@ -16,4 +16,4 @@ class Prestacion(ActiveModel):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE, related_name='prestaciones')
 
     class Meta:
-        ordering = ['default','name']
+        ordering = ['-default','name']

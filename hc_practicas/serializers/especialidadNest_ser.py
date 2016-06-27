@@ -20,6 +20,7 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
         especialidad = Especialidad.objects.create(
             name = validated_data.get('name'),
             description = validated_data.get('description'),
+            default = validated_data.get('default'),
             status = validated_data.get('status'),
         )
 
@@ -28,6 +29,7 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.name= validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
+        instance.default = validated_data.get('default', instance.default)
         instance.status = validated_data.get('status', instance.status)
         instance.save()
         
@@ -43,4 +45,4 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Especialidad
-        fields = ('id', 'name', 'description', 'status', 'prestaciones')
+        fields = ('id', 'name', 'default', 'description', 'status', 'prestaciones')

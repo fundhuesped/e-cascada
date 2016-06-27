@@ -13,4 +13,4 @@ class Especialidad(ActiveModel):
     default = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['default','name']
+        ordering = ['-default','name']

@@ -37,4 +37,4 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prestacion
-        fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'especialidad', 'url' )
+        fields = ('id', 'name', 'description', 'default', 'status', 'duration', 'default', 'notes', 'especialidad', 'url' )
