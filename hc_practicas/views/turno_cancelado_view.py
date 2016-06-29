@@ -22,6 +22,11 @@ class TurnoCancelado(generics.ListAPIView):
         ausenciaId = self.request.query_params.get('ausencia')
         agendaId = self.request.query_params.get('agenda')
 
+        querysetFilter = {
+            'taken': True,
+            'status': Turno.STATUS_INACTIVE,
+        }
+
         if ausenciaId is not None:
             ausencia = Ausencia.objects.get(pk=ausenciaId)
             start_day = ausencia.start_day
@@ -32,13 +37,12 @@ class TurnoCancelado(generics.ListAPIView):
             start_day = agenda.validFrom
             end_day = agenda.validTo
             profesionalId = agenda.profesional_id
+            querysetFilter['prestacion'] = agenda.prestacion_id
         else:
             print 'Handle error'
 
-        queryset = queryset.filter(day__range=(start_day,
-                                               end_day),
-                                   taken=True,
-                                   status=Turno.STATUS_INACTIVE,
-                                   profesional_id=profesionalId)
+        querysetFilter['day__range'] = (start_day, end_day)
+        querysetFilter['profesional_id'] = profesionalId
+        queryset = queryset.filter(**querysetFilter)
 
         return queryset
