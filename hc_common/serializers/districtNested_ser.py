@@ -8,7 +8,7 @@ from hc_common.models import District
 
 class DistrictNestedSerializer(TypeNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:District-detail',
+        view_name='api:hc_common:District-detail',
         lookup_field='pk'
     )
     province = ProvinceNestedSerializer(

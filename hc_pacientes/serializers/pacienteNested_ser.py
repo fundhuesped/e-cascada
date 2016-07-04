@@ -27,7 +27,7 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
     primaryPhoneMessage=serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_pacientes:Paciente-detail',
+        view_name='api:hc_pacientes:Paciente-detail',
         lookup_field='pk'
     )
 

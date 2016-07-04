@@ -27,7 +27,7 @@ class ProfesionalNestedSerializer(serializers.ModelSerializer):
     primaryPhoneMessage=serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Profesional-detail',
+        view_name='api:hc_practicas:Profesional-detail',
         lookup_field='pk'
     )
 

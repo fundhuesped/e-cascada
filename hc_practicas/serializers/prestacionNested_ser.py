@@ -18,7 +18,7 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
     notes = serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Prestacion-detail',
+        view_name='api:hc_practicas:Prestacion-detail',
         lookup_field='pk'
     )
 

@@ -8,7 +8,7 @@ from hc_common.serializers import TypeNestedSerializer
 
 class CivilStatusTypeNestedSerializer(TypeNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:CivilStatusType-detail',
+        view_name='api:hc_common:CivilStatusType-detail',
         lookup_field='pk'
     )
 

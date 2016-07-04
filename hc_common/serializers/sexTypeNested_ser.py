@@ -8,7 +8,7 @@ from hc_common.serializers import TypeNestedSerializer
 
 class SexTypeNestedSerializer(TypeNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:SexType-detail',
+        view_name='api:hc_common:SexType-detail',
         lookup_field='pk'
     )
 

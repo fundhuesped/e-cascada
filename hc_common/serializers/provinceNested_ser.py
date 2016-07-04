@@ -9,7 +9,7 @@ from hc_common.models import Province
 class ProvinceNestedSerializer(TypeNestedSerializer):
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:Province-detail',
+        view_name='api:hc_common:Province-detail',
         lookup_field='pk'
     )
 
