@@ -18,7 +18,7 @@ class DistrictList(PaginateListCreateAPIView):
         status = self.request.query_params.get('status')
         province = self.request.query_params.get('province')
         if name is not None:
-            queryset = queryset.filter(name__startswith=name)
+            queryset = queryset.filter(name__istartswith=name)
         if status is not None:
             queryset = queryset.filter(status=status)
         if province is not None:
