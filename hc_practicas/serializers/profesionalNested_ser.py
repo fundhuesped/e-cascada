@@ -32,7 +32,10 @@ class ProfesionalNestedSerializer(serializers.ModelSerializer):
     )
 
     def to_internal_value(self, data):
-        profesionales= Profesional.objects.filter(pk=data['id'])
+        if isinstance(data, list):
+            profesionales= Profesional.objects.filter(pk=data['id'])
+        else:
+            profesionales=Profesional.objects.filter(pk=data)
         if profesionales.count()>0:
             return profesionales[0]
         else:
