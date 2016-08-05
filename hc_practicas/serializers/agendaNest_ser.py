@@ -3,7 +3,8 @@
 
 from django.db import transaction
 from rest_framework import serializers
-from hc_practicas.models import Agenda, Period, DayOfWeek, Profesional, Prestacion, Turno
+from django.db.models import Q
+from hc_practicas.models import Agenda, Period, DayOfWeek, Profesional, Prestacion, Turno, Ausencia
 from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestedSerializer, PrestacionNestedSerializer
 import datetime as dt
 import calendar
@@ -138,6 +139,12 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
 
     def load_updated_agenda(self, periods, agenda_instance, profesional, prestacion):
+        ausencias = Ausencia.objects.filter((Q(start_day__gte=agenda_instance.validFrom) 
+                        & Q(start_day__lte=agenda_instance.validTo))
+                    |(Q(end_day__gte=agenda_instance.validFrom) 
+                        & Q(end_day__lte=agenda_instance.validTo)),
+                        profesional=profesional, 
+                        status=Ausencia.STATUS_ACTIVE  )
         for period in periods:
             period_instance = Period.objects.create(
                 start=period['start'],
@@ -154,7 +161,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                 )
                 dayOfWeek_instance.save()
                 period_instance.daysOfWeek.add(dayOfWeek_instance)
-                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion)
+                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion, ausencias)
 
             period_instance.save()
             agenda_instance.periods.add(period_instance)
@@ -163,6 +170,13 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
 
     def load_agenda(self, periods, agenda_instance, profesional, prestacion):
+        ausencias = Ausencia.objects.filter((Q(start_day__gte=agenda_instance.validFrom) 
+                                & Q(start_day__lte=agenda_instance.validTo))
+                            |(Q(end_day__gte=agenda_instance.validFrom) 
+                                & Q(end_day__lte=agenda_instance.validTo)),
+                                profesional=profesional, 
+                                status=Ausencia.STATUS_ACTIVE  )
+
         for period in periods:
             period_instance = Period.objects.create(
                 start=period.get('start'),
@@ -179,14 +193,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                 )
                 dayOfWeek_instance.save()
                 period_instance.daysOfWeek.add(dayOfWeek_instance)
-                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion)
+                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion, ausencias)
 
             period_instance.save()
             agenda_instance.periods.add(period_instance)
             agenda_instance.save()
         return agenda_instance
 
-    def insert_period_days(self, agenda, period, day_of_week, profesional, prestacion):
+    def insert_period_days(self, agenda, period, day_of_week, profesional, prestacion, ausencias):
         start_date = agenda.validFrom
         end_date = agenda.validTo
 
@@ -197,16 +211,28 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             if current_date.weekday() == day_of_week.index:
                 if day_of_week.selected is True:
                     turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start=period.start,end=period.end, day=current_date)
-                    if turnos.count()>0: #Existe un turno previamente
+                    if turnos.exists(): #Existe un turno previamente
+                        #Chekeo si existe una ausencia para este dia
+                        if ausencias.filter(start_day__lte=current_date,end_day__gte=current_date).exists():
+                            status = Turno.STATUS_INACTIVE
+                        else:
+                            status=agenda.status #Lo creo con el mismo estado que la agenda
+
                         for turno in turnos:
-                            turno.status=agenda.status #Lo dejo en el mismo estado que la agenda
+                            turno.status=status 
                             turno.save()
                     else: #Si no existe, crea el slot para el turno
+
+                        #Chekeo si existe una ausencia para este dia
+                        if ausencias.filter(start_day__lte=current_date,end_day__gte=current_date).exists():
+                            status = Turno.STATUS_INACTIVE
+                        else:
+                            status=agenda.status #Lo creo con el mismo estado que la agenda
                         turno_instance = Turno.objects.create(
                             day=current_date,
                             start=period.start,
                             end=period.end,
-                            status=agenda.status, #Lo creo con el mismo estado que la agenda
+                            status=status, #Lo creo con el mismo estado que la agenda
                             profesional=profesional,
                             prestacion=prestacion
                         )
