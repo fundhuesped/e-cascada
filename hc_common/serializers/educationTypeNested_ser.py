@@ -8,7 +8,7 @@ from hc_common.serializers import TypeNestedSerializer
 
 class EducationTypeNestedSerializer(TypeNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:EducationType-detail',
+        view_name='api:hc_common:EducationType-detail',
         lookup_field='pk'
     )
 

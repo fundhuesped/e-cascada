@@ -25,7 +25,7 @@ class PrestacionList(PaginateListCreateAPIView):
         especialidad = self.request.query_params.get('especialidad')
         profesional = self.request.query_params.get('profesional')
         if name is not None:
-            queryset = queryset.filter(name__startswith=name)
+            queryset = queryset.filter(name__istartswith=name)
         if status is not None:
             queryset = queryset.filter(status=status)
         if especialidad is not None:

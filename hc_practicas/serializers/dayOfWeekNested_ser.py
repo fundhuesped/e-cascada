@@ -17,7 +17,7 @@ class DayOfWeekNestedSerializer(serializers.ModelSerializer):
 
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:DayOfWeek-detail',
+        view_name='api:hc_practicas:DayOfWeek-detail',
         lookup_field='pk'
     )
 

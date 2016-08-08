@@ -45,6 +45,14 @@ class TurnoList(PaginateListCreateAPIView):
         if paciente is not None:
             queryset = queryset.filter(paciente=paciente)
 
+        start = self.request.query_params.get('start')
+        if start is not None:
+            queryset = queryset.filter(day__gte=start)
+
+        end = self.request.query_params.get('end')
+        if end is not None:
+            queryset = queryset.filter(day__lte=end)
+
         return queryset
 
     def str2bool(self, v):

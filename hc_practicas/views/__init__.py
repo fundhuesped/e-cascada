@@ -6,3 +6,4 @@ from .dayOfWeek_view import *
 from .period_view import *
 from .turno_view import *
 from .ausencia_view import *
+from .turno_cancelado_view import *

@@ -12,3 +12,4 @@ class AbstractType(ActiveModel):
 
     class Meta:
         abstract = True
+    	ordering = ['name']

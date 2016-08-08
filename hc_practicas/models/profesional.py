@@ -13,3 +13,4 @@ class Profesional(Persona):
     prestaciones = models.ManyToManyField(Prestacion)
     municipalNumber = models.CharField(max_length=8, null=False)
     licenseNumber = models.CharField(max_length=8, null=False)
+    updated_on = models.DateField(auto_now=True)

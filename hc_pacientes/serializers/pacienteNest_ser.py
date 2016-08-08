@@ -132,12 +132,13 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
         paciente = Paciente.objects.create(
             idpaciente=validated_data.get('idpaciente'),
-            prospect = prospect,
+            prospect=prospect,
             firstName=validated_data.get('firstName'),
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
             motherSurname=validated_data.get('motherSurname'),
             birthDate=validated_data.get('birthDate'),
+            consent=validated_data.get('consent'),
             documentNumber=validated_data.get('documentNumber'),
             email=validated_data.get('email'),
             street=validated_data.get('street'),
@@ -211,6 +212,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.fatherSurname = validated_data.get('fatherSurname', instance.fatherSurname)
         instance.motherSurname = validated_data.get('motherSurname', instance.motherSurname)
         instance.birthDate = validated_data.get('birthDate', instance.birthDate)
+        instance.consent = validated_data.get('consent', instance.consent)
         instance.documentNumber = validated_data.get('documentNumber', instance.documentNumber)
         instance.email = validated_data.get('email', instance.email)
         instance.street = validated_data.get('street', instance.street)
@@ -245,7 +247,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paciente
         fields = ('id', 'idpaciente', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
-                  'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
+                  'street', 'postal', 'status', 'consent','documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
                   'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
                   'primaryPhoneContact', 'primaryPhoneMessage', 'secondPhoneNumber', 'secondPhoneContact',

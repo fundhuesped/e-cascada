@@ -14,7 +14,7 @@ class EspecialidadNestedSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Especialidad-detail',
+        view_name='api:hc_practicas:Especialidad-detail',
         lookup_field='pk'
     )
 
@@ -28,4 +28,4 @@ class EspecialidadNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Especialidad
-        fields = ('id', 'name', 'description', 'status', 'url')
+        fields = ('id', 'name', 'description', 'default', 'status', 'url')

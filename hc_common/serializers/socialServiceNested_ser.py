@@ -8,7 +8,7 @@ from hc_common.serializers import TypeNestedSerializer
 
 class SocialServiceNestedSerializer(TypeNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:SocialService-detail',
+        view_name='api:hc_common:SocialService-detail',
         lookup_field='pk'
     )
 

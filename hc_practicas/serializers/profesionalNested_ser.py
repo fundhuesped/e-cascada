@@ -27,12 +27,15 @@ class ProfesionalNestedSerializer(serializers.ModelSerializer):
     primaryPhoneMessage=serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Profesional-detail',
+        view_name='api:hc_practicas:Profesional-detail',
         lookup_field='pk'
     )
 
     def to_internal_value(self, data):
-        profesionales= Profesional.objects.filter(pk=data['id'])
+        if isinstance(data, list):
+            profesionales= Profesional.objects.filter(pk=data['id'])
+        else:
+            profesionales=Profesional.objects.filter(pk=data)
         if profesionales.count()>0:
             return profesionales[0]
         else:

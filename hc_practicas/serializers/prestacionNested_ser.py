@@ -18,7 +18,7 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
     notes = serializers.ReadOnlyField()
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Prestacion-detail',
+        view_name='api:hc_practicas:Prestacion-detail',
         lookup_field='pk'
     )
 
@@ -37,4 +37,4 @@ class PrestacionNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prestacion
-        fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'especialidad', 'url' )
+        fields = ('id', 'name', 'description', 'default', 'status', 'duration', 'default', 'notes', 'especialidad', 'url' )

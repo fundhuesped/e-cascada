@@ -19,7 +19,7 @@ class PeriodNestedSerializer(serializers.ModelSerializer):
     )
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_practicas:Periodo-detail',
+        view_name='api:hc_practicas:Periodo-detail',
         lookup_field='pk'
     )
 

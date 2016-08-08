@@ -13,7 +13,7 @@ class LocationNestedSerializer(TypeNestedSerializer):
     )
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='hc_common:Location-detail',
+        view_name='api:hc_common:Location-detail',
         lookup_field='pk'
     )
 

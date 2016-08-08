@@ -50,4 +50,4 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
                 "required": False,
             },
         }
-        fields = ('id', 'name', 'description', 'status', 'duration', 'default', 'notes', 'especialidad')
+        fields = ('id', 'name', 'description', 'default', 'status', 'duration', 'default', 'notes', 'especialidad')
