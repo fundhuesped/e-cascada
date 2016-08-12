@@ -20,7 +20,7 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
         especialidad = Especialidad.objects.create(
             name = validated_data.get('name'),
             description = validated_data.get('description'),
-            default = validated_data.get('default'),
+            default = validated_data.get('default', False),
             status = validated_data.get('status'),
         )
 

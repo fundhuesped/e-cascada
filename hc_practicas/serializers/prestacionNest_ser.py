@@ -19,7 +19,7 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
             description=validated_data.get('description'),
             status=validated_data.get('status'),
             duration=validated_data.get('duration'),
-            default=validated_data.get('default'),
+            default=validated_data.get('default', False),
             notes=validated_data.get('notes'),
             especialidad=especialidad
         )
