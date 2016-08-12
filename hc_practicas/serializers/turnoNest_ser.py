@@ -68,7 +68,7 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
     def cambiar_status_turnos_asociados(self, day, start, end, profesional, status, original_turno_id):
         turnos = Turno.objects.filter(day=day,profesional=profesional).exclude(pk=original_turno_id)
         for turno in turnos:
-            if (turno.start > start and turno.start < end) or (turno.end <= end and turno.end >=start) or (turno.start == start and turno.end == end):
+            if (turno.end == end) or (turno.start == start) or (turno.start < start and turno.end > end) or (turno.start >= start and turno.start < end) or (turno.end > start and turno.end <= end):
                 turno.status = status if status is not None else turno.status
                 turno.save()
     class Meta:
