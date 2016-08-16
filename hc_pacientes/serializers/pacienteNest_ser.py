@@ -138,7 +138,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             fatherSurname=validated_data.get('fatherSurname'),
             motherSurname=validated_data.get('motherSurname'),
             birthDate=validated_data.get('birthDate'),
-            consent=validated_data.get('consent'),
+            consent=validated_data.get('consent', Paciente.CONSENT_NA),
             documentNumber=validated_data.get('documentNumber'),
             email=validated_data.get('email'),
             street=validated_data.get('street'),
