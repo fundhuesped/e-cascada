@@ -12,6 +12,20 @@ import json
 from django.db.models import Max
 from django.utils.translation import gettext as _
 
+class AgendaListSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    profesional = ProfesionalNestedSerializer(
+        many=False
+    )
+
+    prestacion = PrestacionNestedSerializer(
+        many=False
+    )
+    class Meta:
+        model = Agenda
+        fields = ('id', 'status', 'start', 'end', 'validFrom', 'validTo', 'profesional', 'prestacion')
+
 class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
 

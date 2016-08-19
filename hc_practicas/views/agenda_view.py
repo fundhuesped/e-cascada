@@ -4,14 +4,16 @@
 from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import AgendaNestSerializer
+from hc_practicas.serializers import AgendaListSerializer
 from hc_practicas.models import Agenda
 from hc_core.views import PaginateListCreateAPIView
 
 
 class AgendaList(PaginateListCreateAPIView):
-    serializer_class = AgendaNestSerializer
+    serializer_class = AgendaListSerializer
     queryset = Agenda.objects.all()
     filter_backends = (filters.OrderingFilter,)
+
 
     def get_queryset(self):
         queryset = Agenda.objects.all()
