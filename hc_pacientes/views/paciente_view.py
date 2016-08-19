@@ -23,6 +23,8 @@ class PacienteList(PaginateListCreateAPIView):
         status = self.request.query_params.get('status')
         documentType = self.request.query_params.get('documentType')
         document = self.request.query_params.get('documentNumber')
+        birthDate = self.request.query_params.get('birthDate')
+
         if firstName is not None and len(firstName) >= 3:
             queryset = queryset.filter(firstName__istartswith=firstName)
         if fatherSurname is not None and len(fatherSurname) >= 3:
@@ -33,6 +35,10 @@ class PacienteList(PaginateListCreateAPIView):
             queryset = queryset.filter(documentType=documentType)
         if document is not None:
             queryset = queryset.filter(documentNumber=document)
+        if birthDate is not None:
+            queryset = queryset.filter(birthDate=birthDate)
+
+
         #Order  
         order_field = self.request.query_params.get('order_field')
         order_by = self.request.query_params.get('order_by')
