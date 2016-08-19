@@ -24,7 +24,6 @@ class Persona(ActiveModel):
     postal = models.CharField(max_length=20, null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='personLocation', null=True, blank=True)
     occupation = models.CharField(max_length=150, blank=True, null=True)
-    terms = models.NullBooleanField(default=False, null=True, blank=True)
     socialService = models.ForeignKey(SocialService, models.SET_NULL, blank=True, null=True)
     socialServiceNumber = models.CharField(max_length=30, null=True, blank=True)
     civilStatus = models.ForeignKey(CivilStatusType, models.SET_NULL, blank=True, null=True)

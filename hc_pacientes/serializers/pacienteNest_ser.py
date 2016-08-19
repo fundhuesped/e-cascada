@@ -146,7 +146,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             status=validated_data.get('status'),
             occupation=validated_data.get('occupation'),
             socialServiceNumber=validated_data.get('socialServiceNumber'),
-            terms=validated_data.get('terms'),
             bornPlace=validated_data.get('bornPlace'),
             firstVisit=validated_data.get('firstVisit'),
             notes=validated_data.get('notes'),
@@ -220,7 +219,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.status=validated_data.get('status', instance.status)
         instance.occupation = validated_data.get('occupation', instance.occupation)
         instance.socialServiceNumber = validated_data.get('socialServiceNumber', instance.socialServiceNumber)
-        instance.terms = validated_data.get('terms', instance.terms)
         instance.bornPlace = validated_data.get('bornPlace', instance.bornPlace)
         instance.firstVisit = validated_data.get('firstVisit', instance.firstVisit)
         instance.notes = validated_data.get('notes', instance.notes)
@@ -249,6 +247,6 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         fields = ('id', 'idpaciente', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'consent','documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
-                  'socialServiceNumber', 'terms', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
+                  'socialServiceNumber', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
                   'primaryPhoneContact', 'primaryPhoneMessage', 'secondPhoneNumber', 'secondPhoneContact',
                   'secondPhoneMessage', 'thirdPhoneNumber', 'thirdPhoneContact', 'thirdPhoneMessage')
