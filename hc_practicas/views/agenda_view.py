@@ -8,15 +8,19 @@ from hc_practicas.serializers import AgendaListSerializer
 from hc_practicas.models import Agenda
 from hc_core.views import PaginateListCreateAPIView
 
-
 class AgendaList(PaginateListCreateAPIView):
-    serializer_class = AgendaListSerializer
+    serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
     filter_backends = (filters.OrderingFilter,)
 
 
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = AgendaListSerializer
+        return super(AgendaList, self).list(request, *args, **kwargs)
+
     def get_queryset(self):
         queryset = Agenda.objects.all()
+        serializer = AgendaListSerializer(queryset, many=True)
         status = self.request.query_params.get('status')
         profesional = self.request.query_params.get('profesional')
         prestacion = self.request.query_params.get('prestacion')
@@ -39,7 +43,6 @@ class AgendaList(PaginateListCreateAPIView):
                     queryset = queryset.order_by('-'+order_field)
                     
         return queryset
-
 
 class AgendaDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AgendaNestSerializer
