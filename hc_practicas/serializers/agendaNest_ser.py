@@ -247,6 +247,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                             start=period.start,
                             end=period.end,
                             status=status, #Lo creo con el mismo estado que la agenda
+                            agenda=agenda,
                             profesional=profesional,
                             prestacion=prestacion
                         )
