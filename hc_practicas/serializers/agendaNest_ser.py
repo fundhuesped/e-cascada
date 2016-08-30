@@ -1,18 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from django.db import transaction
-from rest_framework import serializers
-from django.db.models import Q
-from hc_practicas.models import Agenda, Period, DayOfWeek, Profesional, Prestacion, Turno, Ausencia
-from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestedSerializer, PrestacionNestedSerializer
 import datetime as dt
 import calendar
-import json
-from django.db.models import Max
 from django.utils.translation import gettext as _
+from django.db import transaction
+from django.db.models import Q, Max
+from rest_framework import serializers
+from hc_practicas.models import Agenda, Period, DayOfWeek, Turno, Ausencia
+from hc_practicas.serializers import PeriodNestSerializer, ProfesionalNestedSerializer, PrestacionNestedSerializer
 
 class AgendaListSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    AgendaListSerializer for list method only
+    """
     id = serializers.ReadOnlyField()
 
     profesional = ProfesionalNestedSerializer(
@@ -23,10 +24,16 @@ class AgendaListSerializer(serializers.HyperlinkedModelSerializer):
         many=False
     )
     class Meta:
+        """
+        AgendaListSerializer meta configuration
+        """
         model = Agenda
         fields = ('id', 'status', 'start', 'end', 'validFrom', 'validTo', 'profesional', 'prestacion')
 
 class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    AgendaNestSerializer for all methods except list
+    """
     id = serializers.ReadOnlyField()
 
     periods = PeriodNestSerializer(
@@ -50,18 +57,18 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         """
         fromDate = dt.datetime.now().date()
         #Filtrado de agenda por profesional y prestación
-        queryset = Agenda.objects.filter(profesional = profesional, prestacion=prestacion)
+        queryset = Agenda.objects.filter(profesional=profesional, prestacion=prestacion)
 
-        if queryset.count()>0:
-            maxDate = queryset.aggregate(Max('validTo'))['rating__max'] ##TODO:probar bien
-            day = maxDate.day
-            month = maxDate.month
-            year = maxDate.year
-            if(day==calendar.monthrange(year, month)): ##Si es el ultimo dia del mes
-                fromDate = dt.date(year=year if month <12 else year+1, month= month+1 if month < 12 else 1, day=1)
+        if queryset.count() > 0:
+            max_date = queryset.aggregate(Max('validTo'))['rating__max'] ##TODO:probar bien
+            day = max_date.day
+            month = max_date.month
+            year = max_date.year
+            if day == calendar.monthrange(year, month): ##Si es el ultimo dia del mes
+                from_date = dt.date(year=year if month < 12 else year+1, month=month+1 if month < 12 else 1, day=1)
             else:
-                fromDate = dt.date(year=year, month=month, day=day+1)
-        return fromDate
+                from_date = dt.date(year=year, month=month, day=day+1)
+        return from_date
 
     def getToDate(self, fromDate):
         """
@@ -126,8 +133,6 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         instance.end = validated_data.get('end', instance.end)
         instance.validFrom = validated_data.get('validFrom', instance.validFrom)
         instance.validTo = validated_data.get('validTo', instance.validTo)
-        instance.profesional = profesional
-        instance.prestacion = prestacion
 
         turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start__gte=instance.start,
                                             end__lte=instance.end, day__gte=instance.validFrom,
@@ -153,12 +158,12 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
 
     def load_updated_agenda(self, periods, agenda_instance, profesional, prestacion):
-        ausencias = Ausencia.objects.filter((Q(start_day__gte=agenda_instance.validFrom) 
-                        & Q(start_day__lte=agenda_instance.validTo))
-                    |(Q(end_day__gte=agenda_instance.validFrom) 
-                        & Q(end_day__lte=agenda_instance.validTo)),
-                        profesional=profesional, 
-                        status=Ausencia.STATUS_ACTIVE  )
+        ausencias = Ausencia.objects.filter((Q(start_day__gte=agenda_instance.validFrom)
+                                             & Q(start_day__lte=agenda_instance.validTo))
+                                            |(Q(end_day__gte=agenda_instance.validFrom)
+                                              & Q(end_day__lte=agenda_instance.validTo)),
+                                            profesional=profesional,
+                                            status=Ausencia.STATUS_ACTIVE)
         for period in periods:
             period_instance = Period.objects.create(
                 start=period['start'],
@@ -167,15 +172,15 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             )
 
             days_of_week = period.pop('daysOfWeek')
-            for dayOfWeek in days_of_week:
-                dayOfWeek_instance = DayOfWeek.objects.create(
-                    index=dayOfWeek['index'],
-                    name=dayOfWeek['name'],
-                    selected=dayOfWeek['selected']
+            for day_of_week in days_of_week:
+                day_of_week_instance = DayOfWeek.objects.create(
+                    index=day_of_week['index'],
+                    name=day_of_week['name'],
+                    selected=day_of_week['selected']
                 )
-                dayOfWeek_instance.save()
-                period_instance.daysOfWeek.add(dayOfWeek_instance)
-                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion, ausencias)
+                day_of_week_instance.save()
+                period_instance.daysOfWeek.add(day_of_week_instance)
+                self.insert_period_days(agenda_instance, period_instance, day_of_week_instance, profesional, prestacion, ausencias)
 
             period_instance.save()
             agenda_instance.periods.add(period_instance)
@@ -185,11 +190,11 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
     def load_agenda(self, periods, agenda_instance, profesional, prestacion):
         ausencias = Ausencia.objects.filter((Q(start_day__gte=agenda_instance.validFrom) 
-                                & Q(start_day__lte=agenda_instance.validTo))
-                            |(Q(end_day__gte=agenda_instance.validFrom) 
-                                & Q(end_day__lte=agenda_instance.validTo)),
-                                profesional=profesional, 
-                                status=Ausencia.STATUS_ACTIVE  )
+                                             & Q(start_day__lte=agenda_instance.validTo))
+                                            |(Q(end_day__gte=agenda_instance.validFrom)
+                                              & Q(end_day__lte=agenda_instance.validTo)),
+                                            profesional=profesional,
+                                            status=Ausencia.STATUS_ACTIVE)
 
         for period in periods:
             period_instance = Period.objects.create(
@@ -199,15 +204,15 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             )
 
             days_of_week = period.pop('daysOfWeek')
-            for dayOfWeek in days_of_week:
-                dayOfWeek_instance = DayOfWeek.objects.create(
-                    index = dayOfWeek.index,
-                    name = dayOfWeek.name,
-                    selected = dayOfWeek.selected
+            for day_of_week in days_of_week:
+                day_of_week_instance = DayOfWeek.objects.create(
+                    index=day_of_week.index,
+                    name=day_of_week.name,
+                    selected=day_of_week.selected
                 )
-                dayOfWeek_instance.save()
-                period_instance.daysOfWeek.add(dayOfWeek_instance)
-                self.insert_period_days(agenda_instance, period_instance, dayOfWeek_instance, profesional, prestacion, ausencias)
+                day_of_week_instance.save()
+                period_instance.daysOfWeek.add(day_of_week_instance)
+                self.insert_period_days(agenda_instance, period_instance, day_of_week_instance, profesional, prestacion, ausencias)
 
             period_instance.save()
             agenda_instance.periods.add(period_instance)
@@ -215,7 +220,12 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         return agenda_instance
 
     def insert_period_days(self, agenda, period, day_of_week, profesional, prestacion, ausencias):
-        start_date = agenda.validFrom
+        
+        if agenda.validFrom >= dt.date.today():
+            start_date = agenda.validFrom
+        else:
+            start_date = dt.date.today()
+
         end_date = agenda.validTo
 
         total_days = (end_date - start_date).days + 1
@@ -224,24 +234,28 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             current_date = (start_date + dt.timedelta(days=day_number))
             if current_date.weekday() == day_of_week.index:
                 if day_of_week.selected is True:
-                    turnos = Turno.objects.all().filter(profesional=profesional, prestacion=prestacion, start=period.start,end=period.end, day=current_date)
+                    turnos = Turno.objects.all().filter(profesional=profesional,
+                                                        prestacion=prestacion,
+                                                        start=period.start,
+                                                        end=period.end,
+                                                        day=current_date)
                     if turnos.exists(): #Existe un turno previamente
                         #Chekeo si existe una ausencia para este dia
-                        if ausencias.filter(start_day__lte=current_date,end_day__gte=current_date).exists():
+                        if ausencias.filter(start_day__lte=current_date, end_day__gte=current_date).exists():
                             status = Turno.STATUS_INACTIVE
                         else:
-                            status=agenda.status #Lo creo con el mismo estado que la agenda
+                            status = agenda.status #Lo creo con el mismo estado que la agenda
 
                         for turno in turnos:
-                            turno.status=status 
+                            turno.status = status 
                             turno.save()
                     else: #Si no existe, crea el slot para el turno
 
                         #Chekeo si existe una ausencia para este dia
-                        if ausencias.filter(start_day__lte=current_date,end_day__gte=current_date).exists():
+                        if ausencias.filter(start_day__lte=current_date, end_day__gte=current_date).exists():
                             status = Turno.STATUS_INACTIVE
                         else:
-                            status=agenda.status #Lo creo con el mismo estado que la agenda
+                            status = agenda.status #Lo creo con el mismo estado que la agenda
                         turno_instance = Turno.objects.create(
                             day=current_date,
                             start=period.start,
