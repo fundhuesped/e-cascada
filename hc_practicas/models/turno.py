@@ -3,7 +3,7 @@
 
 from django.db import models
 from hc_common.models import ActiveModel
-from hc_practicas.models import Profesional, Prestacion
+from hc_practicas.models import Profesional, Prestacion, Agenda
 from hc_pacientes.models import Paciente
 
 
@@ -15,6 +15,7 @@ class Turno(ActiveModel):
     status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES,
                               default=ActiveModel.STATUS_ACTIVE)
     paciente = models.ForeignKey(Paciente, null=True)
+    agenda = models.ForeignKey(Agenda, null=True)
     profesional = models.ForeignKey(Profesional, null=True)
     prestacion = models.ForeignKey(Prestacion, null=True)
     updated_on = models.DateField(auto_now=True)
