@@ -2,6 +2,7 @@
 #### Requirements for huesped_backend ####
 django==1.9.7
 djangorestframework==3.3.3
+djangorestframework-filters==0.8.0
 markdown==2.6.6
 django-filter==0.13.0
 django-rest-swagger==0.3.7
