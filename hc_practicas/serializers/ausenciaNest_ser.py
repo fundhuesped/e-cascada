@@ -1,10 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
+
 from rest_framework import serializers
-import datetime
-from hc_practicas.models import Turno, Ausencia
-from hc_practicas.serializers import ProfesionalNestedSerializer, PrestacionNestedSerializer
+from hc_practicas.models import Ausencia
+from hc_practicas.models import Turno
+from hc_practicas.serializers import ProfesionalNestedSerializer
+from hc_practicas.services.turno_service import inactivate_taken_turno_unaware
 
 
 class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,16 +23,20 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
             start_day=validated_data.get('start_day'),
             end_day=validated_data.get('end_day'),
             profesional=profesional,
-            notes = validated_data.get('notes'),
-            reason = validated_data.get('reason')
+            notes=validated_data.get('notes'),
+            reason=validated_data.get('reason')
         )
 
         #Cuando se crea una ausencia, inhabilita todos los turnos del profesional asociado
-        turnos = Turno.objects.filter(day__range=[instance.start_day, instance.end_day], profesional=instance.profesional)
-        for turno in turnos:
-            turno.status = Turno.STATUS_INACTIVE
-            turno.save()
-
+        turnos = Turno.objects.filter(day__range=[instance.start_day, instance.end_day],
+                                      profesional=instance.profesional)
+        with reversion.create_revision():
+            for turno in turnos:
+                inactivate_taken_turno_unaware(turno)
+            # Seteo los datos de la revision
+            reversion.set_user(self._context['request'].user)
+            reversion.set_comment("Ausencia created")
+            
         return instance
 
     #Método agregado por compatibilidad. Las ausencias solo se pueden agregar o eliminar
@@ -47,4 +54,4 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ausencia
-        fields = ('id', 'start_day', 'end_day', 'profesional', 'status', 'reason','notes')
+        fields = ('id', 'start_day', 'end_day', 'profesional', 'status', 'reason', 'notes')

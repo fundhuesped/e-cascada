@@ -2,13 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import datetime as dt
+
+import reversion
+
 from django.db import transaction
 from django.utils.translation import gettext as _
-from rest_framework import serializers
-from hc_practicas.models import Profesional, Prestacion, Turno
 from hc_pacientes.models import Paciente
 from hc_pacientes.serializers import PacienteNestedSerializer
-from hc_practicas.serializers import ProfesionalNestedSerializer, PrestacionNestedSerializer
+from hc_practicas.models import Prestacion
+from hc_practicas.models import Profesional
+from hc_practicas.models import Turno
+from hc_practicas.serializers import PrestacionNestedSerializer
+from hc_practicas.serializers import ProfesionalNestedSerializer
+from rest_framework import serializers
 
 
 class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
@@ -69,15 +75,20 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 #
 #           Modifico datos del turno menos el paciente o su estado de taken
 #
-            instance.day = validated_data.get('day', instance.day)
-            instance.start = validated_data.get('start', instance.start)
-            instance.end = validated_data.get('end', instance.end)
-            instance.profesional = profesional
-            instance.prestacion = prestacion
-            instance.save()
+            with reversion.create_revision():
+
+                instance.day = validated_data.get('day', instance.day)
+                instance.start = validated_data.get('start', instance.start)
+                instance.end = validated_data.get('end', instance.end)
+                instance.profesional = profesional
+                instance.prestacion = prestacion
+                instance.save()
+                # Seteo los datos de la revision
+                reversion.set_user(self._context['request'].user)
+                reversion.set_comment("Turn modified")
 
 
-            return instance
+        return instance
 
     @transaction.atomic
     def take_turn(self, instance, paciente):
@@ -87,17 +98,22 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
         if instance.day < dt.date.today():
             raise serializers.ValidationError({'error': _('No se pueden tomar turnos ya pasados')})
-        instance.paciente = paciente
-        instance.status = Turno.STATUS_ACTIVE
-        instance.taken = True
-        instance.save()
 
-        self.cambiar_status_turnos_asociados(instance.day,
-                                             instance.start,
-                                             instance.end,
-                                             instance.profesional,
-                                             Turno.STATUS_INACTIVE,
-                                             instance.id)
+        with reversion.create_revision():
+            instance.paciente = paciente
+            instance.status = Turno.STATUS_ACTIVE
+            instance.taken = True
+            instance.save()
+
+            self.cambiar_status_turnos_asociados(instance.day,
+                                                 instance.start,
+                                                 instance.end,
+                                                 instance.profesional,
+                                                 Turno.STATUS_INACTIVE,
+                                                 instance.id)
+            # Seteo los datos de la revision
+            reversion.set_user(self._context['request'].user)
+            reversion.set_comment("Turn taken")
         return instance
 
     @transaction.atomic
@@ -108,17 +124,22 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         if instance.day < dt.date.today():
             raise serializers.ValidationError({'error': _('No se pueden liberar turnos ya pasados')})
 
-        instance.paciente = None
-        instance.status = Turno.STATUS_ACTIVE
-        instance.taken = False
-        instance.save()
+        with reversion.create_revision():
+            instance.paciente = None
+            instance.status = Turno.STATUS_ACTIVE
+            instance.taken = False
+            instance.save()
 
-        self.cambiar_status_turnos_asociados(instance.day,
-                                             instance.start,
-                                             instance.end,
-                                             instance.profesional,
-                                             Turno.STATUS_ACTIVE,
-                                             instance.id)
+            self.cambiar_status_turnos_asociados(instance.day,
+                                                 instance.start,
+                                                 instance.end,
+                                                 instance.profesional,
+                                                 Turno.STATUS_ACTIVE,
+                                                 instance.id)
+            # Seteo los datos de la revision
+            reversion.set_user(self._context['request'].user)
+            reversion.set_comment("Turn released")
+
         return instance
 
     def cambiar_status_turnos_asociados(self, day, start, end, profesional, status, original_turno_id):

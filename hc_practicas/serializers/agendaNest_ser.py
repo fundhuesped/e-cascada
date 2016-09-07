@@ -20,6 +20,11 @@ from hc_practicas.models import Turno
 from hc_practicas.serializers import PeriodNestSerializer
 from hc_practicas.serializers import PrestacionNestedSerializer
 from hc_practicas.serializers import ProfesionalNestedSerializer
+from hc_practicas.services.turno_service import activate_turno
+from hc_practicas.services.turno_service import create_turno
+from hc_practicas.services.turno_service import delete_turno
+from hc_practicas.services.turno_service import inactivate_taken_turno
+
 from rest_framework import serializers
 
 
@@ -212,7 +217,6 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                         current_period = Period(**period)
                         current_period.start = datetime.strptime(current_period.start, '%H:%M:%S')
                         current_period.end = datetime.strptime(current_period.end, '%H:%M:%S')
-                        print vars(current_period)
                         self.insert_period_days(agenda_instance, current_period, instance_day_of_week)
 
                     if day_of_week["selected"] is False and instance_day_of_week.selected is True:
@@ -238,10 +242,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         if instance.profesional.status == Agenda.STATUS_INACTIVE:
             raise FailedDependencyException('El profesional de la agenda debe estar activo')
+
         with reversion.create_revision():
             instance.status = Agenda.STATUS_ACTIVE
-            Turno.objects.filter(agenda = instance).update(status=Agenda.STATUS_ACTIVE) 
+            turnos = Turno.objects.filter(agenda = instance)
+            for turno in turnos:
+                activate_turno(turno)
             instance.save()
+            # Seteo parametro de la revision 
             reversion.set_user(self._context['request'].user)
             reversion.set_comment("Activated agenda")
 
@@ -253,10 +261,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         with reversion.create_revision():
             turnos = Turno.objects.filter(agenda=instance, status=Agenda.STATUS_ACTIVE)
             for turno in turnos:
-                turno.status = Agenda.STATUS_INACTIVE
-                turno.taken = False
-                turno.paciente = None
-                turno.save()
+                inactivate_taken_turno(turno)
             instance.status = Agenda.STATUS_INACTIVE
             instance.save()
             reversion.set_user(self._context['request'].user)
@@ -274,58 +279,23 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         total_days = (end_date - start_date).days + 1
 
-        #Recupero los turnos activo y tomados del profesional
-        turnos = Turno.objects.filter(status=Turno.STATUS_ACTIVE,
-                                      profesional=agenda.profesional,
-                                      taken=True
-                                     )
-        #Recupera las ausencias del profesional para los fechas de la agenda
-        ausencias = Ausencia.objects.filter((Q(start_day__gte=agenda.validFrom)
-                                             & Q(start_day__lte=agenda.validTo))
-                                            |(Q(end_day__gte=agenda.validFrom)
-                                              & Q(end_day__lte=agenda.validTo)),
-                                            profesional=agenda.profesional,
-                                            status=Ausencia.STATUS_ACTIVE)
-
         for day_number in range(total_days):
             #Por cada dia dentro de la agenda
             current_date = (start_date + dt.timedelta(days=day_number))
             if current_date.weekday() == day_of_week.index:
                 #Si el dia que recorro corresponde con el dia de la semana que estoy procesando
                 if day_of_week.selected is True:
-                    #Checkeo si hay turnos que colisionan con este periodo y dia
-                    #y estan activos y tomados
-                    if turnos.filter((Q(end=period.end)
-                                      |Q(start=period.start)
-                                      |(Q(start__gt=period.start)
-                                        &Q(end__lt=period.end))
-                                      |(Q(start__lte=period.start)
-                                        &Q(end__gt=period.start))
-                                      |(Q(start__lt=period.end)
-                                        &Q(end__gte=period.end))),
-                                     day=current_date).exists():
-                        status = Turno.STATUS_INACTIVE
-                    else:
-                        #Chekeo si existe una ausencia para este dia
-                        if ausencias.filter(start_day__lte=current_date,
-                                            end_day__gte=current_date).exists():
-                            status = Turno.STATUS_INACTIVE
-                        else:
-                            status = agenda.status #Lo creo con el mismo estado que la agenda
-                    turno_instance = Turno.objects.create(
-                        day=current_date,
-                        start=period.start,
-                        end=period.end,
-                        status=status, #Lo creo con el mismo estado que la agenda
-                        agenda=agenda,
-                        profesional=agenda.profesional,
-                        prestacion=agenda.prestacion
-                    )
-                    turno_instance.save()
+                    # Creo el turno
+                    create_turno(current_date,
+                                 period.start,
+                                 period.end,
+                                 agenda,
+                                 agenda.profesional,
+                                 agenda.prestacion)
 
     def disable_period_days(self, agenda, period, day_of_week):
         """
-        Dehabilita y libera todos los turnos de una agenda que correspondan
+        Elimina todos los turnos de una agenda que correspondan
         a un periodo y un day_of_week
         """
 
@@ -338,12 +308,11 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             # Si el dia corresponde con el que estoy trabajando
             if current_date.weekday() == day_of_week.index:
                 turnos = Turno.objects.filter(agenda=agenda,
-                                              status=Agenda.STATUS_ACTIVE,
                                               start=period.start,
                                               end=period.end,
                                               day=current_date)
                 for turno in turnos:
-                    turno.delete()
+                    delete_turno(turno)
 
     class Meta:
         model = Agenda
