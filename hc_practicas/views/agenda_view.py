@@ -1,11 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics, filters
 import rest_framework_filters as r_f_filters
-from hc_practicas.serializers import AgendaNestSerializer, AgendaListSerializer
-from hc_practicas.models import Agenda
+
 from hc_core.views import PaginateListCreateAPIView
+from hc_practicas.models import Agenda
+from hc_practicas.serializers import AgendaListSerializer
+from hc_practicas.serializers import AgendaNestSerializer
+from rest_framework import filters
+from rest_framework import generics
 
 
 class AgendaFilter(r_f_filters.FilterSet):
@@ -65,3 +68,12 @@ class AgendaDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
     #permission_classes = (AllowAny,)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.disable(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def disable(self, instance):
+        instance.status = Agenda.STATUS_INACTIVE
+        instance.save()

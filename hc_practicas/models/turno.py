@@ -5,8 +5,9 @@ from django.db import models
 from hc_common.models import ActiveModel
 from hc_practicas.models import Profesional, Prestacion, Agenda
 from hc_pacientes.models import Paciente
+import reversion
 
-
+@reversion.register()
 class Turno(ActiveModel):
     day = models.DateField(null=False)
     start = models.TimeField(default='08:00:00')

@@ -22,11 +22,11 @@ class DayOfWeekNestedSerializer(serializers.ModelSerializer):
     )
 
     def to_internal_value(self, data):
-        days= DayOfWeek.objects.filter(pk=data['id'])
-        if days.count()>0:
-            return days[0]
-        else:
-            return DayOfWeek(selected=data['selected'], name=data['name'], index=data['index']) #ValueError('DaysOfWeek not found')
+        if id in data:
+            days= DayOfWeek.objects.filter(pk=data['id'])
+            if days.count()>0:
+                return days[0]
+        return DayOfWeek(selected=data['selected'], name=data['name'], index=data['index']) #ValueError('DaysOfWeek not found')
 
 
     class Meta:

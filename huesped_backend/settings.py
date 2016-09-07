@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'hc_practicas',
     'hc_common',
     'hc_pacientes',
-    'hc_core'
+    'hc_core',
+    'reversion'
 ]
 
 MIDDLEWARE_CLASSES = [
