@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-
 def loadEspecialidades(apps, schema_editor):
     Especialidad = apps.get_model("hc_practicas", "Especialidad")
 
@@ -15,14 +14,14 @@ def loadEspecialidades(apps, schema_editor):
         ).save()
 
     Especialidad(
-        name="Ginecología",
-        description="Especialidad de Ginecología",
+        name="Ginecología y obstetricia",
+        description="Especialidad de Ginecología y obstetricia",
         status="Active"
         ).save()
 
     Especialidad(
-        name="Trastornos Metabólicos",
-        description="Especialidad de Trastornos Metabólicos",
+        name="Coloproctología",
+        description="Especialidad de Coloproctología",
         status="Active"
         ).save()
 
@@ -33,32 +32,20 @@ def loadEspecialidades(apps, schema_editor):
         ).save()
 
     Especialidad(
-        name="Dermatología",
-        description="Especialidad de Dermatología",
+        name="Hepatología",
+        description="Especialidad de Hepatología",
         status="Active"
         ).save()
 
     Especialidad(
-        name="Psiquiatría",
-        description="Especialidad de Psiquiatría",
+        name="Pediatría",
+        description="Especialidad de Pediatría",
         status="Active"
         ).save()
 
     Especialidad(
-        name="Proctología",
-        description="Especialidad de Proctología",
-        status="Active"
-        ).save()
-
-    Especialidad(
-        name="Endocrinología",
-        description="Especialidad de Endocrinología",
-        status="Active"
-        ).save()
-
-    Especialidad(
-        name="Psicología",
-        description="Especialidad de Psicología",
+        name="Neurología",
+        description="Especialidad de Neurología",
         status="Active"
         ).save()
 

@@ -12,7 +12,7 @@ def loadPrestaciones(apps, schema_editor):
     Prestacion(
         name="Primera vez - Infectología",
         description="Consulta de Primera vez - Infectología",
-        duration=20,
+        duration=40,
         especialidad=Especialidad.objects.get(name="Infectología")
         ).save()
 
@@ -24,178 +24,45 @@ def loadPrestaciones(apps, schema_editor):
         ).save()
 
     Prestacion(
-        name="Tuberculosis",
-        description="Consulta de Tuberculosis",
+        name="Consulta - Ginecología y obstetricia",
+        description="Consulta Ginecología y obstetricia",
         duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
+        especialidad=Especialidad.objects.get(name="Ginecología y obstetricia")
         ).save()
 
     Prestacion(
-        name="ETS - Enfermedad de trans. sexual",
-        description="Enfermedad de Transmisión Sexual",
+        name="Consulta - Coloproctología",
+        description="Consulta Coloproctología",
         duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
+        especialidad=Especialidad.objects.get(name="Coloproctología")
         ).save()
 
     Prestacion(
-        name="Traumatología",
-        description="Consulta para traumatología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
-        ).save()
-
-    Prestacion(
-        name="Embarazadas",
-        description="Consulta para embarazadas",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
-        ).save()
-
-    Prestacion(
-        name="Pediátricos",
-        description="Consulta para pediátricos",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
-        ).save()
-
-    Prestacion(
-        name="Micología",
-        description="Consulta para micología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
-        ).save()
-
-    Prestacion(
-        name="Pediátricos y Adolescentes",
-        description="Consulta para pediátricos y adolescentes",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
-        ).save()
-
-    Prestacion(
-        name="Hepatitis C",
-        description="Consulta para hepatitis C",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Infectología")
-        ).save()
-
-    Prestacion(
-        name="Primera vez - Ginecología",
-        description="Consulta de primera vez Ginecología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Ginecología")
-        ).save()
-
-    Prestacion(
-        name="Seguimiento - Ginecología",
-        description="Consulta de seguimiento Ginecología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Ginecología")
-        ).save()
-
-    Prestacion(
-        name="Primera vez - Trastornos metabólicos",
-        description="Consulta de primera vez - Trastornos metabólicos",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Trastornos Metabólicos")
-        ).save()
-
-    Prestacion(
-        name="Seguimiento - Trastornos metabólicos",
-        description="Consulta de seguimiento - Trastornos metabólicos",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Trastornos Metabólicos")
-        ).save()
-
-    Prestacion(
-        name="Primera vez - Nutrición",
-        description="Consulta de primera vez - Nutrición",
-        duration=20,
+        name="Consulta - Nutrición",
+        description="Consulta Nutrición",
+        duration=10,
         especialidad=Especialidad.objects.get(name="Nutrición")
         ).save()
 
     Prestacion(
-        name="Seguimiento - Nutrición",
-        description="Consulta de seguimiento - Nutrición",
+        name="Consulta - Hepatología",
+        description="Consulta Hepatología",
         duration=20,
-        especialidad=Especialidad.objects.get(name="Nutrición")
+        especialidad=Especialidad.objects.get(name="Hepatología")
         ).save()
 
     Prestacion(
-        name="Primera vez - Dermatología",
-        description="Consulta de primera vez - Dermatología",
+        name="Consulta - Pediatría",
+        description="Consulta Pediatría",
         duration=20,
-        especialidad=Especialidad.objects.get(name="Dermatología")
+        especialidad=Especialidad.objects.get(name="Pediatría")
         ).save()
 
     Prestacion(
-        name="Seguimiento - Dermatología",
-        description="Consulta de primera vez - Dermatología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Dermatología")
-        ).save()
-
-    Prestacion(
-        name="Primera vez - Psiquiatria",
-        description="Consulta de primera vez - Psiquiatría",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Psiquiatría")
-        ).save()
-
-    Prestacion(
-        name="Seguimiento - Psiquiatria",
-        description="Consulta de seguimiento - Psiquiatría",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Psiquiatría")
-        ).save()
-
-    Prestacion(
-        name="Test Cognitivo",
-        description="Test Cognitivo - Psiquiatría",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Psiquiatría")
-        ).save()
-
-    Prestacion(
-        name="Primera vez Proctología (Sólo proyecto T)",
-        description="Consulta de primera vez - Proctología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Proctología")
-        ).save()
-
-    Prestacion(
-        name="Seguimiento Proctología (Sólo proyecto T)",
-        description="Consulta de seguimiento - Proctología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Proctología")
-        ).save()
-
-    Prestacion(
-        name="Primera vez Endocrinología (Sólo proyecto T)",
-        description="Consulta de primera vez - Endocrinología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Endocrinología")
-        ).save()
-
-    Prestacion(
-        name="Seguimiento Endocrinología (Sólo proyecto T)",
-        description="Consulta de seguimiento - Endocrinología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Endocrinología")
-        ).save()
-
-    Prestacion(
-        name="Primera vez Psicologia (Sólo Adherencia)",
-        description="Consulta de primera vez - Psicología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Psicología")
-        ).save()
-
-    Prestacion(
-        name="Seguimiento Psicología (Sólo Adherencia)",
-        description="Consulta seguimiento - Psicología",
-        duration=20,
-        especialidad=Especialidad.objects.get(name="Psicología")
+        name="Consulta - Neurología",
+        description="Consulta - Dermatología",
+        duration=30,
+        especialidad=Especialidad.objects.get(name="Neurología")
         ).save()
 
 

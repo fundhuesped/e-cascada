@@ -18,5 +18,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(loadInitialData('paciente')),
+    #    migrations.RunSQL(loadInitialData('paciente')),
     ]
