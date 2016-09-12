@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
                 ('fatherSurname', models.CharField(max_length=40)),
                 ('motherSurname', models.CharField(blank=True, max_length=40, null=True)),
                 ('birthDate', models.DateField(null=True)),
-                ('documentNumber', models.CharField(blank=True, max_length=10, null=True)),
+                ('documentNumber', models.CharField(blank=True, max_length=15, null=True)),
                 ('email', models.CharField(blank=True, max_length=70, null=True)),
                 ('status', models.CharField(choices=[(b'Active', b'Activo'), (b'Inactive', b'Inactivo')], default=b'Active', max_length=8)),
                 ('street', models.CharField(blank=True, max_length=150, null=True)),

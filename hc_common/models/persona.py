@@ -15,7 +15,7 @@ class Persona(ActiveModel):
     motherSurname = models.CharField(max_length=40, null=True, blank=True)
     birthDate = models.DateField(null=True, blank=True)
     documentType = models.ForeignKey(DocumentType, null=True, blank=True)
-    documentNumber = models.CharField(max_length=10, null=True, blank=True)
+    documentNumber = models.CharField(max_length=15, null=True, blank=True)
     genderAtBirth = models.ForeignKey(SexType, on_delete=models.CASCADE, related_name='personGenderBirth', null=True, blank=True)
     genderOfChoice = models.ForeignKey(SexType, on_delete=models.CASCADE, related_name='personGenderChoice', null=True, blank=True)
     email = models.CharField(max_length=100, null=True, blank=True)
