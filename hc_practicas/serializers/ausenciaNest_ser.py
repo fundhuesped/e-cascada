@@ -5,9 +5,9 @@ import reversion
 
 from rest_framework import serializers
 from hc_practicas.models import Ausencia
-from hc_practicas.models import Turno
+from hc_practicas.models import TurnoSlot
 from hc_practicas.serializers import ProfesionalNestedSerializer
-from hc_practicas.services.turno_service import inactivate_taken_turno_unaware
+from hc_practicas.services import turnoSlot_service
 
 
 class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,12 +27,12 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
             reason=validated_data.get('reason')
         )
 
-        #Cuando se crea una ausencia, inhabilita todos los turnos del profesional asociado
-        turnos = Turno.objects.filter(day__range=[instance.start_day, instance.end_day],
+        #Cuando se crea una ausencia, pasa a conflicto todos los turnosSlots del profesional asociado
+        turno_slots = TurnoSlot.objects.filter(day__range=[instance.start_day, instance.end_day],
                                       profesional=instance.profesional)
         with reversion.create_revision():
-            for turno in turnos:
-                inactivate_taken_turno_unaware(turno)
+            for turno_slot in turno_slots:
+                turnoSlot_service.conflict_turno_slot_unaware(turno_slot)
             # Seteo los datos de la revision
             reversion.set_user(self._context['request'].user)
             reversion.set_comment("Ausencia created")

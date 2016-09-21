@@ -5,5 +5,6 @@ from .agenda_view import *
 from .dayOfWeek_view import *
 from .period_view import *
 from .turno_view import *
+from .turnoSlot_view import *
 from .ausencia_view import *
 from .turno_cancelado_view import *

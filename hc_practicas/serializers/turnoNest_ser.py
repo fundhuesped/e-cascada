@@ -3,17 +3,14 @@
 
 import datetime as dt
 
-import reversion
-
 from django.db import transaction
 from django.utils.translation import gettext as _
-from hc_pacientes.models import Paciente
 from hc_pacientes.serializers import PacienteNestedSerializer
-from hc_practicas.models import Prestacion
-from hc_practicas.models import Profesional
 from hc_practicas.models import Turno
-from hc_practicas.serializers import PrestacionNestedSerializer
-from hc_practicas.serializers import ProfesionalNestedSerializer
+from hc_practicas.services import turnoSlot_service
+from hc_practicas.services import turno_service
+from hc_practicas.serializers import TurnoSlotNestedSerializer
+
 from rest_framework import serializers
 
 
@@ -24,130 +21,53 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         many=False
     )
 
-    profesional = ProfesionalNestedSerializer(
-        many=False
+    turnoSlot = TurnoSlotNestedSerializer(
+        many=False,
+        required=False
     )
 
-    prestacion = PrestacionNestedSerializer(
-        many=False
-    )
-
+    @transaction.atomic
     def create(self, validated_data):
-        profesional = validated_data.pop('profesional')
-        prestacion = validated_data.pop('prestacion')
-        paciente = validated_data.pop('paciente')
-        instance = Turno.objects.create(
-            day=validated_data.get('day'),
-            start=validated_data.get('start'),
-            end=validated_data.get('end'),
-            taken=validated_data.get('taken'),
-            profesional=profesional,
-            prestacion=prestacion,
-            paciente=paciente
-        )
+        turno_slot = validated_data.get('turnoSlot')
+        paciente = validated_data.get('paciente')
+        notes = validated_data.get('notes')
+
+        if turno_slot.day < dt.date.today():
+            raise serializers.ValidationError({'error': _('No se pueden tomar turnos ya pasados')})
+
+        instance = turno_service.create_turno(turno_slot, paciente, notes)
+        turnoSlot_service.occupy_turno_slot(turno_slot)
 
         return instance
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        profesional = validated_data.pop('profesional')
-        prestacion = validated_data.pop('prestacion')
-        paciente = validated_data.pop('paciente')
-        taken = validated_data.get('taken')
+        state = validated_data.get('state')
+        notes = validated_data.get('notes')
 
-        #Nuevo estado de turnos para el mismo período de tiempo, para el profesional en cuestión.
-        #Si taken = true (se confirma un nuevo turno para el profesional) y instance.taken = false (no estaba tomado el turno), se deben inhabilitar los turnos (status_turnos_asociados = 'Inactive')
-        #Si taken = false (se libera un turno para el profesional) y instance.taken = true (estaba tomado el turno), se deben habilitar los turnos asociados (status_turnos_asociados='Active')
-        #En otro caso, solo modificar datos del turno.
+        if instance.state != state:
+            if instance.state == Turno.STATE_INITIAL:
+                if state == Turno.STATE_PRESENT:
+                    instance.state = Turno.STATE_PRESENT
+                elif state == Turno.STATE_ABSENT:
+                    instance.state = Turno.STATE_ABSENT
+                elif state == Turno.STATE_CANCELED:
+                    turnoSlot_service.release_turno_slot(instance.turnoSlot)
+                    instance.state = Turno.STATE_CANCELED
+                else:
+                    raise serializers.ValidationError({'error': _('Estado incorrecto')})
+            elif instance.state == Turno.STATE_PRESENT:
+                if state == Turno.STATE_SERVED:
+                    instance.state = Turno.STATE_SERVED
+                else:
+                    raise serializers.ValidationError({'error': _('Estado incorrecto')})
+            else:
+                raise serializers.ValidationError({'error': _('Estado incorrecto')})
 
-
-        if taken and not instance.taken:
-#
-#           Tomo el turno y no modifico sus demas datos
-#
-            return self.take_turn(instance, paciente)
-        elif not taken and instance.taken:
-#
-#           Suelto el turno y no modifico sus demas datos
-#
-            return self.release_turn(instance)
-        else:
-#
-#           Modifico datos del turno menos el paciente o su estado de taken
-#
-            with reversion.create_revision():
-
-                instance.day = validated_data.get('day', instance.day)
-                instance.start = validated_data.get('start', instance.start)
-                instance.end = validated_data.get('end', instance.end)
-                instance.profesional = profesional
-                instance.prestacion = prestacion
-                instance.save()
-                # Seteo los datos de la revision
-                reversion.set_user(self._context['request'].user)
-                reversion.set_comment("Turn modified")
-
-
+        instance.notes = notes
+        instance.save()
         return instance
 
-    @transaction.atomic
-    def take_turn(self, instance, paciente):
-        """
-        Toma un turno para un paciente y marca los demas turnos que colisionan
-        """
-
-        if instance.day < dt.date.today():
-            raise serializers.ValidationError({'error': _('No se pueden tomar turnos ya pasados')})
-
-        with reversion.create_revision():
-            instance.paciente = paciente
-            instance.status = Turno.STATUS_ACTIVE
-            instance.taken = True
-            instance.save()
-
-            self.cambiar_status_turnos_asociados(instance.day,
-                                                 instance.start,
-                                                 instance.end,
-                                                 instance.profesional,
-                                                 Turno.STATUS_INACTIVE,
-                                                 instance.id)
-            # Seteo los datos de la revision
-            reversion.set_user(self._context['request'].user)
-            reversion.set_comment("Turn taken")
-        return instance
-
-    @transaction.atomic
-    def release_turn(self, instance):
-        """
-        Libera un turno y marca los demas turnos que colisionan
-        """
-        if instance.day < dt.date.today():
-            raise serializers.ValidationError({'error': _('No se pueden liberar turnos ya pasados')})
-
-        with reversion.create_revision():
-            instance.paciente = None
-            instance.status = Turno.STATUS_ACTIVE
-            instance.taken = False
-            instance.save()
-
-            self.cambiar_status_turnos_asociados(instance.day,
-                                                 instance.start,
-                                                 instance.end,
-                                                 instance.profesional,
-                                                 Turno.STATUS_ACTIVE,
-                                                 instance.id)
-            # Seteo los datos de la revision
-            reversion.set_user(self._context['request'].user)
-            reversion.set_comment("Turn released")
-
-        return instance
-
-    def cambiar_status_turnos_asociados(self, day, start, end, profesional, status, original_turno_id):
-        turnos = Turno.objects.filter(day=day,profesional=profesional).exclude(pk=original_turno_id)
-        for turno in turnos:
-            if (turno.end == end) or (turno.start == start) or (turno.start < start and turno.end > end) or (turno.start >= start and turno.start < end) or (turno.end > start and turno.end <= end):
-                turno.status = status if status is not None else turno.status
-                turno.save()
     class Meta:
         model = Turno
-        fields = ('id', 'day', 'start', 'end', 'taken', 'paciente', 'profesional', 'prestacion', 'status')
+        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes')

@@ -1,65 +1,63 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import rest_framework_filters as r_f_filters
+
 from rest_framework import generics, filters
 from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
 
+class TurnoFilter(r_f_filters.FilterSet):
+    """
+    Configura los campos por los que se puede fitrar
+    """
+    class Meta(object):
+        """
+        Define por diccionario los que se puede fitrar
+        """
+        model = Turno
+        fields = {
+            'status': r_f_filters.ALL_LOOKUPS,
+            'state': r_f_filters.ALL_LOOKUPS
+        }
 
 class TurnoList(PaginateListCreateAPIView):
+    """
+    Vista para listar los elementos y crear uno nuevo
+    """
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
     filter_backends = (filters.OrderingFilter,)
-
+    ordering_fields = ('turnoSlot__day')
+    ordering = ('-turnoSlot__day')
+    
     def get_queryset(self):
         queryset = Turno.objects.all()
-        taken = self.request.query_params.get('taken')
-
-        if taken is not None:
-            value = self.str2bool(taken)
-            queryset = queryset.filter(taken=value)
-
-        day = self.request.query_params.get('day')
-        if day is not None:
-            queryset = queryset.filter(day=day)
-
-        day__gte = self.request.query_params.get('day__gte')
-        if day__gte is not None:
-            queryset = queryset.filter(day__gte=day__gte)
-
-        prestacion = self.request.query_params.get('prestacion')
-        if prestacion is not None:
-            queryset = queryset.filter(prestacion=prestacion)
-
-        profesional = self.request.query_params.get('profesional')
-        if profesional is not None:
-            queryset = queryset.filter(profesional=profesional)
-
-        status = self.request.query_params.get('status')
-        if status is not None:
-            queryset = queryset.filter(status=status)
 
         paciente = self.request.query_params.get('paciente')
         if paciente is not None:
             queryset = queryset.filter(paciente=paciente)
 
-        start = self.request.query_params.get('start')
-        if start is not None:
-            queryset = queryset.filter(day__gte=start)
+        status = self.request.query_params.get('status')
+        if status is not None:
+            queryset = queryset.filter(status=status)
 
-        end = self.request.query_params.get('end')
-        if end is not None:
-            queryset = queryset.filter(day__lte=end)
+        state = self.request.query_params.get('state')
+        if state is not None:
+            queryset = queryset.filter(state=state)
+
+        turno_slot = self.request.query_params.get('turnoSlot')
+        if turno_slot is not None:
+            queryset = queryset.filter(turnoSlot=turno_slot)
 
         return queryset
 
-    def str2bool(self, v):
-        return v.lower() in ("yes", "true", "t", "1")
-
-
 class TurnoDetails(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Vista para solicitar un recurso y modificarlo
+    """
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
     permission_classes = (AllowAny,)

@@ -17,13 +17,11 @@ from hc_practicas.models import Ausencia
 from hc_practicas.models import DayOfWeek
 from hc_practicas.models import Period
 from hc_practicas.models import Turno
+from hc_practicas.models import TurnoSlot
 from hc_practicas.serializers import PeriodNestSerializer
 from hc_practicas.serializers import PrestacionNestedSerializer
 from hc_practicas.serializers import ProfesionalNestedSerializer
-from hc_practicas.services.turno_service import activate_turno
-from hc_practicas.services.turno_service import create_turno
-from hc_practicas.services.turno_service import delete_turno
-from hc_practicas.services.turno_service import inactivate_taken_turno
+from hc_practicas.services import turnoSlot_service
 
 from rest_framework import serializers
 
@@ -151,9 +149,6 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             days_of_week = period.pop('daysOfWeek')
 
             for day_of_week in days_of_week:
-                # print('Empieza un dia')
-                # print(day_of_week.index)
-                # print(day_of_week.selected)
                 day_of_week_instance = DayOfWeek.objects.create(
                     index=day_of_week.index,
                     name=day_of_week.name,
@@ -161,13 +156,37 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                     period=period_instance
                 )
                 day_of_week_instance.save()
-                # print('Empieza instancia')
-                # print(day_of_week_instance.index)
-                # print(day_of_week_instance.selected)
 
                 self.insert_period_days(agenda_instance, period_instance, day_of_week_instance)
         agenda_instance.save()
         return agenda_instance
+
+    def insert_period_days(self, agenda, period, day_of_week):
+        """
+        Crea los turnoSlots para un perido de una agenda y un weekday en particular
+        Toma en cuenta las ausencias del profesional y la colision con turnos
+        ya tomados del profesional
+        """
+
+        start_date = agenda.validFrom
+        end_date = agenda.validTo
+
+        total_days = (end_date - start_date).days + 1
+
+        for day_number in range(total_days):
+            #Por cada dia dentro de la agenda
+            current_date = (start_date + dt.timedelta(days=day_number))
+            if current_date.weekday() == day_of_week.index:
+                #Si el dia que recorro corresponde con el dia de la semana que estoy procesando
+                if day_of_week.selected is True:
+                    # Creo el turno
+                    turnoSlot_service.create_turno_slot(current_date,
+                                                        period.start,
+                                                        period.end,
+                                                        agenda,
+                                                        agenda.profesional,
+                                                        agenda.prestacion)
+
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -217,7 +236,9 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                         current_period = Period(**period)
                         current_period.start = datetime.strptime(current_period.start, '%H:%M:%S')
                         current_period.end = datetime.strptime(current_period.end, '%H:%M:%S')
-                        self.insert_period_days(agenda_instance, current_period, instance_day_of_week)
+                        self.insert_period_days(agenda_instance,
+                                                current_period,
+                                                instance_day_of_week)
 
                     if day_of_week["selected"] is False and instance_day_of_week.selected is True:
                     # Si cambia a no seleccionado
@@ -226,7 +247,9 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                         instance_day_of_week.selected = False
                         instance_day_of_week.save()
                         current_period = Period(**period)
-                        self.disable_period_days(agenda_instance, current_period, instance_day_of_week)
+                        self.disable_period_days(agenda_instance,
+                                                 current_period,
+                                                 instance_day_of_week)
 
             # Guardo la agenda
             agenda_instance.save()
@@ -245,11 +268,11 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
 
         with reversion.create_revision():
             instance.status = Agenda.STATUS_ACTIVE
-            turnos = Turno.objects.filter(agenda = instance)
-            for turno in turnos:
-                activate_turno(turno)
+            turno_slots = TurnoSlot.objects.filter(agenda=instance)
+            for turno_slot in turno_slots:
+                turnoSlot_service.activate_turno_slot(turno_slot)
             instance.save()
-            # Seteo parametro de la revision 
+            # Seteo parametro de la revision
             reversion.set_user(self._context['request'].user)
             reversion.set_comment("Activated agenda")
 
@@ -259,39 +282,14 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         """
 
         with reversion.create_revision():
-            turnos = Turno.objects.filter(agenda=instance, status=Agenda.STATUS_ACTIVE)
-            for turno in turnos:
-                inactivate_taken_turno(turno)
+            turno_slots = TurnoSlot.objects.filter(agenda=instance, status=Agenda.STATUS_ACTIVE)
+            for turno_slot in turno_slots:
+                turnoSlot_service.delete_turno_slot(turno_slot)
             instance.status = Agenda.STATUS_INACTIVE
             instance.save()
             reversion.set_user(self._context['request'].user)
             reversion.set_comment("Deactivated agenda")
 
-    def insert_period_days(self, agenda, period, day_of_week):
-        """
-        Crea los turnos para un perido de una agenda y un weekday en particular
-        Toma en cuenta las ausencias del profesional y la colision con turnos
-        ya tomados del profesional
-        """
-
-        start_date = agenda.validFrom
-        end_date = agenda.validTo
-
-        total_days = (end_date - start_date).days + 1
-
-        for day_number in range(total_days):
-            #Por cada dia dentro de la agenda
-            current_date = (start_date + dt.timedelta(days=day_number))
-            if current_date.weekday() == day_of_week.index:
-                #Si el dia que recorro corresponde con el dia de la semana que estoy procesando
-                if day_of_week.selected is True:
-                    # Creo el turno
-                    create_turno(current_date,
-                                 period.start,
-                                 period.end,
-                                 agenda,
-                                 agenda.profesional,
-                                 agenda.prestacion)
 
     def disable_period_days(self, agenda, period, day_of_week):
         """
@@ -307,12 +305,12 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             current_date = (agenda.validFrom + dt.timedelta(days=day_number))
             # Si el dia corresponde con el que estoy trabajando
             if current_date.weekday() == day_of_week.index:
-                turnos = Turno.objects.filter(agenda=agenda,
-                                              start=period.start,
-                                              end=period.end,
-                                              day=current_date)
-                for turno in turnos:
-                    delete_turno(turno)
+                turno_slots = TurnoSlot.objects.filter(agenda=agenda,
+                                                       start=period.start,
+                                                       end=period.end,
+                                                       day=current_date)
+                for turno_slot in turno_slots:
+                    turnoSlot_service.delete_turno_slot(turno_slot)
 
     class Meta:
         model = Agenda

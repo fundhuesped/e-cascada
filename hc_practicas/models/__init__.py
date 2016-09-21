@@ -4,5 +4,6 @@ from .profesional import *
 from .agenda import *
 from .period import *
 from .dayOfWeek import *
+from .turnoSlot import *
 from .turno import *
 from .ausencia import *
