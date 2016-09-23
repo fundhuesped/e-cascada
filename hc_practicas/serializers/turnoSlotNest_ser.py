@@ -23,6 +23,10 @@ class TurnoSlotNestSerializer(serializers.HyperlinkedModelSerializer):
         many=True
     )
 
+    currentTurno = TurnoNestedSerializer(
+        many=False
+    )
+
     class Meta:
         model = TurnoSlot
-        fields = ('id', 'day', 'start', 'end', 'profesional', 'prestacion', 'status', 'state', 'turnos')
+        fields = ('id', 'day', 'start', 'end', 'profesional', 'prestacion', 'status', 'state', 'turnos', 'currentTurno')

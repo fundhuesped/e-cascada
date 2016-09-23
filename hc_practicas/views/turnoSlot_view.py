@@ -39,7 +39,6 @@ class TurnoSlotList(PaginateListAPIView):
 
     def get_queryset(self):
         queryset = TurnoSlot.objects.all()
-
         day = self.request.query_params.get('day')
         if day is not None:
             queryset = queryset.filter(day=day)

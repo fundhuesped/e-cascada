@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Q
 from hc_common.models import ActiveModel
-from hc_practicas.models import Profesional, Prestacion, Agenda
+from hc_practicas.models import Agenda
+from hc_practicas.models import Prestacion
+from hc_practicas.models import Profesional
+from django.apps import apps
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class TurnoSlot(ActiveModel):
@@ -33,3 +38,15 @@ class TurnoSlot(ActiveModel):
     profesional = models.ForeignKey(Profesional, null=True)
     prestacion = models.ForeignKey(Prestacion, null=True)
     updated_on = models.DateField(auto_now=True)
+
+    @property
+    def currentTurno(self):
+        """
+        Representaal turno que actualmente tiene ocupado este slot o devuelve vacio
+        """
+        turno_state = apps.get_model('hc_practicas','Turno').STATE_CANCELED
+        try:
+            currentTurno = self.turnos.get(~Q(state=turno_state))
+            return currentTurno
+        except ObjectDoesNotExist:
+            return None
