@@ -27,15 +27,12 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
             reason=validated_data.get('reason')
         )
 
-        #Cuando se crea una ausencia, pasa a conflicto todos los turnosSlots del profesional asociado
+        # Cuando se crea una ausencia,
+        # pasa a conflicto todos los turnosSlots del profesional asociado
         turno_slots = TurnoSlot.objects.filter(day__range=[instance.start_day, instance.end_day],
-                                      profesional=instance.profesional)
-        with reversion.create_revision():
-            for turno_slot in turno_slots:
-                turnoSlot_service.conflict_turno_slot_unaware(turno_slot)
-            # Seteo los datos de la revision
-            reversion.set_user(self._context['request'].user)
-            reversion.set_comment("Ausencia created")
+                                               profesional=instance.profesional)
+        for turno_slot in turno_slots:
+            turnoSlot_service.conflict_turno_slot_unaware(turno_slot)
             
         return instance
 

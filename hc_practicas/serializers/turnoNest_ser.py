@@ -54,11 +54,17 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
                 elif state == Turno.STATE_CANCELED:
                     turnoSlot_service.release_turno_slot(instance.turnoSlot)
                     instance.state = Turno.STATE_CANCELED
+                    instance.cancelation_reason = Turno.CANCELATION_PACIENT_REQUEST
                 else:
                     raise serializers.ValidationError({'error': _('Estado incorrecto')})
             elif instance.state == Turno.STATE_PRESENT:
                 if state == Turno.STATE_SERVED:
                     instance.state = Turno.STATE_SERVED
+                else:
+                    raise serializers.ValidationError({'error': _('Estado incorrecto')})
+            elif instance.state == Turno.STATE_CANCELED:
+                if state == Turno.STATE_CANCELED_INFORMED:
+                    instance.state = Turno.STATE_CANCELED_INFORMED
                 else:
                     raise serializers.ValidationError({'error': _('Estado incorrecto')})
             else:

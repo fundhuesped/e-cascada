@@ -179,13 +179,23 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             if current_date.weekday() == day_of_week.index:
                 #Si el dia que recorro corresponde con el dia de la semana que estoy procesando
                 if day_of_week.selected is True:
-                    # Creo el turno
-                    turnoSlot_service.create_turno_slot(current_date,
-                                                        period.start,
-                                                        period.end,
-                                                        agenda,
-                                                        agenda.profesional,
-                                                        agenda.prestacion)
+                    # Chequeo si no existe un turnoSlot dado de baja para ese periodo y dia
+                    turno_slots = TurnoSlot.objects.filter(agenda=agenda,
+                                                           start=period.start,
+                                                           end=period.end,
+                                                           day=current_date,
+                                                           state=TurnoSlot.STATE_DELETED
+                                                          )
+                    if turno_slots:
+                        turnoSlot_service.activate_turno_slot(turno_slots[0])
+                    else:
+                        # Creo el turno
+                        turnoSlot_service.create_turno_slot(current_date,
+                                                            period.start,
+                                                            period.end,
+                                                            agenda,
+                                                            agenda.profesional,
+                                                            agenda.prestacion)
 
 
     @transaction.atomic
@@ -266,29 +276,49 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         if instance.profesional.status == Agenda.STATUS_INACTIVE:
             raise FailedDependencyException('El profesional de la agenda debe estar activo')
 
-        with reversion.create_revision():
-            instance.status = Agenda.STATUS_ACTIVE
-            turno_slots = TurnoSlot.objects.filter(agenda=instance)
-            for turno_slot in turno_slots:
-                turnoSlot_service.activate_turno_slot(turno_slot)
-            instance.save()
-            # Seteo parametro de la revision
-            reversion.set_user(self._context['request'].user)
-            reversion.set_comment("Activated agenda")
+        instance.status = Agenda.STATUS_ACTIVE
+        days_of_week = DayOfWeek.objects.filter(period__agenda=instance)
+
+        if instance.validFrom > dt.date.today():
+            start_date = instance.validFrom
+        else:
+            start_date = dt.date.today()
+
+        end_date = instance.validTo
+
+        total_days = (end_date - start_date).days + 1
+
+        for day_of_week in days_of_week:
+            for day_number in range(total_days):
+                #Por cada dia dentro de la agenda
+                current_date = (start_date + dt.timedelta(days=day_number))
+                if current_date.weekday() == day_of_week.index:
+                    #Si el dia que recorro corresponde con el dia de la semana que estoy procesando
+                    if day_of_week.selected is True:
+                        # Chequeo si no existe un turnoSlot dado de baja para ese periodo y dia
+                        turno_slot = TurnoSlot.objects.get(agenda=instance,
+                                                           start=day_of_week.period.start,
+                                                           end=day_of_week.period.end,
+                                                           day=current_date,
+                                                           state=TurnoSlot.STATE_DELETED
+                                                          )
+                        turnoSlot_service.activate_turno_slot(turno_slot)
+        instance.save()
 
     def deactivate(self, instance):
         """
         Desactiva una agenda y todos sus turnos.
         """
-
-        with reversion.create_revision():
-            turno_slots = TurnoSlot.objects.filter(agenda=instance, status=Agenda.STATUS_ACTIVE)
-            for turno_slot in turno_slots:
-                turnoSlot_service.delete_turno_slot(turno_slot)
-            instance.status = Agenda.STATUS_INACTIVE
-            instance.save()
-            reversion.set_user(self._context['request'].user)
-            reversion.set_comment("Deactivated agenda")
+        turno_slots = TurnoSlot.objects.filter(agenda=instance,
+                                               status=TurnoSlot.STATUS_ACTIVE,
+                                               state__in=[TurnoSlot.STATE_AVAILABLE,
+                                                          TurnoSlot.STATE_OCCUPIED,
+                                                          TurnoSlot.STATE_CONFLICT],
+                                               day__gte=dt.date.today())
+        for turno_slot in turno_slots:
+            turnoSlot_service.delete_turno_slot(turno_slot)
+        instance.status = Agenda.STATUS_INACTIVE
+        instance.save()
 
 
     def disable_period_days(self, agenda, period, day_of_week):
@@ -308,7 +338,10 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                 turno_slots = TurnoSlot.objects.filter(agenda=agenda,
                                                        start=period.start,
                                                        end=period.end,
-                                                       day=current_date)
+                                                       day=current_date,
+                                                       state__in=[TurnoSlot.STATE_AVAILABLE,
+                                                                  TurnoSlot.STATE_OCCUPIED,
+                                                                  TurnoSlot.STATE_CONFLICT])
                 for turno_slot in turno_slots:
                     turnoSlot_service.delete_turno_slot(turno_slot)
 

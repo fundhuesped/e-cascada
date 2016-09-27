@@ -23,20 +23,49 @@ class Turno(ActiveModel):
     #El paciente ya fue atendido
     STATE_SERVED = 'Served'
 
-    #El turno fue cancelado el turno
+    #El turno fue cancelado
     STATE_CANCELED = 'Canceled'
+
+    #El turno fue cancelado e informado al paciente
+    STATE_CANCELED_INFORMED = 'Canceled and informed'
 
     STATE_CHOICES = (
         (STATE_INITIAL, 'Inicial'),
         (STATE_PRESENT, 'Presente'),
         (STATE_ABSENT, 'Ausente'),
         (STATE_SERVED, 'Atendido'),
-        (STATE_CANCELED, 'Cancelado')
+        (STATE_CANCELED, 'Cancelado'),
+        (STATE_CANCELED_INFORMED, 'Cancelado e informado')
+    )
+    #Cancelacion por ausencia del profesional
+    CANCELATION_PROFESIONAL_ABSENT = 'Profesional absent'
+
+    #Cancelacion por cambio o baja de agenda
+    CANCELATION_AGENDA_CHANGE = 'Agenda changed'
+
+    #Cancelacion a pedido del paciente
+    CANCELATION_PACIENT_REQUEST = 'Pacient request'
+
+    #Cancelacion por otro motivo
+    CANCELATION_OTHER = 'Other'
+
+    CANCELATION_CHOICES = (
+        (CANCELATION_PROFESIONAL_ABSENT, 'Ausencia del profesional'),
+        (CANCELATION_AGENDA_CHANGE, 'Cambio o baja de agenda'),
+        (CANCELATION_PACIENT_REQUEST, 'Pedido del paciente'),
+        (CANCELATION_OTHER, 'Otro')
     )
 
-    status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES,
+
+
+    status = models.CharField(max_length=8,
+                              choices=ActiveModel.STATUS_CHOICES,
                               default=ActiveModel.STATUS_ACTIVE)
-    state = models.CharField(max_length=10, choices=STATE_CHOICES, null=False, default=STATE_INITIAL)
+    state = models.CharField(max_length=10,
+                             choices=STATE_CHOICES,
+                             null=False,
+                             default=STATE_INITIAL)
+    cancelation_reason = models.CharField(max_length=20, choices=CANCELATION_CHOICES, null=True)
     paciente = models.ForeignKey(Paciente, null=False)
     turnoSlot = models.ForeignKey(TurnoSlot, null=False, related_name='turnos')
     notes = models.CharField(blank=True, max_length=150, null=True)

@@ -2,6 +2,7 @@ from django.db.models import Q
 from hc_practicas.models import Agenda
 from hc_practicas.models import Ausencia
 from hc_practicas.models import TurnoSlot
+from hc_practicas.models import Turno
 from hc_practicas.services import turno_service
 
 def create_turno_slot(day, start, end, agenda, profesional, prestacion):
@@ -60,7 +61,7 @@ def activate_turno_slot(turno_slot):
                                   day=turno_slot.day,
                                   state=TurnoSlot.STATE_OCCUPIED,
                                   profesional=turno_slot.profesional
-                                 ).exclude(turno_slot.id).exists():
+                                 ).exclude(pk=turno_slot.id).exists():
         turno_slot.state = TurnoSlot.STATE_CONFLICT
     else:
         turno_slot.state = TurnoSlot.STATE_AVAILABLE
@@ -171,7 +172,7 @@ def conflict_turno_slot_unaware(turno_slot):
     No activa otros turnos
     """
     if turno_slot.state == TurnoSlot.STATE_OCCUPIED:
-        turno_service.cancel_turno(turno_slot)
+        turno_service.cancel_turno(turno_slot, Turno.CANCELATION_PROFESIONAL_ABSENT)
     turno_slot.state = TurnoSlot.STATE_CONFLICT
     turno_slot.save()
 
@@ -181,10 +182,9 @@ def delete_turno_slot(turno_slot):
     """
     activate_conflicting_turno_slots(turno_slot)
     if turno_slot.state == TurnoSlot.STATE_OCCUPIED:
-        turno_service.cancel_turno(turno_slot)
+        turno_service.cancel_turno(turno_slot.currentTurno, Turno.CANCELATION_AGENDA_CHANGE)
     turno_slot.state = TurnoSlot.STATE_DELETED
     turno_slot.save()
-
 
 # Esto debe ir en ausencias no en turnos
 def get_active_ausencias_for_day_and_profesional(day, profesional):

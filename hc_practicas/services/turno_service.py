@@ -2,12 +2,15 @@ from django.db.models import Q
 from hc_pacientes.models import Paciente
 from hc_practicas.models import Turno
 
-def cancel_turno(turno):
+def cancel_turno(turno, reason=Turno.CANCELATION_OTHER):
     """
     Cancela un turno
     """
+    print turno.state
     turno.state = Turno.STATE_CANCELED
+    turno.cancelation_reason = reason
     turno.save()
+    print turno.state
     return
 
 def create_turno(turno_slot, paciente, notes=''):
