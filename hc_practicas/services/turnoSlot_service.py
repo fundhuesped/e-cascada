@@ -6,7 +6,9 @@ from hc_practicas.models import Turno
 from hc_practicas.services import turno_service
 
 def create_turno_slot(day, start, end, agenda, profesional, prestacion):
-    """ Valida el estado del turnoSlot a crear, lo crea y lo devuelve """
+    """
+    Valida el estado del turnoSlot a crear, lo crea y lo devuelve
+    """
 
 
     #Falta validar si la prestacion, especialidad, agenda y profesional estan activos
@@ -172,7 +174,7 @@ def conflict_turno_slot_unaware(turno_slot):
     No activa otros turnos
     """
     if turno_slot.state == TurnoSlot.STATE_OCCUPIED:
-        turno_service.cancel_turno(turno_slot, Turno.CANCELATION_PROFESIONAL_ABSENT)
+        turno_service.cancel_turno(turno_slot.currentTurno, Turno.CANCELATION_PROFESIONAL_ABSENT)
     turno_slot.state = TurnoSlot.STATE_CONFLICT
     turno_slot.save()
 

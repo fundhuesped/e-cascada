@@ -44,6 +44,7 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         state = validated_data.get('state')
         notes = validated_data.get('notes')
+        informed = validated_data.get('informed')
 
         if instance.state != state:
             if instance.state == Turno.STATE_INITIAL:
@@ -70,10 +71,11 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
             else:
                 raise serializers.ValidationError({'error': _('Estado incorrecto')})
 
+        instance.informed = informed
         instance.notes = notes
         instance.save()
         return instance
 
     class Meta:
         model = Turno
-        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes')
+        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes', 'cancelation_reason', 'informed')

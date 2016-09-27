@@ -35,6 +35,11 @@ class TurnoList(PaginateListCreateAPIView):
     
     def get_queryset(self):
         queryset = Turno.objects.all()
+        informed = self.request.query_params.get('informed')
+
+        if informed is not None:
+            value = self.str2bool(informed)
+            queryset = queryset.filter(informed=value)
 
         paciente = self.request.query_params.get('paciente')
         if paciente is not None:
@@ -53,6 +58,9 @@ class TurnoList(PaginateListCreateAPIView):
             queryset = queryset.filter(turnoSlot=turno_slot)
 
         return queryset
+
+    def str2bool(self, v):
+        return v.lower() in ("yes", "true", "t", "1")
 
 class TurnoDetails(generics.RetrieveUpdateDestroyAPIView):
     """

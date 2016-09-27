@@ -38,13 +38,13 @@ class Turno(ActiveModel):
         (STATE_CANCELED_INFORMED, 'Cancelado e informado')
     )
     #Cancelacion por ausencia del profesional
-    CANCELATION_PROFESIONAL_ABSENT = 'Profesional absent'
+    CANCELATION_PROFESIONAL_ABSENT = 'ProfesionalAbsent'
 
     #Cancelacion por cambio o baja de agenda
-    CANCELATION_AGENDA_CHANGE = 'Agenda changed'
+    CANCELATION_AGENDA_CHANGE = 'AgendaChanged'
 
     #Cancelacion a pedido del paciente
-    CANCELATION_PACIENT_REQUEST = 'Pacient request'
+    CANCELATION_PACIENT_REQUEST = 'PacientRequest'
 
     #Cancelacion por otro motivo
     CANCELATION_OTHER = 'Other'
@@ -70,3 +70,4 @@ class Turno(ActiveModel):
     turnoSlot = models.ForeignKey(TurnoSlot, null=False, related_name='turnos')
     notes = models.CharField(blank=True, max_length=150, null=True)
     updated_on = models.DateField(auto_now=True)
+    informed = models.BooleanField(default=False)

@@ -40,4 +40,4 @@ class TurnoNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Turno
-        fields = ('id', 'paciente', 'state', 'status', 'notes', 'url')
+        fields = ('id', 'paciente', 'state', 'status', 'notes', 'url', 'cancelation_reason', 'informed')
