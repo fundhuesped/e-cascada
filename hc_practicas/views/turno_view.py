@@ -8,20 +8,24 @@ from rest_framework.permissions import AllowAny
 from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
+from django_filters import widgets
 
 class TurnoFilter(r_f_filters.FilterSet):
     """
     Configura los campos por los que se puede fitrar
     """
+    cancelation_reason = r_f_filters.MultipleChoiceFilter(choices=Turno.CANCELATION_CHOICES,
+                                                          widget=widgets.CSVWidget())
     class Meta(object):
         """
         Define por diccionario los que se puede fitrar
         """
         model = Turno
-        fields = {
-            'status': r_f_filters.ALL_LOOKUPS,
-            'state': r_f_filters.ALL_LOOKUPS
-        }
+        fields = ['cancelation_reason']
+        # fields = {
+        #     'status': r_f_filters.ALL_LOOKUPS,
+        #     'state': r_f_filters.ALL_LOOKUPS
+        # }
 
 class TurnoList(PaginateListCreateAPIView):
     """
@@ -29,7 +33,8 @@ class TurnoList(PaginateListCreateAPIView):
     """
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
-    filter_backends = (filters.OrderingFilter,)
+    filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
+    filter_class = TurnoFilter
     ordering_fields = ('turnoSlot__day')
     ordering = ('-turnoSlot__day')
     
