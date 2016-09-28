@@ -50,6 +50,10 @@ class TurnoList(PaginateListCreateAPIView):
         if paciente is not None:
             queryset = queryset.filter(paciente=paciente)
 
+        agenda = self.request.query_params.get('agenda')
+        if agenda is not None:
+            queryset = queryset.filter(turnoSlot__agenda=agenda)    
+
         status = self.request.query_params.get('status')
         if status is not None:
             queryset = queryset.filter(status=status)
