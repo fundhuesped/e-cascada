@@ -37,7 +37,7 @@ class TurnoList(PaginateListCreateAPIView):
     filter_class = TurnoFilter
     ordering_fields = ('turnoSlot__day')
     ordering = ('-turnoSlot__day')
-    
+
     def get_queryset(self):
         queryset = Turno.objects.all()
         informed = self.request.query_params.get('informed')
@@ -52,7 +52,12 @@ class TurnoList(PaginateListCreateAPIView):
 
         agenda = self.request.query_params.get('agenda')
         if agenda is not None:
-            queryset = queryset.filter(turnoSlot__agenda=agenda)    
+            queryset = queryset.filter(turnoSlot__agenda=agenda)
+
+        day__range_start = self.request.query_params.get('day__range_start')
+        day__range_end = self.request.query_params.get('day__range_end')
+        if day__range_start is not None and day__range_end is not None:
+            queryset = queryset.filter(turnoSlot__day__range=(day__range_start, day__range_end))
 
         status = self.request.query_params.get('status')
         if status is not None:
@@ -61,6 +66,14 @@ class TurnoList(PaginateListCreateAPIView):
         state = self.request.query_params.get('state')
         if state is not None:
             queryset = queryset.filter(state=state)
+
+        profesional = self.request.query_params.get('profesional')
+        if profesional is not None:
+            queryset = queryset.filter(turnoSlot__profesional=profesional)
+
+        prestacion = self.request.query_params.get('prestacion')
+        if prestacion is not None:
+            queryset = queryset.filter(turnoSlot__prestacion=prestacion)
 
         turno_slot = self.request.query_params.get('turnoSlot')
         if turno_slot is not None:
