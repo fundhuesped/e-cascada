@@ -8,3 +8,4 @@ from .turno_view import *
 from .turnoSlot_view import *
 from .ausencia_view import *
 from .turno_cancelado_view import *
+from .sobreturno_view import *

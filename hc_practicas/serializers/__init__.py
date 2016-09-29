@@ -13,4 +13,5 @@ from .turnoSlotNested_ser import *
 from .turnoNest_ser import *
 from .turnoNested_ser import *
 from .turnoSlotNest_ser import *
+from .sobreturnoNest_ser import *
 from .ausenciaNest_ser import *

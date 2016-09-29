@@ -29,7 +29,10 @@ class TurnoSlotNestedSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         if (isinstance(data, list) or isinstance(data, dict)):
-            turno_slots= TurnoSlot.objects.filter(pk=data['id'])
+            if 'id' in data:
+                turno_slots = TurnoSlot.objects.filter(pk=data['id'])
+            else:
+                return data
         else:
             turno_slots=TurnoSlot.objects.filter(pk=data)
         if turno_slots.count() > 0:
