@@ -1,13 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import serializers
-from hc_common.models import Location
-from hc_practicas.models import Profesional, Prestacion
-from hc_practicas.serializers import PrestacionNestedSerializer
-from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestedSerializer, \
-    CivilStatusTypeNestedSerializer, EducationTypeNestedSerializer, SocialServiceNestedSerializer
+
+import datetime as dt
+import copy
 from django.utils.translation import gettext as _
+from hc_common.models import Location
+from hc_common.serializers import CivilStatusTypeNestedSerializer
+from hc_common.serializers import DocumentTypeNestedSerializer
+from hc_common.serializers import EducationTypeNestedSerializer
+from hc_common.serializers import LocationNestedSerializer
+from hc_common.serializers import SexTypeNestedSerializer
+from hc_common.serializers import SocialServiceNestedSerializer
+from hc_practicas.models import Agenda
+from hc_practicas.models import Prestacion
+from hc_practicas.models import Profesional
+from hc_practicas.serializers import PrestacionNestedSerializer
+from rest_framework import serializers
 
 
 class ProfesionalNestSerializer(serializers.ModelSerializer):
@@ -192,7 +201,6 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.street = validated_data.get('street', instance.street)
         instance.postal = validated_data.get('postal', instance.postal)
-        instance.status = validated_data.get('status', instance.status)
         instance.notes = validated_data.get('notes', instance.notes)
         instance.occupation = validated_data.get('occupation', instance.occupation)
         instance.education = validated_data.get('education', instance.education)
@@ -206,6 +214,26 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         instance.genderOfChoice = genderOfChoice
         instance.location = location
         instance.civilStatus = civilStatus
+        status = validated_data.get('status', instance.status)
+
+        if instance.status != status:
+
+            try:
+                from hc_practicas.serializers import AgendaNestSerializer
+            except ImportError:
+                import sys
+                AgendaNestSerializer = sys.modules[__package__ + '.AgendaNestSerializer']
+
+            if instance.status == Profesional.STATUS_ACTIVE and status == Profesional.STATUS_INACTIVE:
+                agenda_serializer = AgendaNestSerializer()
+                instance.status = Profesional.STATUS_INACTIVE
+                agendas = Agenda.objects.filter(profesional=instance,
+                                                status=Agenda.STATUS_ACTIVE,
+                                                validTo__gte=dt.date.today())
+                for agenda in agendas:
+                    agenda_serializer.deactivate(agenda)
+            elif instance.status == Profesional.STATUS_INACTIVE and status == Profesional.STATUS_ACTIVE:
+                instance.status = Profesional.STATUS_ACTIVE
 
         instance.prestaciones.clear()
         prestaciones = validated_data.pop('prestaciones')

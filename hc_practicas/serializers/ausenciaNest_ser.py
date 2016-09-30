@@ -1,10 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
+
 from rest_framework import serializers
-import datetime
-from hc_practicas.models import Turno, Ausencia
-from hc_practicas.serializers import ProfesionalNestedSerializer, PrestacionNestedSerializer
+from hc_practicas.models import Ausencia
+from hc_practicas.models import TurnoSlot
+from hc_practicas.serializers import ProfesionalNestedSerializer
+from hc_practicas.services import turnoSlot_service
 
 
 class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,15 +23,18 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
             start_day=validated_data.get('start_day'),
             end_day=validated_data.get('end_day'),
             profesional=profesional,
-            notes = validated_data.get('notes'),
-            reason = validated_data.get('reason')
+            notes=validated_data.get('notes'),
+            reason=validated_data.get('reason')
         )
 
-        #Cuando se crea una ausencia, inhabilita todos los turnos del profesional asociado
-        turnos = Turno.objects.filter(day__range=[instance.start_day, instance.end_day], profesional=instance.profesional)
-        for turno in turnos:
-            turno.status = Turno.STATUS_INACTIVE
-            turno.save()
+        # Cuando se crea una ausencia,
+        # pasa a conflicto todos los turnosSlots del profesional asociado
+        turno_slots = TurnoSlot.objects.filter(day__range=[instance.start_day, instance.end_day],
+                                               profesional=instance.profesional,
+                                               state__in=[TurnoSlot.STATE_AVAILABLE,
+                                                          TurnoSlot.STATE_OCCUPIED])
+        for turno_slot in turno_slots:
+            turnoSlot_service.conflict_turno_slot_unaware(turno_slot)
 
         return instance
 
@@ -47,4 +53,4 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ausencia
-        fields = ('id', 'start_day', 'end_day', 'profesional', 'status', 'reason','notes')
+        fields = ('id', 'start_day', 'end_day', 'profesional', 'status', 'reason', 'notes')

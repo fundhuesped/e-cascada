@@ -9,5 +9,9 @@ from .periodNested_ser import *
 from .profesionalNest_ser import *
 from .profesionalNested_ser import *
 from .agendaNest_ser import *
+from .turnoSlotNested_ser import *
 from .turnoNest_ser import *
+from .turnoNested_ser import *
+from .turnoSlotNest_ser import *
+from .sobreturnoNest_ser import *
 from .ausenciaNest_ser import *

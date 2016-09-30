@@ -39,12 +39,15 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
     )
 
     def to_internal_value(self, data):
-        pacientes = Paciente.objects.filter(pk=data['id'])
+        if (isinstance(data, list) or isinstance(data, dict)):
+            pacientes= Paciente.objects.filter(pk=data['id'])
+        else:
+            pacientes=Paciente.objects.filter(pk=data)
+
         if pacientes.count()>0:
             return pacientes[0]
         else:
             raise ValueError('Paciente not found')
-
 
     class Meta:
         model = Paciente

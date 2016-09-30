@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
-from hc_practicas.serializers import PeriodNestSerializer
-from hc_practicas.models import Period
 from hc_core.views import PaginateListCreateAPIView
+from hc_practicas.models import Period
+from hc_practicas.serializers import PeriodNestSerializer
+from rest_framework import filters
+from rest_framework import generics
 
 
 class PeriodList(PaginateListCreateAPIView):

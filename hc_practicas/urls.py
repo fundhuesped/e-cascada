@@ -27,7 +27,11 @@ urlpatterns = [
     url(r'^period/$', views.PeriodList.as_view(), name='Period-list'),
     url(r'^period/(?P<pk>[0-9]+)/$', views.PeriodDetails.as_view(), name='Period-detail'),
 
+    url(r'^turnoSlot/$', views.TurnoSlotList.as_view(), name='TurnoSlot-list'),
+    url(r'^turnoSlot/(?P<pk>[0-9]+)/$', views.TurnoSlotDetails.as_view(), name='TurnoSlot-detail'),
+
     url(r'^turno/$', views.TurnoList.as_view(), name='Turno-list'),
     url(r'^turno/(?P<pk>[0-9]+)/$', views.TurnoDetails.as_view(), name='Turno-detail'),
     url(r'^turno/cancelado/$', views.TurnoCancelado.as_view(), name='Turno-cancelado'),
+    url(r'^sobreturno/$', views.SobreturnoCreate.as_view(), name='Sobreturno-create'),
 ]
