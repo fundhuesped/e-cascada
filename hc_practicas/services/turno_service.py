@@ -6,11 +6,9 @@ def cancel_turno(turno, reason=Turno.CANCELATION_OTHER):
     """
     Cancela un turno
     """
-    print turno.state
     turno.state = Turno.STATE_CANCELED
     turno.cancelation_reason = reason
     turno.save()
-    print turno.state
     return
 
 def create_turno(turno_slot, paciente, notes=''):

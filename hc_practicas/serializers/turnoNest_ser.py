@@ -53,7 +53,10 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
                 elif state == Turno.STATE_ABSENT:
                     instance.state = Turno.STATE_ABSENT
                 elif state == Turno.STATE_CANCELED:
-                    turnoSlot_service.release_turno_slot(instance.turnoSlot)
+                    if instance.turnoSlot.agenda:
+                        turnoSlot_service.release_turno_slot(instance.turnoSlot)
+                    else:
+                        turnoSlot_service.delete_turno_slot_unaware(instance.turnoSlot)
                     instance.state = Turno.STATE_CANCELED
                     instance.cancelation_reason = Turno.CANCELATION_PACIENT_REQUEST
                 else:

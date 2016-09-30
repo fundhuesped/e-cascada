@@ -188,6 +188,15 @@ def delete_turno_slot(turno_slot):
     turno_slot.state = TurnoSlot.STATE_DELETED
     turno_slot.save()
 
+def delete_turno_slot_unaware(turno_slot):
+    """
+    Pasa un turnoSlot a "eliminado"
+    """
+    turno_slot.state = TurnoSlot.STATE_DELETED
+    turno_slot.status = TurnoSlot.STATUS_INACTIVE
+    turno_slot.save()
+
+
 # Esto debe ir en ausencias no en turnos
 def get_active_ausencias_for_day_and_profesional(day, profesional):
 

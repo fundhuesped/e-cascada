@@ -30,10 +30,12 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
         # Cuando se crea una ausencia,
         # pasa a conflicto todos los turnosSlots del profesional asociado
         turno_slots = TurnoSlot.objects.filter(day__range=[instance.start_day, instance.end_day],
-                                               profesional=instance.profesional)
+                                               profesional=instance.profesional,
+                                               state__in=[TurnoSlot.STATE_AVAILABLE,
+                                                          TurnoSlot.STATE_OCCUPIED])
         for turno_slot in turno_slots:
             turnoSlot_service.conflict_turno_slot_unaware(turno_slot)
-            
+
         return instance
 
     #Método agregado por compatibilidad. Las ausencias solo se pueden agregar o eliminar
