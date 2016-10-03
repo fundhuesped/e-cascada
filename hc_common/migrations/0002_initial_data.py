@@ -14,7 +14,7 @@ def loadInitialData(filename):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hc_common', '0003_auto_20160620_2216'),
+        ('hc_common', '0001_initial'),
     ]
 
     operations = [
@@ -22,7 +22,6 @@ class Migration(migrations.Migration):
         migrations.RunSQL(loadInitialData('civilstatustype')),
         migrations.RunSQL(loadInitialData('educationtype')),
         migrations.RunSQL(loadInitialData('documenttype')),
-        migrations.RunSQL(loadInitialData('socialservice')),
         migrations.RunSQL(loadInitialData('province')),
         migrations.RunSQL(loadInitialData('district')),
         migrations.RunSQL(loadInitialData('location'))
