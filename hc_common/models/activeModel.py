@@ -5,6 +5,9 @@ from django.db import models
 
 
 class ActiveModel(models.Model):
+    """
+    Clase base que implementa el concepto de entidad activa/inactiva
+    """
     STATUS_ACTIVE = 'Active'
     STATUS_INACTIVE = 'Inactive'
 
@@ -14,4 +17,7 @@ class ActiveModel(models.Model):
     )
 
     class Meta:
+        """
+        Metadata de la clase
+        """
         abstract = True

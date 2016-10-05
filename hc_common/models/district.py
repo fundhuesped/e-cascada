@@ -6,4 +6,7 @@ from hc_common.models import AbstractType, Province
 
 
 class District(AbstractType):
+    """
+    Clase que representa un distrito donde vive una persona
+    """
     province = models.ForeignKey(Province)
