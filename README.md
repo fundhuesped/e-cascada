@@ -38,6 +38,7 @@ El sistema se encuentra construido utilizando principalmente :
 
 ### hc_common
 Contiene las entidades generales del sistema:
+
 * activeModel
 * abstractType
 * province
