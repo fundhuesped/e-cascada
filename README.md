@@ -65,7 +65,7 @@ Maneja la entidad Paciente
 
 ### hc_practicas
 Contiene las funcionalidades referentes a los profesionales, agendas, etc. del sistema.
-Maneja las entidades:
+Maneja las entidades
 
 * especialidad
 * prestacion
