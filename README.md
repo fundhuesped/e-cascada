@@ -109,9 +109,3 @@ Maneja las entidades
 
 ### huesped_backend
 Core de la sistema. Contiene las configuraciones propias del sistema.
-
-
-## Estructura general de directorios
-
-Cada modulo cuenta con los directorios
-
