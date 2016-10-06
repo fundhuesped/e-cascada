@@ -32,6 +32,5 @@ urlpatterns = [
 
     url(r'^turno/$', views.TurnoList.as_view(), name='Turno-list'),
     url(r'^turno/(?P<pk>[0-9]+)/$', views.TurnoDetails.as_view(), name='Turno-detail'),
-    url(r'^turno/cancelado/$', views.TurnoCancelado.as_view(), name='Turno-cancelado'),
     url(r'^sobreturno/$', views.SobreturnoCreate.as_view(), name='Sobreturno-create'),
 ]
