@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
 from django.db import models
 from hc_practicas.models import Period
 
+@reversion.register()
 class DayOfWeek(models.Model):
     """
     Modelo un dia de la semana de un periodo de una agenda

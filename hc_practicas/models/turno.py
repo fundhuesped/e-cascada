@@ -5,7 +5,9 @@ from django.db import models
 from hc_common.models import ActiveModel
 from hc_practicas.models import TurnoSlot
 from hc_pacientes.models import Paciente
+import reversion
 
+@reversion.register()
 class Turno(ActiveModel):
     """
     Clase que representa un turno otorgado a un paciente

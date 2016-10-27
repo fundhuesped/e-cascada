@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
 from rest_framework import serializers
 from hc_practicas.models import Prestacion
 from hc_practicas.serializers import EspecialidadNestedSerializer
@@ -23,6 +24,9 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
             notes=validated_data.get('notes'),
             especialidad=especialidad
         )
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Created Prestacion")
 
         return prestacion
 
@@ -39,6 +43,9 @@ class PrestacionNestSerializer(serializers.ModelSerializer):
         instance.notes = validated_data.get('notes', instance.notes)
         instance.especialidad = especialidad
         instance.save()
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Updated Prestacion")
 
         return instance
 

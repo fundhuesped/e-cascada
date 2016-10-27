@@ -4,6 +4,7 @@
 from rest_framework import serializers
 from hc_practicas.models import Prestacion, Especialidad
 from hc_practicas.serializers import PrestacionNestedSerializer
+import reversion
 
 class EspecialidadNestSerializer(serializers.ModelSerializer):
     """
@@ -23,10 +24,14 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
             default = validated_data.get('default', False),
             status = validated_data.get('status'),
         )
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Created especialidad")
 
         return especialidad
 
     def update(self, instance, validated_data):
+        reversion.set_user(self._context['request'].user)
         instance.name= validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.default = validated_data.get('default', instance.default)
@@ -39,6 +44,9 @@ class EspecialidadNestSerializer(serializers.ModelSerializer):
             #TODO HUES-259:Check if the prestacion was disabled due to disabling the especialidad or its disabled anyway
             prestacion.status=instance.status
             prestacion.save()
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Modified Especialidad")
 
         return instance
 

@@ -4,8 +4,9 @@
 from django.db import models
 from hc_practicas.models import Especialidad
 from hc_common.models import ActiveModel
+import reversion
 
-
+@reversion.register()
 class Prestacion(ActiveModel):
     name = models.CharField(max_length=70, null=False)
     description = models.CharField(max_length=150, null=True, blank=True)

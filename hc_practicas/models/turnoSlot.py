@@ -9,8 +9,9 @@ from hc_practicas.models import Prestacion
 from hc_practicas.models import Profesional
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
+import reversion
 
-
+@reversion.register()
 class TurnoSlot(ActiveModel):
     """
     Clase que representa un slot de tiempo que puede ser tomado por un turno

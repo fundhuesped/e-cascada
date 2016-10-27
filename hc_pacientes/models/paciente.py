@@ -3,7 +3,9 @@
 
 from django.db import models
 from hc_common.models import Persona
+import reversion
 
+@reversion.register()
 class Paciente(Persona):
     """
     Clase que representa la información mínima necesaria para gestionar un Paciente

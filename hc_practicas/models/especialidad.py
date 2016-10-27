@@ -1,10 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
 from django.db import models
 from hc_common.models import ActiveModel
+import reversion
 
-
+@reversion.register()
 class Especialidad(ActiveModel):
 
     name = models.CharField(max_length=70, null=False)

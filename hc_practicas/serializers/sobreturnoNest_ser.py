@@ -3,6 +3,7 @@
 
 import datetime as dt
 
+import reversion
 from django.db import transaction
 from django.utils.translation import gettext as _
 from hc_pacientes.serializers import PacienteNestedSerializer
@@ -31,7 +32,10 @@ class SobreturnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        print dict(validated_data)
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Created Sobreturno")
+
         turno_slot = validated_data.get('turnoSlot')
         paciente = validated_data.get('paciente')
         notes = validated_data.get('notes')
