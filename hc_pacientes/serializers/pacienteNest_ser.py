@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
 from hc_common.models import Persona
@@ -166,6 +167,9 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             education=education,
             socialService=socialService
         )
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Created Paciente")
         return paciente
 
     def update(self, instance, validated_data):
@@ -240,6 +244,9 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.socialService = socialService
         instance.save()
 
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Modified Paciente")
         return instance
 
     class Meta:

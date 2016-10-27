@@ -17,15 +17,9 @@ SECRET_KEY = os.getenv('SECRET_KEY','SECRET_KEY_HARDCODED')
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-DB_NAME = os.getenv('DB_NAME','postgres')
+DB_NAME = os.getenv('DB_NAME','turnos')
 DB_USER = os.getenv('DB_USER','postgres')
-DB_PASSWORD = os.getenv('DB_PASSWORD','huesped1234')
+DB_PASSWORD = os.getenv('DB_PASSWORD','turnos1234')
 DB_HOST = os.getenv('DB_HOST','127.0.0.1')
 DB_PORT = os.getenv('DB_PORT','32768')
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
+import reversion
 import datetime as dt
 import copy
 from django.utils.translation import gettext as _
@@ -179,6 +179,9 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
                 profesional.prestaciones.add(prestacion)
 
         profesional.save()
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Created Profesional")
 
         return profesional
 
@@ -216,6 +219,10 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         instance.civilStatus = civilStatus
         status = validated_data.get('status', instance.status)
 
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Modified Profesional")
+
         if instance.status != status:
 
             try:
@@ -232,8 +239,14 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
                                                 validTo__gte=dt.date.today())
                 for agenda in agendas:
                     agenda_serializer.deactivate(agenda)
+                # Agrego datos de la revision
+                reversion.set_comment("Deactivated Profesional")
+
             elif instance.status == Profesional.STATUS_INACTIVE and status == Profesional.STATUS_ACTIVE:
                 instance.status = Profesional.STATUS_ACTIVE
+                # Agrego datos de la revision
+                reversion.set_comment("Activated Profesional")
+
 
         instance.prestaciones.clear()
         prestaciones = validated_data.pop('prestaciones')
@@ -243,7 +256,6 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
                 instance.prestaciones.add(prestacion)
 
         instance.save()
-
         return instance
 
     class Meta:

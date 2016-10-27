@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
 from django.utils import timezone
 from django.db import models
 from hc_common.models import ActiveModel
@@ -9,6 +10,7 @@ from hc_practicas.models import Profesional, Turno
 """
 Representa la ausencia de un profesional en un dia determinado
 """
+@reversion.register()
 class Ausencia(ActiveModel):
     start_day = models.DateField(null=False, default=timezone.now)
     end_day = models.DateField(null=False, default=timezone.now)

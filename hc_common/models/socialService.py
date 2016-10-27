@@ -5,4 +5,7 @@ from hc_common.models import AbstractType
 
 
 class SocialService(AbstractType):
+    """
+    Clase que representa la obra social de una persona
+    """
     pass

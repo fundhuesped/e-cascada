@@ -5,4 +5,7 @@ from hc_common.models import AbstractType
 
 
 class SexType(AbstractType):
+    """
+    Clase que representa el sexo de una persona
+    """
     pass

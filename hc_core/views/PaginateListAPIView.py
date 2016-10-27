@@ -1,6 +1,10 @@
 from rest_framework import generics
 
 class PaginateListAPIView(generics.ListAPIView):
+    """
+    Vista que hereda de ListAPIView y agrega la posibilidad de paginar o no sus resultados
+    """
+
 
     def initial(self, request, *args, **kwargs):
         all_items = self.request.query_params.get('all')

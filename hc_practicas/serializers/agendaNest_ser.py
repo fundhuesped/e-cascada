@@ -112,6 +112,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         Crea una nueva agenda
         POST /agendas
         """
+        reversion.set_user(self._context['request'].user)
 
         profesional = validated_data.pop('profesional')
         prestacion = validated_data.pop('prestacion')
@@ -130,6 +131,10 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             prestacion=prestacion                 #Prestación para la cual se desea crear una agenda
         )
         periods = validated_data.pop('periods')
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Created agenda")
+
         return self.load_agenda(periods, instance)
 
     def load_agenda(self, periods, agenda_instance):
@@ -304,6 +309,10 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
                                                           )
                         turnoSlot_service.activate_turno_slot(turno_slot)
         instance.save()
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Activated agenda")
+
 
     def deactivate(self, instance):
         """
@@ -319,6 +328,9 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
             turnoSlot_service.delete_turno_slot(turno_slot)
         instance.status = Agenda.STATUS_INACTIVE
         instance.save()
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Deactivated agenda")
 
 
     def disable_period_days(self, agenda, period, day_of_week):

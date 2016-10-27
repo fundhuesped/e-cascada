@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import reversion
 from django.db import models
 from hc_practicas.models import Agenda
 
+@reversion.register()
 class Period(models.Model):
     """
     Modelo para un bloque de tiempo de una agenda

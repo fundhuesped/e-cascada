@@ -15,7 +15,6 @@ class EspecialidadList(PaginateListCreateAPIView):
     serializer_class = EspecialidadNestSerializer
     queryset = Especialidad.objects.all()
     filter_backends = (filters.OrderingFilter,)
-
     def get_queryset(self):
         """
         Filtrado opcional del query, en base a name (valida que comience con los datos dados)

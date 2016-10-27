@@ -35,7 +35,9 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
                                                           TurnoSlot.STATE_OCCUPIED])
         for turno_slot in turno_slots:
             turnoSlot_service.conflict_turno_slot_unaware(turno_slot)
-
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Create Ausencia")
         return instance
 
     #Método agregado por compatibilidad. Las ausencias solo se pueden agregar o eliminar
@@ -46,7 +48,9 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
         instance.end = validated_data.get('end', instance.end)
         instance.profesional = profesional
         instance.save()
-
+        # Agrego datos de la revision
+        reversion.set_user(self._context['request'].user)
+        reversion.set_comment("Updated Ausencia")
         return instance
 
 
