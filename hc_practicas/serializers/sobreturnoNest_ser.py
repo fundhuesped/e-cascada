@@ -14,6 +14,7 @@ from hc_practicas.models import Prestacion
 from hc_practicas.services import turnoSlot_service
 from hc_practicas.services import turno_service
 from hc_practicas.serializers import TurnoSlotNestedSerializer
+from datetime import datetime
 
 from rest_framework import serializers
 
@@ -26,8 +27,7 @@ class SobreturnoNestSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     turnoSlot = TurnoSlotNestedSerializer(
-        many=False,
-        required=False
+        many=False
     )
 
     @transaction.atomic
@@ -37,15 +37,21 @@ class SobreturnoNestSerializer(serializers.HyperlinkedModelSerializer):
         reversion.set_comment("Created Sobreturno")
 
         turno_slot = validated_data.get('turnoSlot')
+
         paciente = validated_data.get('paciente')
         notes = validated_data.get('notes')
         prestacion = Prestacion.objects.get(pk=turno_slot['prestacion'])
         profesional = Profesional.objects.get(pk=turno_slot['profesional'])
 
+
+        day = datetime.strptime(turno_slot['day'], '%Y-%m-%d')
+        start = datetime.strptime(turno_slot['start'], '%H:%M')
+        end = datetime.strptime(turno_slot['end'], '%H:%M')
+
         turno_slot_instance = TurnoSlot.objects.create(
-            day=turno_slot['day'],
-            start=turno_slot['start'],
-            end=turno_slot['end'],
+            day=day,
+            start=start,
+            end=end,
             state=TurnoSlot.STATE_OCCUPIED,
             profesional=profesional,
             prestacion=prestacion
