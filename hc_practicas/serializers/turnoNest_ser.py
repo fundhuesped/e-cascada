@@ -42,14 +42,6 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         if turno_slot.day < dt.date.today():
             raise serializers.ValidationError({'error': _('No se pueden tomar turnos ya pasados')})
 
-        message = "Le recordamos que tiene un turno para el dia " + turno_slot.day.strftime("%d/%m/%Y")
-        message = message + " a las " +  turno_slot.start.strftime("%H:%M")
-        message = message + " con el profesional " + turno_slot.profesional.firstName + " " + turno_slot.profesional.fatherSurname
-
-        notifEmail = NotificationEmailSerializer(data={"message":message, "destination":paciente.email, "title":"Recordatorio de turno"})
-        notifEmail.is_valid()
-        notifEmail.save()
-
         instance = turno_service.create_turno(turno_slot, paciente, notes)
         turnoSlot_service.occupy_turno_slot(turno_slot)
 
