@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'hc_common',
     'hc_pacientes',
     'hc_core',
+    'hc_notificaciones',
     'reversion'
 ]
 
@@ -96,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGOUT_ON_PASSWORD_CHANGE = True
+LOGOUT_ON_PASSWORD_CHANGE = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -158,6 +159,36 @@ CORS_ALLOW_HEADERS = (
 CORS_EXPOSE_HEADERS = {
     'auth-token'
 }
+
+#
+# Notifications configuration
+#
+
+# Days to look in advance to send notifications
+NOTIFICATION_ANTICIPATION_DAYS = os.getenv('NOTIFICATION_ANTICIPATION_DAYS', 2)
+
+# Set to true to activate these chanels
+SEND_SMS_NOTIFICATIONS = True
+SEND_EMAIL_NOTIFICATIONS = True
+
+# Email configuration
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 'PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'EMAIL_HOST_PASSWORD')
+EMAIL_SENDER_ADDRESS = os.getenv('EMAIL_SENDER_ADDRESS', 'EMAIL_SENDER_ADDRESS')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False)
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False)
+
+
+
+
+# SMS Configurations
+BASE_SMS_URL = os.getenv('BASE_SMS_URL', 'BASE_SMS_URL')
+SMS_SERVICE_USER = os.getenv('SMS_SERVICE_USER', 'SMS_SERVICE_USER')
+SMS_SERVICE_PASSWORD = os.getenv('SMS_SERVICE_PASSWORD', 'SMS_SERVICE_PASSWORD')
+
+
 
 # TODO Replace this with jenkins build info file
 try:
