@@ -42,7 +42,7 @@ class CreateNotifications(generics.CreateAPIView):
         """
 
         turno_slot = turno.turnoSlot
-        message = "Ud. tiene un turno el " + turno_slot.day.strftime("%d/%m")
+        message = "Ud. tiene un turno en CMH el " + turno_slot.day.strftime("%d/%m")
         message = message + " a las " +  turno_slot.start.strftime("%H:%M") + "hs"
         message = message + " con Dr. " + turno_slot.profesional.fatherSurname + "."
         message = message + " En caso de no poder asistir por favor cancele su turno. Muchas gracias"
@@ -62,8 +62,8 @@ class CreateNotifications(generics.CreateAPIView):
         message = message + "<p>Le recordamos que tiene un turno para el dia " + turno_slot.day.strftime("%d/%m/%Y")
         message = message + " a las " +  turno_slot.start.strftime("%H:%M") + "Hs."
         message = message + " con el profesional " + turno_slot.profesional.firstName + " " + turno_slot.profesional.fatherSurname + ".</p>"
-        message = message + "<p>Le pedimos por favor cancelar el turno si no puede asistir.</p>"
-        message = message + "<p>Muchas Gracias.</p>"
+        message = message + "<p>Le pedimos por favor cancelar el turno si no puede asistir llamando al 4982-4600 .</p>"
+        message = message + "<p>Muchas Gracias.</p><p><b>CMH - Dr. Pedro Cahn</b></p>"
 
         notif = NotificationEmailSerializer(data={"message":message, "destination":turno.paciente.email, "title":"Recordatorio de turno"})
         notif.is_valid()
