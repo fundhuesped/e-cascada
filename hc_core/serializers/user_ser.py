@@ -54,8 +54,11 @@ class PasswordChangeSerializer(serializers.Serializer):
             user=self.user, data=attrs
         )
 
+
         if not self.set_password_form.is_valid():
             raise serializers.ValidationError(self.set_password_form.errors)
+        if attrs['old_password'] == attrs['new_password1']:
+            raise serializers.ValidationError('Same password')
         return attrs
 
     def save(self):
