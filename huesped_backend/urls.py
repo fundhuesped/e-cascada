@@ -24,6 +24,7 @@ apps_patterns = ([
     url(r'^comun/', include('hc_common.urls')),
     url(r'^pacientes/', include('hc_pacientes.urls')),
     url(r'^core/', include('hc_core.urls')),
+    url(r'^notificaciones/', include('hc_notificaciones.urls')),
 ])
 
 urlpatterns = [
