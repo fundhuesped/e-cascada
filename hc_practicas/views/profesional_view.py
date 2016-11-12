@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import ProfesionalNestSerializer
 from hc_practicas.models import Profesional
 from hc_core.views import PaginateListCreateAPIView
@@ -14,6 +14,7 @@ class ProfesionalList(PaginateListCreateAPIView):
     serializer_class = ProfesionalNestSerializer
     queryset = Profesional.objects.all()
     filter_backends = (filters.OrderingFilter,)
+    permission_classes = (DjangoModelPermissions,)
 
 
     def get_queryset(self):
@@ -57,4 +58,4 @@ class ProfesionalDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = ProfesionalNestSerializer
     queryset = Profesional.objects.all()
-    #permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)

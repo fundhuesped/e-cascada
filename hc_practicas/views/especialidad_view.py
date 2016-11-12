@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import EspecialidadNestSerializer
 from hc_practicas.models import Especialidad,Profesional
 from hc_core.views import PaginateListCreateAPIView
@@ -15,6 +15,8 @@ class EspecialidadList(PaginateListCreateAPIView):
     serializer_class = EspecialidadNestSerializer
     queryset = Especialidad.objects.all()
     filter_backends = (filters.OrderingFilter,)
+    permission_classes = (DjangoModelPermissions,)
+
     def get_queryset(self):
         """
         Filtrado opcional del query, en base a name (valida que comience con los datos dados)
@@ -53,4 +55,4 @@ class EspecialidadDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = EspecialidadNestSerializer
     queryset = Especialidad.objects.all()
-    #permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)

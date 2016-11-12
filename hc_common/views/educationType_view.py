@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_common.serializers import EducationTypeNestSerializer
 from hc_common.models import EducationType
 from hc_core.views import PaginateListCreateAPIView
@@ -11,6 +11,7 @@ from hc_core.views import PaginateListCreateAPIView
 class EducationTypeList(PaginateListCreateAPIView):
     serializer_class = EducationTypeNestSerializer
     queryset = EducationType.objects.all()
+    permission_classes = (DjangoModelPermissions,)
 
     def get_queryset(self):
         queryset = EducationType.objects.all()
@@ -26,4 +27,4 @@ class EducationTypeList(PaginateListCreateAPIView):
 class EducationTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EducationTypeNestSerializer
     queryset = EducationType.objects.all()
-    #permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)

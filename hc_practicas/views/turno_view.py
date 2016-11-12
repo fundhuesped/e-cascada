@@ -4,7 +4,7 @@
 import rest_framework_filters as r_f_filters
 
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
@@ -33,6 +33,7 @@ class TurnoList(PaginateListCreateAPIView):
     """
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
+    permission_classes = (DjangoModelPermissions,)
     filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
     filter_class = TurnoFilter
     ordering_fields = ('turnoSlot__day')
@@ -90,4 +91,4 @@ class TurnoDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)

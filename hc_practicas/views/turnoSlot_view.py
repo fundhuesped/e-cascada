@@ -4,7 +4,7 @@
 import rest_framework_filters as r_f_filters
 
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import TurnoSlotNestSerializer
 from hc_practicas.models import TurnoSlot
 from hc_core.views import PaginateListAPIView
@@ -42,6 +42,7 @@ class TurnoSlotList(PaginateListAPIView):
     queryset = TurnoSlot.objects.all()
     filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
     filter_class = TurnoSlotFilter
+    permission_classes = (DjangoModelPermissions,)
 
     def get_queryset(self):
         queryset = TurnoSlot.objects.all()
@@ -90,4 +91,4 @@ class TurnoSlotDetails(generics.RetrieveAPIView):
     """
     serializer_class = TurnoSlotNestSerializer
     queryset = TurnoSlot.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)

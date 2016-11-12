@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import generics, filters
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import AusenciaNestSerializer
 from hc_practicas.models import Ausencia
 from hc_core.views import PaginateListCreateAPIView
@@ -12,6 +12,7 @@ class AusenciaList(PaginateListCreateAPIView):
     serializer_class = AusenciaNestSerializer
     queryset = Ausencia.objects.all()
     filter_backends = (filters.OrderingFilter,)
+    permission_classes = (DjangoModelPermissions,)
 
     def get_queryset(self):
         queryset = Ausencia.objects.all()
@@ -46,4 +47,4 @@ class AusenciaList(PaginateListCreateAPIView):
 class AusenciaDetails(generics.RetrieveDestroyAPIView): #No se permite modificar una ausencia
     serializer_class = AusenciaNestSerializer
     queryset = Ausencia.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)
