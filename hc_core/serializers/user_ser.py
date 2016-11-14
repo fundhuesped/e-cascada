@@ -5,12 +5,20 @@ from rest_framework import serializers
 from django.conf import settings
 from rest_framework import exceptions
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.models import Group
 
+class GroupSerializer(serializers.ModelSerializer):    
+    class Meta:
+        model = Group
+        fields = ('name',)
+        
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.Field(
         write_only=True
     )
+
+    groups = GroupSerializer(many=True)
 
     def validate(self, attrs):
         user = super(UserSerializer, self).validate(self, attrs)
@@ -19,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password', 'first_name', 'last_name', 'email',)
+        fields = ('password', 'first_name', 'last_name', 'email','groups')
 
 class PasswordChangeSerializer(serializers.Serializer):
 
