@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from hc_common.serializers import DocumentTypeNestSerializer
 from hc_common.models import DocumentType
 from hc_core.views import PaginateListCreateAPIView
@@ -13,6 +13,7 @@ class DocumentTypeList(PaginateListCreateAPIView):
     """
     serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
+    permission_classes = (DjangoModelPermissions,)
 
     def get_queryset(self):
         queryset = DocumentType.objects.all()
@@ -31,4 +32,4 @@ class DocumentTypeDetails(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = DocumentTypeNestSerializer
     queryset = DocumentType.objects.all()
-    #permission_classes = (AllowAny,)
+    permission_classes = (DjangoModelPermissions,)

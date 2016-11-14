@@ -9,6 +9,7 @@ from hc_notificaciones.serializers import NotificationEmailSerializer
 from hc_notificaciones.models import NotificationSMS
 from hc_notificaciones.models import NotificationEmail
 from rest_framework import generics
+from rest_framework.permissions import DjangoModelPermissions
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,6 +19,7 @@ class CreateNotifications(generics.CreateAPIView):
     """
     Vista para generar las notificaciones de los proximos turnos
     """
+    permission_classes = (DjangoModelPermissions,)
 
     def post(self, request, *args, **kwargs):
         fetched_day = dt.date.today() + dt.timedelta(days=settings.NOTIFICATION_ANTICIPATION_DAYS)
