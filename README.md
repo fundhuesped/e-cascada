@@ -109,3 +109,27 @@ Maneja las entidades
 
 ### huesped_backend
 Core de la sistema. Contiene las configuraciones propias del sistema.
+
+#Configuración para notificaciones
+El sistema soporta la notificación de turnos con anticipación por SMS y Email.
+Para ellos precisa se configure el servicio de envío de SMS y los datos de SMTP correspondiente.
+En el archivo settings.py (o bien en variables de entorno) se debe configurar:
+
+
+* `NOTIFICATION_ANTICIPATION_DAYS`: Cuantos días para adelante mirará el sistema para determinar si debe enviar las notificaciones
+* `SEND_SMS_NOTIFICATIONS` = Bolean que permite activar o desactivar las notificaciones por SMS
+* `SEND_EMAIL_NOTIFICATIONS` = Bolean que permite activar o desactivar las notificaciones por Email
+* `EMAIL_HOST` = IP o host del servicio SMTP
+* `EMAIL_PORT` = Puerto del servicio SMTP
+* `EMAIL_HOST_USER` =  Usuario con el que se indentificara al servicio de envio SMTP (normalmente es el mail)
+* `EMAIL_HOST_PASSWORD` = Password del usuario con el que se indentificara al servicio de envio SMTP
+* `EMAIL_SENDER_ADDRESS` = Dirección de correo electronico remitente para el envío de notificaciones
+* `EMAIL_USE_TLS` = Bolean indicando si se debe utilizar o no TLS en la comunicación
+* `EMAIL_USE_SSL` = Bolean indicando si se debe utilizar o no SSL en la comunicación
+* `BASE_SMS_URL` = URL base para el servicio de envio de SMS
+* `SMS_SERVICE_USER` = Usuario del servicio de SMS
+* `SMS_SERVICE_PASSWORD` : Password del servicio de envio de SMS
+
+
+
+
