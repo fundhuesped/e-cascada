@@ -19,7 +19,6 @@ class CreateNotifications(generics.CreateAPIView):
     """
     Vista para generar las notificaciones de los proximos turnos
     """
-    permission_classes = (DjangoModelPermissions,)
 
     def post(self, request, *args, **kwargs):
         fetched_day = dt.date.today() + dt.timedelta(days=settings.NOTIFICATION_ANTICIPATION_DAYS)
