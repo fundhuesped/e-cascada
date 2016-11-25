@@ -130,6 +130,36 @@ En el archivo settings.py (o bien en variables de entorno) se debe configurar:
 * `SMS_SERVICE_USER` = Usuario del servicio de SMS
 * `SMS_SERVICE_PASSWORD` : Password del servicio de envio de SMS
 
+## Envio de notificaciones
+Para configurar el envio de notificaciones diarias se cuenta con tres metodos dependiendo de las posibilidades tanto del sistema operativo como de la modalidad en la que se instale la plataforma:
 
+* Configurar un cronjob con curl: `curl -X POST $URL_BASE/api/notificaciones/createNotifications/`
+* Configurar un cronjob con wget: `wget --post-data='' $URL_BASE/api/notificaciones/createNotifications/`
+* Configurar un cronjob con el comando de manage: `python manage.py sendReminders`
+
+
+## Configuration for sending reminders at 10AM
+~~~~
+#/etc/systemd/reminders.service
+
+[Unit]
+Description=Sends turnosReminders
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c 'curl -X POST $BASE_URL/api/notificaciones/createNotifications/'
+~~~~
+
+
+~~~~
+#/etc/systemd/system/reminders.timer
+
+[Unit]
+Description=Send reminders at 10AM
+
+[Timer]
+OnCalendar=10:00
+Unit=reminders.service
+~~~~
 
 
