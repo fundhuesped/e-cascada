@@ -46,7 +46,7 @@ class CreateNotifications(generics.CreateAPIView):
         message = "Ud. tiene un turno en CMH el " + turno_slot.day.strftime("%d/%m")
         message = message + " a las " +  turno_slot.start.strftime("%H:%M") + "hs"
         message = message + " con Dr. " + turno_slot.profesional.fatherSurname + "."
-        message = message + " En caso de no poder asistir por favor cancele su turno. Muchas gracias"
+        message = message + " En caso de no poder asistir por favor cancele su turno telefonicamente. Muchas gracias"
 
         notif = NotificationSMSSerializer(data={'destination':turno.paciente.primaryPhoneNumber,'message': message})
         notif.is_valid()
