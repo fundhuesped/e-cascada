@@ -135,4 +135,7 @@ insert into hc_common_socialservice (id, name, description, status) values (134,
 insert into hc_common_socialservice (id, name, description, status) values (135, 'TIM', 'TIM', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (136, 'TV SALUD', 'TV SALUD', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (137, 'UOCRA', 'UOCRA', 'Active');
-SELECT setval('hc_common_socialservice_id_seq', 137);
+insert into hc_common_socialservice (id, name, description, status) values (138, 'SIMECO', 'SIMECO', 'Active');
+insert into hc_common_socialservice (id, name, description, status) values (139, 'OSPEP', 'OSPEP', 'Active');
+insert into hc_common_socialservice (id, name, description, status) values (140, 'CIBIC', 'CIBIC', 'Active');
+SELECT setval('hc_common_socialservice_id_seq', 140);
