@@ -96,7 +96,7 @@ insert into hc_common_socialservice (id, name, description, status) values (95, 
 insert into hc_common_socialservice (id, name, description, status) values (96, 'OSPECYRA', 'OSPECYRA', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (97, 'OSPEDYC', 'OSPEDYC', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (98, 'OSPEGAP', 'OSPEGAP', 'Active');
-insert into hc_common_socialservice (id, name, description, status) values (99, 'OSPEP', 'OSPEP', 'Active');
+insert into hc_common_socialservice (id, name, description, status) values (99, 'OSPEP - Panaderos', 'OSPEP - Panaderos', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (100, 'OSPERYH', 'OSPERYH', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (101, 'OSPESGYPE', 'OSPESGYPE', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (102, 'OSPIA', 'OSPIA', 'Active');
@@ -136,6 +136,7 @@ insert into hc_common_socialservice (id, name, description, status) values (135,
 insert into hc_common_socialservice (id, name, description, status) values (136, 'TV SALUD', 'TV SALUD', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (137, 'UOCRA', 'UOCRA', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (138, 'SIMECO', 'SIMECO', 'Active');
-insert into hc_common_socialservice (id, name, description, status) values (139, 'OSPEP', 'OSPEP', 'Active');
+insert into hc_common_socialservice (id, name, description, status) values (139, 'OSPEP - Espectaculos Publicos', 'OSPEP - Espectaculos Publicos', 'Active');
 insert into hc_common_socialservice (id, name, description, status) values (140, 'CIBIC', 'CIBIC', 'Active');
-SELECT setval('hc_common_socialservice_id_seq', 140);
+insert into hc_common_socialservice (id, name, description, status) values (141, 'OSPEP - SYGMA', 'OSPEP - SYGMA', 'Active');
+SELECT setval('hc_common_socialservice_id_seq', 141);
