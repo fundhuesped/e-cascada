@@ -49,6 +49,14 @@ class AgendaList(PaginateListCreateAPIView):
             queryset = queryset.filter(profesional__id=profesional)
         if prestacion is not None:
             queryset = queryset.filter(prestacion__id=prestacion)
+        
+        validToGte = self.request.query_params.get('validToGte')
+        if validToGte is not None:
+            queryset = queryset.filter(validTo__gte=validToGte)
+
+        validToLt = self.request.query_params.get('validToLt')
+        if validToLt is not None:
+            queryset = queryset.filter(validTo__lt=validToLt)
 
         #Order
         order_field = self.request.query_params.get('order_field')
