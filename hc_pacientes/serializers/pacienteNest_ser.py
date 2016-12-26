@@ -67,27 +67,11 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'primaryPhoneNumber': _('El teléfono primario es obligatorio para un paciente')})
 
         if ('prospect' in attrs) and not attrs['prospect']:
-            if (not 'primaryPhoneContact' in attrs) or attrs['primaryPhoneContact'] is None:
-                raise serializers.ValidationError({'primaryPhoneContact': _('El teléfono primario es obligatorio para un paciente')})
             if (not 'primaryPhoneMessage' in attrs) or attrs['primaryPhoneMessage'] is None:
                 raise serializers.ValidationError({'primaryPhoneMessage': _('El teléfono primario es obligatorio para un paciente')})
-
-            if (not 'birthDate' in attrs) or attrs['birthDate'] is None:
-               raise serializers.ValidationError({'birthDate': _('La fecha de nacimiento es obligatoria para un paciente')})
             if ((not 'documentNumber' in attrs) or attrs['documentNumber'] is None) or ((not 'documentType' in attrs) or attrs['documentType']) is None:
                 raise serializers.ValidationError({'documentNumber': _('El tipo y número de documento son obligatorios')})
-            if (not 'genderAtBirth' in attrs) or attrs['genderAtBirth'] is None:
-                raise serializers.ValidationError({'genderAtBirth': _('El sexo al nacer es obligatorio')})
-            if  (not 'genderOfChoice' in attrs) or attrs['genderOfChoice'] is None:
-                raise serializers.ValidationError({'genderOfChoice': _('El sexo por elección es obligatorio')})
-            if (not 'street' in attrs) or attrs['street'] is None:
-                raise serializers.ValidationError({'street': _('El domicilio es obligatorio')})
-            if (not 'postal' in attrs) or attrs['postal'] is None:
-                raise serializers.ValidationError({'postal': _('El código postal es obligatorio')})
-            if (not 'location' in attrs) or attrs['location'] is None:
-                raise serializers.ValidationError({'location': _('La provincia, partido y localidad son obligatorios')})
-
-
+                
         return attrs
 
     def create(self, validated_data):
