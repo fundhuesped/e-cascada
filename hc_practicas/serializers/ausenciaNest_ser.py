@@ -42,18 +42,34 @@ class AusenciaNestSerializer(serializers.HyperlinkedModelSerializer):
 
     #Método agregado por compatibilidad. Las ausencias solo se pueden agregar o eliminar
     def update(self, instance, validated_data):
-        profesional = validated_data.pop('profesional')
-        instance.day = validated_data.get('day', instance.day)
-        instance.start = validated_data.get('start', instance.start)
-        instance.end = validated_data.get('end', instance.end)
-        instance.profesional = profesional
-        instance.save()
+
+        if validated_data.get('status') != instance.status:
+            if validated_data.get('status') == Ausencia.STATUS_INACTIVE:
+                return self.disable(instance)
+            else:
+                return instance
+        else:
+            return instance
+
+    def disable(self, ausencia):
+
+        ausencia.status = Ausencia.STATUS_INACTIVE
+        ausencia.save()
+
+        # Cuando se deshabilita una ausencia,
+        # pasa a  activos todos los turnosSlots del profesional asociado
+        # que no tengan otra ausencia que los bloquee
+        turno_slots = TurnoSlot.objects.filter(day__range=[ausencia.start_day, ausencia.end_day],
+                                               profesional=ausencia.profesional,
+                                               state=TurnoSlot.STATE_CONFLICT)
+
+        for turno_slot in turno_slots:
+            turnoSlot_service.activate_turno_slot(turno_slot)
+
         # Agrego datos de la revision
         reversion.set_user(self._context['request'].user)
-        reversion.set_comment("Updated Ausencia")
-        return instance
-
-
+        reversion.set_comment("Disabled Ausencia")
+        return ausencia
 
     class Meta:
         model = Ausencia

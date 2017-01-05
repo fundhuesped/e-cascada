@@ -44,7 +44,7 @@ class AusenciaList(PaginateListCreateAPIView):
         return queryset
 
 
-class AusenciaDetails(generics.RetrieveDestroyAPIView): #No se permite modificar una ausencia
+class AusenciaDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AusenciaNestSerializer
     queryset = Ausencia.objects.all()
     permission_classes = (DjangoModelPermissions,)
