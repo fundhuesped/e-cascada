@@ -48,7 +48,10 @@ class CreateNotifications(generics.CreateAPIView):
         message = message + " con Dr. " + turno_slot.profesional.fatherSurname + "."
         message = message + " En caso de no poder asistir por favor cancele su turno. Muchas gracias"
 
-        notif = NotificationSMSSerializer(data={'destination':turno.paciente.primaryPhoneNumber,'message': message})
+        notif = NotificationSMSSerializer(data={"destination":turno.paciente.primaryPhoneNumber,
+                                                "message": message,
+                                                "turno": turno.id,
+                                                "paciente":turno.paciente.id})
         notif.is_valid()
         notif.save()
         return notif
@@ -66,7 +69,11 @@ class CreateNotifications(generics.CreateAPIView):
         message = message + "<p>Le pedimos por favor cancelar el turno si no puede asistir.</p>"
         message = message + "<p>Muchas Gracias.</p>"
 
-        notif = NotificationEmailSerializer(data={"message":message, "destination":turno.paciente.email, "title":"Recordatorio de turno"})
+        notif = NotificationEmailSerializer(data={"message":message,
+                                                  "destination":turno.paciente.email,
+                                                  "title":"Recordatorio de turno",
+                                                  "turno": turno.id,
+                                                  "paciente":turno.paciente.id})
         notif.is_valid()
         notif.save()
         return notif
