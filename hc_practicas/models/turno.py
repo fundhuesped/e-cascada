@@ -48,6 +48,12 @@ class Turno(ActiveModel):
     #Cancelacion a pedido del paciente
     CANCELATION_PACIENT_REQUEST = 'PacientRequest'
 
+    #Cancelacion a pedido del paciente por SMS
+    CANCELATION_PACIENT_REQUEST_SMS = 'PatientSMS'
+
+    #Cancelacion a pedido del paciente por Email
+    CANCELATION_PACIENT_REQUEST_EMAIL = 'PatientEmail'
+
     #Cancelacion por otro motivo
     CANCELATION_OTHER = 'Other'
 
@@ -55,6 +61,8 @@ class Turno(ActiveModel):
         (CANCELATION_PROFESIONAL_ABSENT, 'Ausencia del profesional'),
         (CANCELATION_AGENDA_CHANGE, 'Cambio o baja de agenda'),
         (CANCELATION_PACIENT_REQUEST, 'Pedido del paciente'),
+        (CANCELATION_PACIENT_REQUEST_SMS, 'SMS del paciente'),
+        (CANCELATION_PACIENT_REQUEST_EMAIL, 'Email del paciente'),
         (CANCELATION_OTHER, 'Otro')
     )
 
