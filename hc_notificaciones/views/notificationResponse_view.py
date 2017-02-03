@@ -27,9 +27,11 @@ class NotificationResponses(generics.RetrieveAPIView):
         message = request.query_params.get('texto')
         notification_id = request.query_params.get('idinterno')
 
-        SMSResponseSerializer(data={"origin":origin,
-                                    "message": message,
-                                    "notification_id":notification_id})
+        sms_response = SMSResponseSerializer(data={"origin":origin,
+                                    			   "message": message,
+                                    			   "notification_id":notification_id})
+        sms_response.is_valid()
+        sms_response.save()
 
         print(origin)
         print(message)
