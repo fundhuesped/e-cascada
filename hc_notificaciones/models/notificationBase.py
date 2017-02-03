@@ -54,5 +54,5 @@ class BaseNotification(ActiveModel):
                                null=False)
 
     updated_on = models.DateField(auto_now=True)
-    turno = models.ForeignKey(Turno, null=True, related_name='turno')
+    turno = models.ForeignKey(Turno, null=True)
     paciente = models.ForeignKey(Paciente, null=True)
