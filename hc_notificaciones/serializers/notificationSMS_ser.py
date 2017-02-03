@@ -19,6 +19,8 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
             message=validated_data.get('message'),
             state=NotificationSMS.STATE_INITIAL,
             notificationtype=NotificationSMS.NOTIFICATION_TYPE_SMS,
+            turno=validated_data.get('turno'),
+            paciente=validated_data.get('paciente')
         )
         self.send_notification(notificacion)
         return notificacion
@@ -37,3 +39,4 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSMS
         fields = ('id', 'destination', 'message', 'state')
+        fields = ('id', 'destination', 'message', 'state', 'turno', 'paciente')

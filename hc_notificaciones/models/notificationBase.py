@@ -3,6 +3,8 @@
 
 from django.db import models
 from hc_common.models import ActiveModel
+from hc_practicas.models import Turno
+from hc_pacientes.models import Paciente
 
 class BaseNotification(ActiveModel):
     """
@@ -52,3 +54,5 @@ class BaseNotification(ActiveModel):
                                null=False)
 
     updated_on = models.DateField(auto_now=True)
+    turno = models.ForeignKey(Turno, null=True, related_name='turno')
+    paciente = models.ForeignKey(Paciente, null=True)

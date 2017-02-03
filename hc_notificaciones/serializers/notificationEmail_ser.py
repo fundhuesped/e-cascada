@@ -20,6 +20,8 @@ class NotificationEmailSerializer(serializers.ModelSerializer):
             message=validated_data.get('message'),
             state=NotificationEmail.STATE_INITIAL,
             notificationtype=NotificationEmail.NOTIFICATION_TYPE_EMAIL,
+            turno=validated_data.get('turno'),
+            paciente=validated_data.get('paciente')
         )
         self.send_notification(notificacion)
         return notificacion
