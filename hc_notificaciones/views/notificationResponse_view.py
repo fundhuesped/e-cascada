@@ -32,7 +32,7 @@ class NotificationResponses(generics.RetrieveAPIView):
                                     "notification_id":notification_id})
 
         print(origin)
-        print(text)
+        print(message)
         print(notification_id)
 
         return Response({"message": "Hello for today! See you tomorrow!"})
