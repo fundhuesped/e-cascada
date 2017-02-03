@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('hc_practicas', '0001_initial'),
-        ('hc_pacientes', '0002_initial_data'),
         ('hc_notificaciones', '0001_initial'),
     ]
 
