@@ -32,4 +32,4 @@ class NotificationResponses(generics.RetrieveAPIView):
         sms_response.is_valid()
         sms_response.save()
 
-        return Response({"message": "Hello for today! See you tomorrow!"})
+        return Response(sms_response.data)
