@@ -19,22 +19,17 @@ class NotificationResponses(generics.RetrieveAPIView):
 
     def get(self, request, format=None):
         """
-		asd
+		Servicio para recibir respuestas de SMS
         """
 
 
         origin = request.query_params.get('origen')
         message = request.query_params.get('texto')
         notification_id = request.query_params.get('idinterno')
-
         sms_response = SMSResponseSerializer(data={"origin":origin,
                                     			   "message": message,
-                                    			   "notification_id":notification_id})
+                                    			   "notification":notification_id})
         sms_response.is_valid()
         sms_response.save()
 
-        print(origin)
-        print(message)
-        print(notification_id)
-
-        return Response({"message": "Hello for today! See you tomorrow!"})
+        return Response(sms_response.data)

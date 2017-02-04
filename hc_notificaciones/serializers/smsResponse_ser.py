@@ -3,7 +3,11 @@
 
 from rest_framework import serializers
 from hc_notificaciones.models import NotificationSMS
-import requests
+from hc_notificaciones.models import SMSNotificationResponse
+from hc_notificaciones.serializers import NotificationSMSSerializer
+from hc_practicas.models import Turno
+from hc_practicas.services import turno_service
+
 from django.conf import settings
 
 class SMSResponseSerializer(serializers.ModelSerializer):
@@ -13,38 +17,46 @@ class SMSResponseSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     def create(self, validated_data):
-        notificacion = NotificationSMS.objects.create(
-            destination=validated_data.get('destination'),
+
+        notification = validated_data.get('notification')
+
+        response = SMSNotificationResponse.objects.create(
+            origin=validated_data.get('origin'),
             message=validated_data.get('message'),
-            state=NotificationSMS.STATE_INITIAL,
-            notificationtype=NotificationSMS.NOTIFICATION_TYPE_SMS,
-            turno=validated_data.get('turno'),
-            paciente=validated_data.get('paciente')
+            responsetype=SMSNotificationResponse.RESPONSE_TYPE_SMS,
+            turno=notification.turno,
+            paciente=notification.paciente,
+            notification = notification
         )
-        self.send_notification(notificacion)
-        return notificacion
 
-
-    def send_notification(self, notificacion):
-        url = settings.BASE_SMS_URL
-        url = url + "enviar_sms.asp?api=1"
-        url = url + "&usuario=" + settings.SMS_SERVICE_USER
-        url = url + "&clave=" + settings.SMS_SERVICE_PASSWORD
-        url = url + "&tos=" + notificacion.destination
-        url = url + "&texto=" + notificacion.message
-        url = url + "&idinterno=​" + str(notificacion.id)
-        url = url + "&respuestanumerica=1"
-        response = requests.get(url)
-
-        splitted_response = response.text.split(";")
-        if splitted_response[0] == "1":
-            notificacion.state = NotificationSMS.STATE_SENT
-        else:
-            notificacion.state = NotificationSMS.STATE_ERROR
-        notificacion.save()
+        self.process_response(response)
 
         return response
 
+    def process_response(self, response):
+        if response.message.upper() == "NO":
+            response.responseaction = SMSNotificationResponse.RESPONSE_ACTION_CANCEL
+            if response.turno.state == Turno.STATE_INITIAL:
+                turno_service.cancel_turno(response.turno, Turno.CANCELATION_PACIENT_REQUEST_SMS)
+        else:
+            response.responseaction = SMSNotificationResponse.RESPONSE_ACTION_RESEND
+            self.send_options(response)
+        response.save()
+        return
+
+    def send_options(self, response):
+
+        message = "Por favor en caso de querer cancelar el turno envíe solo la palabra NO"
+
+        notif = NotificationSMSSerializer(data={"destination":response.turno.paciente.primaryPhoneNumber,
+                                                "message": message,
+                                                "turno": response.turno.id,
+                                                "paciente":response.turno.paciente.id},
+                                          context={"reference_id": response.notification.id})
+        notif.is_valid()
+        notif.save()
+        return notif
+
     class Meta:
-        model = NotificationSMS
-        fields = ('id', 'destination', 'message', 'state', 'turno', 'paciente')
+        model = SMSNotificationResponse
+        fields = ('id', 'message', 'origin', 'notification', 'turno', 'paciente')

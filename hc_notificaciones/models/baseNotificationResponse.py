@@ -21,9 +21,24 @@ class BaseNotificationResponse(ActiveModel):
         (RESPONSE_TYPE_SMS, 'SMS'),
         (RESPONSE_TYPE_EMAIL, 'Email')
     )
+
+    #Accion de cancelar turno
+    RESPONSE_ACTION_CANCEL = 'Cancel'
+
+    #Accion de contar con opciones
+    RESPONSE_ACTION_RESEND = 'SendOptions'
+
+    RESPONSE_ACTION_CHOICES = (
+        (RESPONSE_ACTION_CANCEL, 'Cancel'),
+        (RESPONSE_ACTION_RESEND, 'SendOptions')
+    )
     responsetype = models.CharField(max_length=10,
                                     choices=RESPONSE_TYPE_CHOICES,
                                     null=False)
+
+    responseaction = models.CharField(max_length=15,
+                                      choices=RESPONSE_ACTION_CHOICES,
+                                      null=False)
 
     origin = models.CharField(max_length=100,
                               null=False)
