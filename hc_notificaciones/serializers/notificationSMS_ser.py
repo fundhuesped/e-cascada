@@ -37,9 +37,9 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
         url = url + "&tos=" + notificacion.destination
         url = url + "&texto=" + notificacion.message
         if self.context.get('reference_id') is not None:
-            url = url + "&idinterno=​" + str(self.context.get('reference_id'))
+            url = url + "&idinterno=" + str(self.context.get('reference_id'))
         else:
-            url = url + "&idinterno=​" + str(notificacion.id)
+            url = url + "&idinterno=" + str(notificacion.id)
         url = url + "&respuestanumerica=1"
         response = requests.get(url)
 
