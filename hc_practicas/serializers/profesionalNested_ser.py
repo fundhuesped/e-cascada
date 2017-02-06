@@ -45,4 +45,4 @@ class ProfesionalNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profesional
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'documentType', 'documentNumber', 'email','primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage', 'municipalNumber', 'licenseNumber','url')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'documentType', 'documentNumber', 'email','primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage', 'municipalNumber', 'licenseNumber','url', 'title')

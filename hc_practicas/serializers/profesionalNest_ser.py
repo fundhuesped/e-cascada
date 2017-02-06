@@ -164,6 +164,7 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
             socialServiceNumber=validated_data.get('socialServiceNumber'),
             bornPlace = validated_data.get('bornPlace'),
             occupation=validated_data.get('occupation'),
+            title=validated_data.get('title'),
             education=education,
             documentType=documentType,
             genderAtBirth=genderAtBirth,
@@ -206,6 +207,7 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         instance.postal = validated_data.get('postal', instance.postal)
         instance.notes = validated_data.get('notes', instance.notes)
         instance.occupation = validated_data.get('occupation', instance.occupation)
+        instance.title = validated_data.get('title')
         instance.education = validated_data.get('education', instance.education)
         instance.primaryPhoneNumber = validated_data.get('primaryPhoneNumber', instance.primaryPhoneNumber)
         instance.primaryPhoneContact = validated_data.get('primaryPhoneContact', instance.primaryPhoneContact)
@@ -269,4 +271,4 @@ class ProfesionalNestSerializer(serializers.ModelSerializer):
         fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
                   'street', 'postal', 'status', 'documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'bornPlace', 'occupation', 'education', 'civilStatus', 'notes', 'primaryPhoneNumber',
-                  'primaryPhoneContact', 'primaryPhoneMessage', 'prestaciones', 'socialService', 'socialServiceNumber', 'municipalNumber', 'licenseNumber')
+                  'primaryPhoneContact', 'primaryPhoneMessage', 'prestaciones', 'socialService', 'socialServiceNumber', 'municipalNumber', 'licenseNumber', 'title')
