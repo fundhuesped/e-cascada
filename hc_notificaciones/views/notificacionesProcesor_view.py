@@ -45,7 +45,12 @@ class CreateNotifications(generics.CreateAPIView):
         turno_slot = turno.turnoSlot
         message = "Ud. tiene un turno en CMH el " + turno_slot.day.strftime("%d/%m")
         message = message + " a las " +  turno_slot.start.strftime("%H:%M") + "hs"
-        message = message + " con Dr. " + turno_slot.profesional.fatherSurname + "."
+        title = ""
+        if turno_slot.profesional.title is not None:
+            title = turno_slot.profesional.title
+        else:
+            title = "Dr."
+        message = message + " con " + title + " " + turno_slot.profesional.fatherSurname + "."
         message = message + " En caso de no poder asistir por favor responda NO. Muchas gracias"
 
         notif = NotificationSMSSerializer(data={"destination":turno.paciente.primaryPhoneNumber,
