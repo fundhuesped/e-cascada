@@ -21,6 +21,5 @@ def create_turno(turno_slot, paciente, notes=''):
                                  notes=notes,
                                  status=Turno.STATUS_ACTIVE,
                                  state=Turno.STATE_INITIAL)
-
     turno.save()
     return turno

@@ -7,6 +7,7 @@ from hc_notificaciones.models import SMSNotificationResponse
 from hc_notificaciones.serializers import NotificationSMSSerializer
 from hc_practicas.models import Turno
 from hc_practicas.services import turno_service
+from hc_practicas.services import turnoSlot_service
 
 from django.conf import settings
 
@@ -38,6 +39,11 @@ class SMSResponseSerializer(serializers.ModelSerializer):
             response.responseaction = SMSNotificationResponse.RESPONSE_ACTION_CANCEL
             if response.turno.state == Turno.STATE_INITIAL:
                 turno_service.cancel_turno(response.turno, Turno.CANCELATION_PACIENT_REQUEST_SMS)
+                if response.turno.turnoSlot.agenda:
+                    turnoSlot_service.release_turno_slot(response.turno.turnoSlot)
+                else:
+                    turnoSlot_service.delete_turno_slot_unaware(response.turno.turnoSlot)
+
         else:
             response.responseaction = SMSNotificationResponse.RESPONSE_ACTION_RESEND
             self.send_options(response)
