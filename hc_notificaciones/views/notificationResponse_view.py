@@ -12,9 +12,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 
-class NotificationResponses(generics.RetrieveAPIView):
+class NotificationResponses(generics.CreateAPIView):
     """
-    Vista para generar las notificaciones de los proximos turnos
+    Vista para recivir respuestas de notificaciones de SMS
     """
 
     def get(self, request, format=None):

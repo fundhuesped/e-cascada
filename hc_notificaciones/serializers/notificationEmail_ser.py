@@ -28,8 +28,14 @@ class NotificationEmailSerializer(serializers.ModelSerializer):
 
 
     def send_notification(self, notificacion):
+
+        if self.context.get('reference_id') is not None:
+            notificacion.title = notificacion.title + " #" + str(self.context.get('reference_id'))
+        else:
+            notificacion.title = notificacion.title + " #" + str(notificacion.id)
+
         sucess = send_mail( notificacion.title,
-                            'Un mensaje',
+                            notificacion.message,
                             settings.EMAIL_SENDER_ADDRESS,
                             [notificacion.destination],
                             fail_silently=False,
@@ -43,4 +49,4 @@ class NotificationEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NotificationEmail
-        fields = ('id', 'destination', 'title','message', 'state')
+        fields = ('id', 'destination', 'title','message', 'turno', 'state')
