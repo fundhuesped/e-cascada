@@ -162,4 +162,50 @@ OnCalendar=10:00
 Unit=reminders.service
 ~~~~
 
+## Recepcion de notificaciones
+El sistema permite la recepcion de notificaciones tanto por SMS com por Email
+
+### SMS
+*Url: $BASE_URL/api/notificaciones/smsResponse/
+*Método: GET
+*Parametros: 
+**origen: numero del cual se recivió el SMS
+**texto: texto del SMS
+**idInterno: idinterno de la notificación original a la cual se respondió
+Si en el texto se recive unicamente la palabra "NO" se cancelará el turno. Cualquier otra frase o palabra enviará un SMS indicando las opciones.
+
+### Email
+*Url: $BASE_URL/api/notificaciones/emailResponse/
+*Método: POST
+Este endpoint permite ejecutar de manera manual la busqueda de respuestas en la casilla de correo anteriormente configurada y actuar en consecuencia. Si el curpo del mail contiene "CANCELAR TURNO" se procederá a cancelar el mismo. Cualquier otro texto enviará un email con las opciones.
+
+Para configurar el checkeo de emails se debe implementar alguna de las siguientes soluciones:
+* Configurar un cronjob con curl: `curl -X POST $URL_BASE/api/notificaciones/emailResponse/`
+* Configurar un cronjob con wget: `wget --post-data='' $URL_BASE/api/notificaciones/emailResponse/`
+* Configurar un cronjob con el comando de manage: `python manage.py checkEmailNotificationResponses`
+
+
+#### Configuration for reading email responses at 10AM
+~~~~
+#/etc/systemd/checkEmailResponses.service
+
+[Unit]
+Description=Checks Email responses
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c 'curl -X POST $BASE_URL/api/notificaciones/emailResponse/'
+~~~~
+
+
+~~~~
+#/etc/systemd/system/reminders.timer
+
+[Unit]
+Description=Checks Email responses at 10AM
+
+[Timer]
+OnCalendar=10:00
+Unit=checkEmailResponses.service
+~~~~
 
