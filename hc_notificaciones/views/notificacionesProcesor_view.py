@@ -46,7 +46,7 @@ class CreateNotifications(generics.CreateAPIView):
         message = "Ud. tiene un turno en CMH el " + turno_slot.day.strftime("%d/%m")
         message = message + " a las " +  turno_slot.start.strftime("%H:%M") + "hs"
         message = message + " con Dr. " + turno_slot.profesional.fatherSurname + "."
-        message = message + " En caso de no poder asistir por favor cancele su turno telefonicamente. Muchas gracias"
+        message = message + " En caso de no poder asistir por favor responda NO. Muchas gracias"
 
         notif = NotificationSMSSerializer(data={"destination":turno.paciente.primaryPhoneNumber,
                                                 "message": message,
@@ -66,7 +66,7 @@ class CreateNotifications(generics.CreateAPIView):
         message = message + "<p>Le recordamos que tiene un turno para el dia " + turno_slot.day.strftime("%d/%m/%Y")
         message = message + " a las " +  turno_slot.start.strftime("%H:%M") + "Hs."
         message = message + " con el profesional " + turno_slot.profesional.firstName + " " + turno_slot.profesional.fatherSurname + ".</p>"
-        message = message + "<p>Le pedimos por favor cancelar el turno si no puede asistir llamando al 4981-1935 o 4982-4600 .</p>"
+        message = message + "<p>Le pedimos por favor cancelar el turno si no puede asistir llamando al 4981-1935 o 4982-4600 o respondiendo CANCELAR TURNO.</p>"
         message = message + "<p>Muchas Gracias.</p><p><b>CMH - Dr. Pedro Cahn</b></p>"
 
         notif = NotificationEmailSerializer(data={"message":message,
