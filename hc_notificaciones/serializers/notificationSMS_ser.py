@@ -25,6 +25,7 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
             turno=validated_data.get('turno'),
             paciente=validated_data.get('paciente')
         )
+        notificacion.save()
         self.send_notification(notificacion)
         return notificacion
 
@@ -41,10 +42,12 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
         else:
             url = url + "&idinterno=" + str(notificacion.id)
         url = url + "&respuestanumerica=1"
+
         response = requests.get(url)
 
         splitted_response = response.text.split(";")
-        if splitted_response[0] == "1":
+
+        if splitted_response[0] == "0":
             notificacion.state = NotificationSMS.STATE_SENT
         else:
             notificacion.state = NotificationSMS.STATE_ERROR
