@@ -8,6 +8,7 @@ from django.db import transaction
 from django.utils.translation import gettext as _
 from hc_pacientes.serializers import PacienteNestedSerializer
 from hc_practicas.models import Turno
+from hc_practicas.models import TurnoSlot
 from hc_practicas.services import turnoSlot_service
 from hc_practicas.services import turno_service
 from hc_practicas.serializers import TurnoSlotNestedSerializer
@@ -41,6 +42,9 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
         if turno_slot.day < dt.date.today():
             raise serializers.ValidationError({'error': _('No se pueden tomar turnos ya pasados')})
+
+        if turno_slot.state != TurnoSlot.STATE_AVAILABLE:
+            raise serializers.ValidationError({'error': _('El turno ya se encuentra tomado')})
 
         instance = turno_service.create_turno(turno_slot, paciente, notes)
         turnoSlot_service.occupy_turno_slot(turno_slot)
