@@ -16,6 +16,10 @@ class TurnoSlot(ActiveModel):
     """
     Clase que representa un slot de tiempo que puede ser tomado por un turno
     """
+    def __str__(self):
+        return "Sarasa"
+    def __unicode__(self):
+        return str(self.start)+'-'+str(self.end)+' '+str(self.day)
 
     STATE_AVAILABLE = 'Available'
     STATE_OCCUPIED = 'Occupied'

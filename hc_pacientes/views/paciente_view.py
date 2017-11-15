@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 from hc_core.views import PaginateListCreateAPIView
+from django.db.models import Q
 
 from rest_framework import serializers
 
@@ -35,13 +36,16 @@ class PacienteList(PaginateListCreateAPIView):
 
         if firstName is not None :
             if  len(firstName) >= 3:
-                queryset = queryset.filter(firstName__istartswith=firstName)
+                print firstName
+                queryset = queryset.filter(Q(firstName__istartswith=firstName)
+                                   |Q(otherNames__istartswith=firstName))
             else:
                 raise serializers.ValidationError({'error': 'Se debe realizar una consulta con parametros de busqueda validos'})
 
         if fatherSurname is not None:
             if len(fatherSurname) >= 3:
-                queryset = queryset.filter(fatherSurname__istartswith=fatherSurname)
+                
+                queryset = queryset.filter(Q(fatherSurname__istartswith=fatherSurname)|Q(motherSurname__istartswith=fatherSurname))
             else:
                 raise serializers.ValidationError({'error': 'Se debe realizar una consulta con parametros de busqueda validos'})
 
@@ -62,7 +66,7 @@ class PacienteList(PaginateListCreateAPIView):
             queryset = queryset.filter(birthDate=birthDate)
 
 
-        #Order  
+        #Order
         order_field = self.request.query_params.get('order_field')
         order_by = self.request.query_params.get('order_by')
         if (order_field is not None) and (order_by is not None):

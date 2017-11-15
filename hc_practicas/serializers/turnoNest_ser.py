@@ -14,6 +14,8 @@ from hc_practicas.services import turno_service
 from hc_practicas.serializers import TurnoSlotNestedSerializer
 from hc_notificaciones.serializers import NotificationSMSSerializer
 from hc_notificaciones.serializers import NotificationEmailSerializer
+from hc_core.serializers import UserNestedSerializer
+
 
 from rest_framework import serializers
 
@@ -22,6 +24,14 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
 
     paciente = PacienteNestedSerializer(
+        many=False
+    )
+
+    lastModifiedBy = UserNestedSerializer(
+        many=False
+    )
+
+    createdBy = UserNestedSerializer(
         many=False
     )
 
@@ -40,13 +50,14 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
         paciente = validated_data.get('paciente')
         notes = validated_data.get('notes')
 
+
         if turno_slot.day < dt.date.today():
             raise serializers.ValidationError({'error': _('No se pueden tomar turnos ya pasados')})
 
         if turno_slot.state != TurnoSlot.STATE_AVAILABLE:
             raise serializers.ValidationError({'error': _('El turno ya se encuentra tomado')})
 
-        instance = turno_service.create_turno(turno_slot, paciente, notes)
+        instance = turno_service.create_turno(turno_slot, paciente, self._context['request'].user, notes)
         turnoSlot_service.occupy_turno_slot(turno_slot)
 
         return instance
@@ -91,9 +102,10 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
         instance.informed = informed
         instance.notes = notes
+        instance.lastModifiedBy = self._context['request'].user;
         instance.save()
         return instance
 
     class Meta:
         model = Turno
-        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes', 'cancelation_reason', 'informed')
+        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes', 'cancelation_reason', 'createdBy', 'lastModifiedBy', 'informed')
