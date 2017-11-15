@@ -5,6 +5,7 @@ from rest_framework import serializers
 from hc_pacientes.models import Paciente
 from hc_practicas.models import Turno
 from hc_pacientes.serializers import PacienteNestedSerializer
+from hc_core.serializers import UserNestedSerializer
 
 class TurnoNestedSerializer(serializers.ModelSerializer):
     """
@@ -25,6 +26,13 @@ class TurnoNestedSerializer(serializers.ModelSerializer):
         lookup_field='pk'
     )
 
+    lastModifiedBy = UserNestedSerializer(
+        many=False
+    )
+
+    createdBy = UserNestedSerializer(
+        many=False
+    )
 
     def to_internal_value(self, data):
         if (isinstance(data, list) or isinstance(data, dict)):
@@ -40,4 +48,4 @@ class TurnoNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Turno
-        fields = ('id', 'paciente', 'state', 'status', 'notes', 'url', 'cancelation_reason', 'informed')
+        fields = ('id', 'paciente', 'state', 'status', 'notes', 'url', 'cancelation_reason', 'createdBy', 'lastModifiedBy', 'informed')

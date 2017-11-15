@@ -5,6 +5,7 @@ from django.db import models
 from hc_common.models import ActiveModel
 from hc_practicas.models import TurnoSlot
 from hc_pacientes.models import Paciente
+from django.contrib.auth.models import User
 import reversion
 
 @reversion.register()
@@ -12,7 +13,6 @@ class Turno(ActiveModel):
     """
     Clase que representa un turno otorgado a un paciente
     """
-
     #Estado inicial del turno
     STATE_INITIAL = 'Initial'
 
@@ -79,5 +79,7 @@ class Turno(ActiveModel):
     paciente = models.ForeignKey(Paciente, null=False)
     turnoSlot = models.ForeignKey(TurnoSlot, null=False, related_name='turnos')
     notes = models.CharField(blank=True, max_length=150, null=True)
+    createdBy = models.ForeignKey(User, null=True, related_name='createdBy')
+    lastModifiedBy = models.ForeignKey(User, null=True, related_name='lastModifiedBy')
     updated_on = models.DateField(auto_now=True)
     informed = models.BooleanField(default=False)
