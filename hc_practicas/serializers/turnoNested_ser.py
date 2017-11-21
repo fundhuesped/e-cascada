@@ -27,11 +27,15 @@ class TurnoNestedSerializer(serializers.ModelSerializer):
     )
 
     lastModifiedBy = UserNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     createdBy = UserNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     def to_internal_value(self, data):
