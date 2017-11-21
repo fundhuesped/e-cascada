@@ -76,4 +76,4 @@ class SobreturnoNestSerializer(serializers.HyperlinkedModelSerializer):
         return instance
     class Meta:
         model = Turno
-        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes')        
+        fields = ('id', 'paciente', 'turnoSlot', 'state', 'status', 'notes', 'lastModifiedBy', 'createdBy')        
