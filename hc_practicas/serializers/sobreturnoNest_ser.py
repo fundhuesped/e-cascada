@@ -15,6 +15,7 @@ from hc_practicas.services import turnoSlot_service
 from hc_practicas.services import turno_service
 from hc_practicas.serializers import TurnoSlotNestedSerializer
 from datetime import datetime
+from hc_core.serializers import UserNestedSerializer
 
 from rest_framework import serializers
 
@@ -28,6 +29,18 @@ class SobreturnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
     turnoSlot = TurnoSlotNestedSerializer(
         many=False
+    )
+
+    lastModifiedBy = UserNestedSerializer(
+        many=False,
+        required=False,
+        allow_null=True
+    )
+
+    createdBy = UserNestedSerializer(
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     @transaction.atomic

@@ -28,11 +28,15 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     lastModifiedBy = UserNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     createdBy = UserNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     turnoSlot = TurnoSlotNestedSerializer(
