@@ -16,11 +16,15 @@ class TurnoSlotNestSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     prestacion = PrestacionNestedSerializer(
-        many=False
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     turnos = TurnoNestedSerializer(
-        many=True
+        many=False,
+        required=False,
+        allow_null=True
     )
 
     currentTurno = TurnoNestedSerializer(
