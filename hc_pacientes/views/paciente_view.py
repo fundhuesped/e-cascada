@@ -36,7 +36,6 @@ class PacienteList(PaginateListCreateAPIView):
 
         if firstName is not None :
             if  len(firstName) >= 3:
-                print firstName
                 queryset = queryset.filter(Q(firstName__istartswith=firstName)
                                    |Q(otherNames__istartswith=firstName))
             else:

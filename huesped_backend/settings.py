@@ -94,6 +94,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'class': 'logging.FileHandler',
+            'filename': './turnos.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+    },
+}
+
 LOGOUT_ON_PASSWORD_CHANGE = False
 
 # Internationalization
