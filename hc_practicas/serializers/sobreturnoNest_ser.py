@@ -71,7 +71,7 @@ class SobreturnoNestSerializer(serializers.HyperlinkedModelSerializer):
         )
         turno_slot_instance.save()
 
-        instance = turno_service.create_turno(turno_slot_instance, paciente, notes)
+        instance = turno_service.create_turno(turno_slot_instance, paciente, self._context['request'].user, notes)
 
         return instance
     class Meta:
