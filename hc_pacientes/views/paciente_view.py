@@ -7,7 +7,8 @@ from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 from hc_core.views import PaginateListCreateAPIView
 from django.db.models import Q
-
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework import serializers
 
 
@@ -76,6 +77,22 @@ class PacienteList(PaginateListCreateAPIView):
                     queryset = queryset.order_by('-'+order_field)
         return queryset
 
+    def create(self, request, *args, **kwargs):
+        if(request.query_params.get('allowDuplicate') and self.request.query_params.get('allowDuplicate') != 'true'):
+            if 'documentNumber' in request.data and 'documentType' in request.data:
+                duplicated = Paciente.objects.filter(Q(firstName__iexact=request.data['firstName'], fatherSurname__iexact=request.data['fatherSurname'])|Q(documentNumber=request.data['documentNumber'], documentType__id=request.data['documentType']['id'] )).count()
+                if duplicated > 0:
+                    return Response("Duplicate paciente exists", status=status.HTTP_400_BAD_REQUEST)
+            else:
+                duplicated = Paciente.objects.filter(Q(firstName__iexact=request.data['firstName'], fatherSurname__iexact=request.data['fatherSurname'])).count()
+                if duplicated > 0:
+                    return Response("Duplicate paciente exists", status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class PacienteDetails(generics.RetrieveUpdateDestroyAPIView):
     """

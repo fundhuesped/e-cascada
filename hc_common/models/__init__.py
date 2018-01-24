@@ -11,4 +11,3 @@ from .documentType import *
 from .civilStatusType import *
 from .educationType import *
 from .socialService import *
-from .persona import *

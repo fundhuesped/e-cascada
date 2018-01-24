@@ -4,7 +4,6 @@
 import reversion
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
-from hc_common.models import Persona
 from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestedSerializer, \
     CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer
 from django.utils.translation import gettext as _
@@ -22,8 +21,8 @@ class PacienteNestSerializer(serializers.ModelSerializer):
     )
     status = serializers.CharField(
         max_length=8,
-        initial=Persona.STATUS_ACTIVE,
-        default=Persona.STATUS_ACTIVE
+        initial=Paciente.STATUS_ACTIVE,
+        default=Paciente.STATUS_ACTIVE
     )
 
     genderAtBirth = SexTypeNestedSerializer(
@@ -116,9 +115,10 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             prospect = False
 
         paciente = Paciente.objects.create(
-            idpaciente=validated_data.get('idpaciente'),
             prospect=prospect,
             firstName=validated_data.get('firstName'),
+            alias=validated_data.get('alias'),
+            hceNumber=validated_data.get('hceNumber'),
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
             motherSurname=validated_data.get('motherSurname'),
@@ -193,9 +193,10 @@ class PacienteNestSerializer(serializers.ModelSerializer):
             socialService = None
 
         instance.prospect = validated_data.get('prospect')
-        instance.idpaciente = validated_data.get('idpaciente', instance.idpaciente)
         instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
+        instance.alias = validated_data.get('alias', instance.alias)
+        instance.hceNumber = validated_data.get('hceNumber', instance.hceNumber)
         instance.fatherSurname = validated_data.get('fatherSurname', instance.fatherSurname)
         instance.motherSurname = validated_data.get('motherSurname', instance.motherSurname)
         instance.birthDate = validated_data.get('birthDate', instance.birthDate)
@@ -235,7 +236,7 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'idpaciente', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'birthDate', 'email',
+        fields = ('id', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'alias', 'hceNumber', 'birthDate', 'email',
                   'street', 'postal', 'status', 'consent','documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
                   'socialServiceNumber', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
