@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_swagger',
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'hc_pacientes',
     'hc_core',
     'hc_notificaciones',
-    'reversion'
+    'reversion',
 ]
 
 MIDDLEWARE_CLASSES = [

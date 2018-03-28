@@ -37,15 +37,15 @@ class PacienteList(PaginateListCreateAPIView):
 
         if firstName is not None :
             if  len(firstName) >= 3:
-                queryset = queryset.filter(Q(firstName__istartswith=firstName)
-                                   |Q(otherNames__istartswith=firstName))
+                queryset = queryset.filter(Q(firstName__unaccent__istartswith=firstName)
+                                   |Q(otherNames__unaccent__istartswith=firstName))
             else:
                 raise serializers.ValidationError({'error': 'Se debe realizar una consulta con parametros de busqueda validos'})
 
         if fatherSurname is not None:
             if len(fatherSurname) >= 3:
                 
-                queryset = queryset.filter(Q(fatherSurname__istartswith=fatherSurname)|Q(motherSurname__istartswith=fatherSurname))
+                queryset = queryset.filter(Q(fatherSurname__unaccent__istartswith=fatherSurname)|Q(motherSurname__unaccent__istartswith=fatherSurname))
             else:
                 raise serializers.ValidationError({'error': 'Se debe realizar una consulta con parametros de busqueda validos'})
 
