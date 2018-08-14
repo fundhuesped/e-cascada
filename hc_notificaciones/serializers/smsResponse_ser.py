@@ -53,7 +53,6 @@ class SMSResponseSerializer(serializers.ModelSerializer):
     def send_options(self, response):
 
         message = "Por favor en caso de querer cancelar el turno envie solo la palabra NO"
-
         notif = NotificationSMSSerializer(data={"destination":response.turno.paciente.primaryPhoneNumber,
                                                 "message": message,
                                                 "turno": response.turno.id,

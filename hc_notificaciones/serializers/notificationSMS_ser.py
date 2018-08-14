@@ -7,7 +7,7 @@ import requests
 from django.conf import settings
 import sys  
 
-reload(sys)  
+reload(sys)
 sys.setdefaultencoding('utf8')
 
 class NotificationSMSSerializer(serializers.ModelSerializer):
@@ -31,20 +31,26 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
 
 
     def send_notification(self, notificacion):
-        url = settings.BASE_SMS_URL
-        url = url + "enviar_sms.asp?api=1"
-        url = url + "&usuario=" + settings.SMS_SERVICE_USER
-        url = url + "&clave=" + settings.SMS_SERVICE_PASSWORD
-        url = url + "&tos=" + notificacion.destination
-        url = url + "&texto=" + notificacion.message
-        if self.context.get('reference_id') is not None:
-            url = url + "&idinterno=" + str(self.context.get('reference_id'))
+        if settings.USE_NOTIFICATION_HUB:
+            data = self.data.copy()
+            data['reference_id'] = notificacion.id
+            response = requests.post(settings.NOTIFICATION_HUB_SMS_URL+"/api/notificaciones/smsNotification/", data=data, headers={"Authorization":"Token "+settings.NOTIFICATION_HUB_TOKEN})
         else:
-            url = url + "&idinterno=" + str(notificacion.id)
-        url = url + "&respuestanumerica=1"
+            url = settings.BASE_SMS_URL
+            url = url + "enviar_sms.asp?api=1"
+            url = url + "&usuario=" + settings.SMS_SERVICE_USER
+            url = url + "&clave=" + settings.SMS_SERVICE_PASSWORD
+            url = url + "&tos=" + notificacion.destination
+            url = url + "&texto=" + notificacion.message
+            url = url + "&instance=CMH" 
+            if self.context.get('reference_id') is not None:
+                url = url + "&idinterno=" + str(self.context.get('reference_id'))
+            else:
+                url = url + "&idinterno=" + str(notificacion.id)
+            url = url + "&respuestanumerica=1"
 
-        response = requests.get(url)
-
+            response = requests.get(url)
+        print response.text
         splitted_response = response.text.split(";")
 
         if splitted_response[0] == "0":
