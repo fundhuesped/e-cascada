@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from django.db.models import Q
 from rest_framework import generics, filters
 from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import ProfesionalNestSerializer
@@ -23,16 +24,19 @@ class ProfesionalList(PaginateListCreateAPIView):
         :return:
         """
         queryset = Profesional.objects.all()
+        anyName = self.request.query_params.get('anyName')
         firstName = self.request.query_params.get('firstName')
         fatherSurename = self.request.query_params.get('fatherSurename')
         status = self.request.query_params.get('status')
         prestacion = self.request.query_params.get('prestacion')
         especialidad = self.request.query_params.get('especialidad')
 
+        if anyName is not None and len(anyName):
+            queryset = queryset.filter(Q(firstName__unaccent__istartswith=anyName)|Q(fatherSurname__unaccent__istartswith=anyName))
         if firstName is not None and len(firstName) > 3:
             queryset = queryset.filter(firstName__unaccent__istartswith=firstName)
         if fatherSurename is not None and len(fatherSurename) > 3:
-            queryset = queryset.filter(fatherSurename__unaccent__istartswith=fatherSurename)
+            queryset = queryset.filter(fatherSurname__unaccent__istartswith=fatherSurename)
         if status is not None:
             queryset = queryset.filter(status=status)            
         if prestacion is not None:
