@@ -12,3 +12,7 @@ share/
 lib/
 
 local/
+
+\.vscode/settings\.json
+
+include/
