@@ -16,3 +16,7 @@ local/
 \.vscode/settings\.json
 
 include/
+
+pip-selfcheck\.json
+
+turnos\.log
