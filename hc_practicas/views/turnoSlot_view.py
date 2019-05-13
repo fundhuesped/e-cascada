@@ -61,7 +61,7 @@ class TurnoSlotList(PaginateListAPIView):
 
         especialidad = self.request.query_params.get('especialidad')
         if especialidad is not None:
-            queryset = queryset.filter(prestacion__espcialidad=especialidad)
+            queryset = queryset.filter(prestacion__especialidad=especialidad)
 
         profesional = self.request.query_params.get('profesional')
         if profesional is not None:
