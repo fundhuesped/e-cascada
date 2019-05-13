@@ -1,6 +1,6 @@
 #
 #### Requirements for huesped_backend ####
-django==1.11.19
+django==1.11.20
 djangorestframework==3.3.3
 djangorestframework-filters==0.8.1
 markdown==2.6.6
