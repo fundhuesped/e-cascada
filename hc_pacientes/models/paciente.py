@@ -2,7 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from hc_common.models import DocumentType, SexType, Location, SocialService, CivilStatusType, EducationType, ActiveModel
+from hc_common.models import DocumentType
+from hc_common.models import SexType
+from hc_common.models import Location
+from hc_common.models import SocialService
+from hc_common.models import CivilStatusType
+from hc_common.models import EducationType
+from hc_common.models import Country
+from hc_common.models import ActiveModel
 import reversion
 
 @reversion.register()
@@ -20,6 +27,7 @@ class Paciente(ActiveModel):
         (CONSENT_NA, 'No preguntado')
     )
 
+    idpaciente = models.CharField(max_length=20, null=True)
     prospect = models.BooleanField(default=False)
     consent = models.CharField(max_length=14, choices=CONSENT_CHOICES, default=CONSENT_NA)
     updated_on = models.DateField(auto_now=True)
@@ -45,7 +53,8 @@ class Paciente(ActiveModel):
     socialServiceNumber = models.CharField(max_length=30, null=True, blank=True)
     civilStatus = models.ForeignKey(CivilStatusType, models.SET_NULL, blank=True, null=True)
     education = models.ForeignKey(EducationType, models.SET_NULL, blank=True, null=True)
-    bornPlace = models.CharField(max_length=50, null=True, blank=True)
+# Aca
+    bornPlace = models.ForeignKey(Country, models.SET_NULL, blank=True, null=True)
     firstVisit = models.DateField(null=True, blank=True)
     notes = models.CharField(max_length=200, null=True, blank=True)
     primaryPhoneNumber = models.CharField(max_length=20, null=True, blank=True)
@@ -57,6 +66,18 @@ class Paciente(ActiveModel):
     thirdPhoneNumber = models.CharField(max_length=20, blank=True, null=True)
     thirdPhoneContact = models.CharField(max_length=40, blank=True, null=True)
     thirdPhoneMessage = models.NullBooleanField(default=False, null=True, blank=True)
+
+    @property
+    def pns(self):
+        """
+        Calculates the PNS code
+        """
+        if self.genderOfChoice.name == 'Masculino': 
+            pns = 'M'
+        else:
+            pns = 'F'
+        pns = pns + self.firstName[:2] + self.fatherSurname[:2] + self.birthDate.strftime('%d%m%Y')
+        return pns.upper()
 
     class Meta:
         ordering = ['fatherSurname']
