@@ -5,7 +5,8 @@ import reversion
 from rest_framework import serializers
 from hc_pacientes.models import Paciente
 from hc_common.serializers import DocumentTypeNestedSerializer, SexTypeNestedSerializer, LocationNestedSerializer, \
-    CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer
+    CivilStatusTypeNestedSerializer, SocialServiceNestedSerializer, EducationTypeNestedSerializer, CountryNestedSerializer
+
 from django.utils.translation import gettext as _
 
 class PacienteNestSerializer(serializers.ModelSerializer):
@@ -61,13 +62,16 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         required=False
     )
 
+    bornPlace = CountryNestedSerializer(
+        many=False,
+        allow_null=True,
+        required=False
+    )
     def validate(self, attrs):
         if (not 'primaryPhoneNumber' in attrs) or attrs['primaryPhoneNumber'] is None:
             raise serializers.ValidationError({'primaryPhoneNumber': _('El teléfono primario es obligatorio para un paciente')})
 
         if ('prospect' in attrs) and not attrs['prospect']:
-            if (not 'primaryPhoneMessage' in attrs) or attrs['primaryPhoneMessage'] is None:
-                raise serializers.ValidationError({'primaryPhoneMessage': _('El teléfono primario es obligatorio para un paciente')})
             if ((not 'documentNumber' in attrs) or attrs['documentNumber'] is None) or ((not 'documentType' in attrs) or attrs['documentType']) is None:
                 raise serializers.ValidationError({'documentNumber': _('El tipo y número de documento son obligatorios')})
                 
@@ -117,11 +121,11 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         paciente = Paciente.objects.create(
             prospect=prospect,
             firstName=validated_data.get('firstName'),
-            alias=validated_data.get('alias'),
             hceNumber=validated_data.get('hceNumber'),
             otherNames=validated_data.get('otherNames'),
             fatherSurname=validated_data.get('fatherSurname'),
             motherSurname=validated_data.get('motherSurname'),
+            alias=validated_data.get('alias'),
             birthDate=validated_data.get('birthDate'),
             consent=validated_data.get('consent', Paciente.CONSENT_NA),
             documentNumber=validated_data.get('documentNumber'),
@@ -195,10 +199,10 @@ class PacienteNestSerializer(serializers.ModelSerializer):
         instance.prospect = validated_data.get('prospect')
         instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.otherNames = validated_data.get('otherNames', instance.otherNames)
-        instance.alias = validated_data.get('alias', instance.alias)
         instance.hceNumber = validated_data.get('hceNumber', instance.hceNumber)
         instance.fatherSurname = validated_data.get('fatherSurname', instance.fatherSurname)
         instance.motherSurname = validated_data.get('motherSurname', instance.motherSurname)
+        instance.alias = validated_data.get('alias', instance.alias)
         instance.birthDate = validated_data.get('birthDate', instance.birthDate)
         instance.consent = validated_data.get('consent', instance.consent)
         instance.documentNumber = validated_data.get('documentNumber', instance.documentNumber)
@@ -236,9 +240,9 @@ class PacienteNestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'alias', 'hceNumber', 'birthDate', 'email',
+        fields = ('id', 'prospect', 'firstName', 'otherNames', 'fatherSurname', 'motherSurname', 'alias', 'hceNumber','birthDate', 'email',
                   'street', 'postal', 'status', 'consent','documentType', 'documentNumber', 'genderAtBirth',
                   'genderOfChoice', 'location', 'occupation', 'civilStatus', 'education', 'socialService',
                   'socialServiceNumber', 'bornPlace', 'firstVisit', 'notes', 'primaryPhoneNumber',
                   'primaryPhoneContact', 'primaryPhoneMessage', 'secondPhoneNumber', 'secondPhoneContact',
-                  'secondPhoneMessage', 'thirdPhoneNumber', 'thirdPhoneContact', 'thirdPhoneMessage')
+                  'secondPhoneMessage', 'thirdPhoneNumber', 'thirdPhoneContact', 'thirdPhoneMessage', 'pns')
