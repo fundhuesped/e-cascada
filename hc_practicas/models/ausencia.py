@@ -14,7 +14,7 @@ Representa la ausencia de un profesional en un dia determinado
 class Ausencia(ActiveModel):
     start_day = models.DateField(null=False, default=timezone.now)
     end_day = models.DateField(null=False, default=timezone.now)
-    profesional = models.ForeignKey(Profesional, null=True)
+    profesional = models.ForeignKey(Profesional, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES, default=ActiveModel.STATUS_ACTIVE)
     reason = models.CharField(blank=True, max_length=150, null=False)
     notes = models.CharField(blank=True, max_length=150, null=True)

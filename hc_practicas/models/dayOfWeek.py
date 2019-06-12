@@ -12,5 +12,5 @@ class DayOfWeek(models.Model):
     """
     index = models.IntegerField(null=False, default=0)
     name = models.CharField(max_length=20, null=False)
-    period = models.ForeignKey(Period, related_name='daysOfWeek')
+    period = models.ForeignKey(Period, related_name='daysOfWeek', on_delete=models.SET_NULL)
     selected = models.BooleanField()
