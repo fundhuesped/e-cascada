@@ -7,3 +7,8 @@ ENV
 documentation
 *.log
 .vscode
+bin/
+share/
+lib/
+
+local/
