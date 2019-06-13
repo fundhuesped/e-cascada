@@ -50,7 +50,7 @@ class NotificationSMSSerializer(serializers.ModelSerializer):
             url = url + "&respuestanumerica=1"
 
             response = requests.get(url)
-        print response.text
+        print(response.text)
         splitted_response = response.text.split(";")
 
         if splitted_response[0] == "0":
