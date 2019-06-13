@@ -236,7 +236,7 @@ class AgendaNestSerializer(serializers.HyperlinkedModelSerializer):
         Procesa la modificacion de periodos de una agenda y guarda la entidad completa
         """
         # Activo guardado de version de objetos
-        with reversion.create_revision():
+        with reversion.create_revision(atomic=True):
             for period in periods:
                 days_of_week = period.pop('daysOfWeek')
                 for day_of_week in days_of_week:
