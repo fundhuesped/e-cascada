@@ -173,9 +173,7 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken'
 )
 
-CORS_EXPOSE_HEADERS = {
-    'auth-token'
-}
+CORS_EXPOSE_HEADERS = 'auth-token'
 
 #
 # Notifications configuration
