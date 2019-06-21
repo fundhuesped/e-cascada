@@ -9,6 +9,8 @@ from hc_practicas.serializers import TurnoSlotNestSerializer
 from hc_practicas.models import TurnoSlot
 from hc_core.views import PaginateListAPIView
 from django_filters import widgets
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class TurnoSlotFilter(r_f_filters.FilterSet):
     """
@@ -40,7 +42,7 @@ class TurnoSlotList(PaginateListAPIView):
     """
     serializer_class = TurnoSlotNestSerializer
     queryset = TurnoSlot.objects.all()
-    filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     filter_class = TurnoSlotFilter
     permission_classes = (DjangoModelPermissions,)
 

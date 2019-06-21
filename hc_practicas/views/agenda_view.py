@@ -9,6 +9,8 @@ from hc_practicas.serializers import AgendaListSerializer
 from hc_practicas.serializers import AgendaNestSerializer
 from rest_framework import filters
 from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 
 class AgendaFilter(r_f_filters.FilterSet):
@@ -32,7 +34,7 @@ class AgendaList(PaginateListCreateAPIView):
     """
     serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
-    filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     filter_class = AgendaFilter
 
     def list(self, request, *args, **kwargs):
