@@ -6,9 +6,9 @@ from hc_notificaciones.models import NotificationSMS
 import requests
 from django.conf import settings
 import sys  
-
-reload(sys)
-sys.setdefaultencoding('utf8')
+# I don't know what this is used for, but it generates an error. The commit says something about 
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 
 class NotificationSMSSerializer(serializers.ModelSerializer):
     """
