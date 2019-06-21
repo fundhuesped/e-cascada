@@ -13,4 +13,4 @@ class Period(models.Model):
     start = models.TimeField()
     end = models.TimeField()
     selected = models.BooleanField()
-    agenda = models.ForeignKey(Agenda, related_name='periods', on_delete=models.SET_NULL)
+    agenda = models.ForeignKey(Agenda, related_name='periods', on_delete=models.DO_NOTHING)
