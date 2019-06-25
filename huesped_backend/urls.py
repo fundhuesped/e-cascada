@@ -29,5 +29,5 @@ apps_patterns = ([
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^info/', views.info_view.info),
-    url(r'^api/', include(apps_patterns))
+    url(r'^api/', include((apps_patterns, 'api'), namespace='api'))
 ]
