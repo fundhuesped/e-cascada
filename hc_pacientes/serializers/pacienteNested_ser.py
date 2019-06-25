@@ -51,4 +51,4 @@ class PacienteNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'alias', 'hceNumber', 'motherSurname', 'birthDate', 'documentType', 'documentNumber', 'email','primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage', 'socialService',  'bornPlace','socialServiceNumber', 'pns')
+        fields = ('id', 'firstName', 'otherNames', 'fatherSurname', 'alias', 'hceNumber', 'motherSurname', 'birthDate', 'documentType', 'documentNumber', 'email','primaryPhoneNumber', 'primaryPhoneContact', 'primaryPhoneMessage', 'socialService',  'bornPlace','socialServiceNumber', 'pns', 'url')
