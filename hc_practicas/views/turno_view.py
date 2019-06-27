@@ -9,6 +9,8 @@ from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
 from django_filters import widgets
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class TurnoFilter(r_f_filters.FilterSet):
     """
@@ -34,7 +36,7 @@ class TurnoList(PaginateListCreateAPIView):
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
     permission_classes = (DjangoModelPermissions,)
-    filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     filter_class = TurnoFilter
     ordering_fields = ('turnoSlot__day')
     ordering = ('-turnoSlot__day')

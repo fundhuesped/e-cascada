@@ -7,3 +7,16 @@ ENV
 documentation
 *.log
 .vscode
+bin/
+share/
+lib/
+
+local/
+
+\.vscode/settings\.json
+
+include/
+
+pip-selfcheck\.json
+
+turnos\.log

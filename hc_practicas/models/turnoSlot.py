@@ -39,9 +39,9 @@ class TurnoSlot(ActiveModel):
     status = models.CharField(max_length=8, choices=ActiveModel.STATUS_CHOICES,
                               default=ActiveModel.STATUS_ACTIVE)
     state = models.CharField(max_length=10, choices=STATE_CHOICES, null=False)
-    agenda = models.ForeignKey(Agenda, null=True)
-    profesional = models.ForeignKey(Profesional, null=True)
-    prestacion = models.ForeignKey(Prestacion, null=True)
+    agenda = models.ForeignKey(Agenda, null=True, on_delete=models.SET_NULL)
+    profesional = models.ForeignKey(Profesional, null=True, on_delete=models.SET_NULL)
+    prestacion = models.ForeignKey(Prestacion, null=True, on_delete=models.SET_NULL)
     updated_on = models.DateField(auto_now=True)
 
     @property
