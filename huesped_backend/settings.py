@@ -180,6 +180,7 @@ CORS_EXPOSE_HEADERS = 'auth-token'
 
 # Days to look in advance to send notifications
 NOTIFICATION_ANTICIPATION_DAYS = os.getenv('NOTIFICATION_ANTICIPATION_DAYS', 2)
+USE_NOTIFICATION_HUB=False
 
 # Set to true to activate these chanels
 SEND_SMS_NOTIFICATIONS = False
