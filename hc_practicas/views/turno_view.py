@@ -9,7 +9,6 @@ from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
 from django_filters import widgets
-from django_filters.rest_framework import DjangoFilterBackend
 
 class TurnoList(PaginateListCreateAPIView):
     """
