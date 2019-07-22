@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import rest_framework_filters as r_f_filters
-
 from hc_core.views import PaginateListCreateAPIView
 from hc_practicas.models import Agenda
 from hc_practicas.serializers import AgendaListSerializer

@@ -1,14 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import rest_framework_filters as r_f_filters
-
 from rest_framework import generics, filters
 from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
-from django_filters import widgets
 
 class TurnoList(PaginateListCreateAPIView):
     """
