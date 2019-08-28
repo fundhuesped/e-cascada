@@ -21,7 +21,7 @@ from subprocess import check_output
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['turnos.dev.redclin.org', 'localhost']
 
 
 # Application definition
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_swagger',
@@ -42,17 +43,16 @@ INSTALLED_APPS = [
     'hc_pacientes',
     'hc_core',
     'hc_notificaciones',
-    'reversion'
+    'reversion',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'reversion.middleware.RevisionMiddleware'
@@ -93,6 +93,25 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'class': 'logging.FileHandler',
+            'filename': './turnos.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+    },
+}
 
 LOGOUT_ON_PASSWORD_CHANGE = False
 
@@ -153,9 +172,7 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken'
 )
 
-CORS_EXPOSE_HEADERS = {
-    'auth-token'
-}
+CORS_EXPOSE_HEADERS = ('auth-token',)
 
 #
 # Notifications configuration
@@ -163,19 +180,21 @@ CORS_EXPOSE_HEADERS = {
 
 # Days to look in advance to send notifications
 NOTIFICATION_ANTICIPATION_DAYS = os.getenv('NOTIFICATION_ANTICIPATION_DAYS', 2)
+USE_NOTIFICATION_HUB=False
 
 # Set to true to activate these chanels
-SEND_SMS_NOTIFICATIONS = True
+SEND_SMS_NOTIFICATIONS = False
 SEND_EMAIL_NOTIFICATIONS = True
 
 # Email configuration
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT', 'PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'EMAIL_HOST_PASSWORD')
-EMAIL_SENDER_ADDRESS = os.getenv('EMAIL_SENDER_ADDRESS', 'EMAIL_SENDER_ADDRESS')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'mail.2peoplestudio.com')
+EMAIL_PORT = os.getenv('EMAIL_PORT', '587')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'cmh@incubator.com.ar')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'HuesDev2016')
+EMAIL_SENDER_ADDRESS = os.getenv('EMAIL_SENDER_ADDRESS', 'cmh@incubator.com.ar')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', False)
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False)
+
 
 
 

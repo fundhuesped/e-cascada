@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import rest_framework_filters as r_f_filters
-
 from hc_core.views import PaginateListCreateAPIView
 from hc_practicas.models import Agenda
 from hc_practicas.serializers import AgendaListSerializer
@@ -10,30 +8,13 @@ from hc_practicas.serializers import AgendaNestSerializer
 from rest_framework import filters
 from rest_framework import generics
 
-
-class AgendaFilter(r_f_filters.FilterSet):
-    """
-    Configura los campos por los que se puede fitrar
-    """
-    class Meta(object):
-        """
-        Define por diccionario los que se puede fitrar
-        """
-        model = Agenda
-        fields = {
-            'validFrom': r_f_filters.ALL_LOOKUPS,
-            'status': r_f_filters.ALL_LOOKUPS,
-            'validTo': r_f_filters.ALL_LOOKUPS
-        }
-
 class AgendaList(PaginateListCreateAPIView):
     """
     Vista para listar los elementos y crear uno nuevo
     """
     serializer_class = AgendaNestSerializer
     queryset = Agenda.objects.all()
-    filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
-    filter_class = AgendaFilter
+    filter_backends = (filters.OrderingFilter, )
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = AgendaListSerializer

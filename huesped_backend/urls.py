@@ -19,7 +19,6 @@ from huesped_backend import views
 
 apps_patterns = ([
     url(r'^api-auth/', include('rest_framework.urls')),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^practicas/', include('hc_practicas.urls')),
     url(r'^comun/', include('hc_common.urls')),
     url(r'^pacientes/', include('hc_pacientes.urls')),
@@ -30,5 +29,5 @@ apps_patterns = ([
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^info/', views.info_view.info),
-    url(r'^api/', include(apps_patterns, namespace='api'))
+    url(r'^api/', include((apps_patterns, 'api'), namespace='api'))
 ]

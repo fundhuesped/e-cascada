@@ -9,4 +9,4 @@ class SMSNotificationResponse(BaseNotificationResponse):
     """
     Clase que representa una respuesta de notificacion SMS
     """
-    notification = models.ForeignKey(NotificationSMS, null=True, related_name='notification')
+    notification = models.ForeignKey(NotificationSMS, null=True, related_name='notification', on_delete=models.SET_NULL)

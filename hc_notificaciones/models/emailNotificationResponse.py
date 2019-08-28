@@ -9,4 +9,4 @@ class EmailNotificationResponse(BaseNotificationResponse):
     """
     Clase que representa una respuesta de notificacion Email
     """
-    notification = models.ForeignKey(NotificationEmail, null=True, related_name='notification')
+    notification = models.ForeignKey(NotificationEmail, null=True, related_name='notification', on_delete=models.SET_NULL)

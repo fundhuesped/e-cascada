@@ -106,7 +106,7 @@ class TurnoNestSerializer(serializers.HyperlinkedModelSerializer):
 
         instance.informed = informed
         instance.notes = notes
-        instance.lastModifiedBy = self._context['request'].user;
+        instance.lastModifiedBy = self._context['request'].user
         instance.save()
         return instance
 

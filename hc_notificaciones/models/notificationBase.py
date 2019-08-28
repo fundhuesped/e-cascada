@@ -54,5 +54,5 @@ class BaseNotification(ActiveModel):
                                null=False)
 
     updated_on = models.DateField(auto_now=True)
-    turno = models.ForeignKey(Turno, null=True)
-    paciente = models.ForeignKey(Paciente, null=True)
+    turno = models.ForeignKey(Turno, null=True, on_delete=models.SET_NULL)
+    paciente = models.ForeignKey(Paciente, null=True, on_delete=models.SET_NULL)

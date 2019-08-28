@@ -1,31 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import rest_framework_filters as r_f_filters
-
 from rest_framework import generics, filters
 from rest_framework.permissions import DjangoModelPermissions
 from hc_practicas.serializers import TurnoNestSerializer
 from hc_practicas.models import Turno
 from hc_core.views import PaginateListCreateAPIView
-from django_filters import widgets
-
-class TurnoFilter(r_f_filters.FilterSet):
-    """
-    Configura los campos por los que se puede fitrar
-    """
-    cancelation_reason = r_f_filters.MultipleChoiceFilter(choices=Turno.CANCELATION_CHOICES,
-                                                          widget=widgets.CSVWidget())
-    class Meta(object):
-        """
-        Define por diccionario los que se puede fitrar
-        """
-        model = Turno
-        fields = ['cancelation_reason']
-        # fields = {
-        #     'status': r_f_filters.ALL_LOOKUPS,
-        #     'state': r_f_filters.ALL_LOOKUPS
-        # }
 
 class TurnoList(PaginateListCreateAPIView):
     """
@@ -34,8 +14,7 @@ class TurnoList(PaginateListCreateAPIView):
     serializer_class = TurnoNestSerializer
     queryset = Turno.objects.all()
     permission_classes = (DjangoModelPermissions,)
-    filter_backends = (filters.OrderingFilter, filters.DjangoFilterBackend)
-    filter_class = TurnoFilter
+    filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('turnoSlot__day')
     ordering = ('-turnoSlot__day')
 
@@ -54,6 +33,10 @@ class TurnoList(PaginateListCreateAPIView):
         agenda = self.request.query_params.get('agenda')
         if agenda is not None:
             queryset = queryset.filter(turnoSlot__agenda=agenda)
+
+        cancelation_reason = self.request.query_params.get('cancelation_reason')
+        if cancelation_reason is not None:
+            queryset = queryset.filter(cancelation_reason__in=cancelation_reason.split(','))
 
         day__range_start = self.request.query_params.get('day__range_start')
         day__range_end = self.request.query_params.get('day__range_end')

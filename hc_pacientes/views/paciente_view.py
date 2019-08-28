@@ -7,7 +7,8 @@ from hc_pacientes.serializers import PacienteNestSerializer
 from hc_pacientes.models import Paciente
 from hc_core.views import PaginateListCreateAPIView
 from django.db.models import Q
-
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework import serializers
 
 
@@ -36,16 +37,15 @@ class PacienteList(PaginateListCreateAPIView):
 
         if firstName is not None :
             if  len(firstName) >= 3:
-                print firstName
-                queryset = queryset.filter(Q(firstName__istartswith=firstName)
-                                   |Q(otherNames__istartswith=firstName))
+                queryset = queryset.filter(Q(firstName__unaccent__istartswith=firstName)
+                                   |Q(otherNames__unaccent__istartswith=firstName))
             else:
                 raise serializers.ValidationError({'error': 'Se debe realizar una consulta con parametros de busqueda validos'})
 
         if fatherSurname is not None:
             if len(fatherSurname) >= 3:
                 
-                queryset = queryset.filter(Q(fatherSurname__istartswith=fatherSurname)|Q(motherSurname__istartswith=fatherSurname))
+                queryset = queryset.filter(Q(fatherSurname__unaccent__istartswith=fatherSurname)|Q(motherSurname__unaccent__istartswith=fatherSurname))
             else:
                 raise serializers.ValidationError({'error': 'Se debe realizar una consulta con parametros de busqueda validos'})
 
@@ -77,6 +77,22 @@ class PacienteList(PaginateListCreateAPIView):
                     queryset = queryset.order_by('-'+order_field)
         return queryset
 
+    def create(self, request, *args, **kwargs):
+        if(not request.query_params.get('allowDuplicate') or self.request.query_params.get('allowDuplicate') != 'true'):
+            if 'documentNumber' in request.data and 'documentType' in request.data:
+                duplicated = Paciente.objects.filter(Q(documentNumber=request.data['documentNumber'], documentType__id=request.data['documentType']['id'] )).count()
+                if duplicated > 0:
+                    return Response("Duplicate paciente exists", status=status.HTTP_400_BAD_REQUEST)
+            else:
+                duplicated = Paciente.objects.filter(Q(firstName__iexact=request.data['firstName'], fatherSurname__iexact=request.data['fatherSurname'])).count()
+                if duplicated > 0:
+                    return Response("Duplicate paciente exists", status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class PacienteDetails(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -85,3 +101,27 @@ class PacienteDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PacienteNestSerializer
     queryset = Paciente.objects.all()
     permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        if (request.data['status'] == Paciente.STATUS_INACTIVE and instance.status == Paciente.STATUS_ACTIVE )or (request.data['status'] == Paciente.STATUS_ACTIVE and instance.status ==  Paciente.STATUS_INACTIVE):
+            pass
+        else:
+            if request.query_params.get('allowDuplicate') is None or (request.query_params.get('allowDuplicate') is not None and self.request.query_params.get('allowDuplicate') != 'true'):
+                if 'documentNumber' in request.data and 'documentType' in request.data:
+                    duplicated = Paciente.objects.filter(Q(documentNumber=request.data['documentNumber'], documentType__id=request.data['documentType']['id'] )).exclude(id=instance.id).count()
+                    if duplicated > 0:
+                        return Response("Duplicate paciente exists", status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    duplicated = Paciente.objects.filter(Q(firstName__unaccent__iexact=request.data['firstName'], fatherSurname__unaccent__iexact=request.data['fatherSurname'])).exclude(id=instance.id).count()
+                    if duplicated > 0:
+                        return Response("Duplicate paciente exists", status=status.HTTP_400_BAD_REQUEST)
+
+
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
