@@ -12,7 +12,7 @@ El sistema se encuentra construido utilizando principalmente :
 * Django Rest Framework-Filters
 
 ## Requisitos
-* Python v2/3
+* Python 3.6.8
 * Pip
 * Postgres
 
@@ -48,6 +48,33 @@ Ejecutar el siguiente comando deja corriendo el sistema en el puerto 8000
 
 ```bash
 	python manage.py runserver localhost:8000
+```
+
+## Despliegues e Instalación en ambientes
+Siendo root en el servidor a elección con el codigo del repositorio clonado ejecutar:
+ 
+```bash
+	git pull #Traer ultimos cambios
+	cd /carpeta-donde-estan-variables-de-entorno
+	source setenv.sh  #Levantar las variables de entorno
+	./start_docker.sh  #Levantar docker compose
+	docker ps # Verificar estan levantados los 3 docker
+```
+
+### Luego correr las background tasks que cierra las sesiones automaticamente al finalizar el dia y procesa importaciones que tardan mucho
+```bash
+	docker exec -d turnosbackoffice_beturnos_1 python manage.py process_tasks
+```
+
+### Si es necesario aplicar las migraciones a la base de datos:
+```bash
+	docker exec -ti turnosbackoffice_beturnos_1 /bin/bash
+	python manage.py migrate
+```
+
+### Para debugging de problemas viendo los logs del docker creado:
+```bash
+	docker logs --tail 300 turnosbackoffice_beturnos_1
 ```
 
 ## Datos iniciales
